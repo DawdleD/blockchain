@@ -37,7 +37,6 @@
                                 </li>
                             </ul>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -74,6 +73,19 @@
                     </li>
                     <li>
                         <div class="first">考试平台</div>
+                        <div class="second">
+                            <ul>
+                                <li>
+                                    <a>考试列表</a>
+                                </li>
+                                <li>
+                                    <a>成绩查询</a>
+                                </li>
+                                <li>
+                                    <a>课后习题</a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
                     <li>
                         <div class="first">项目列表</div>

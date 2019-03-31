@@ -1,18 +1,334 @@
 <template>
-    <header-stu></header-stu>
+    <div>
+        <header-stu></header-stu>
+        <div class="banner-slide">
+            <el-carousel trigger="click" height="400px">
+                <el-carousel-item>
+                    <a style="background-color: #010004" class="banner-slide-a" href="https://www.blockchain.com/zh"
+                       target="_blank">
+                        <img alt="" src="../assets/image/block-chain.jpg" class="banner-slide-img">
+                    </a>
+                </el-carousel-item>
+                <el-carousel-item>
+                    <a style="background-color:#000000" class="banner-slide-a" href="https://bitcoin.org/zh_CN/"
+                       target="_blank">
+                        <img alt="" src="../assets/image/bitcoin.jpg" class="banner-slide-img">
+                    </a>
+                </el-carousel-item>
+                <el-carousel-item>
+                    <a style="background-color: #131c2f" class="banner-slide-a" href="https://www.ethereum.org/"
+                       target="_blank">
+                        <img alt="" src="../assets/image/ethereum.jpg" class="banner-slide-img">
+                    </a>
+                </el-carousel-item>
+            </el-carousel>
+        </div>
+        <div class="content">
+            <div class="course">
+                <div class="header clear">
+                    <ul class="clear">
+                        <li v-bind:class="chargeActive" v-on:click="changeCourseFee">付费课程</li>
+                        <li v-bind:class="freeActive" v-on:click="changeCourseFee">免费课程</li>
+                    </ul>
+                    <div class="more">
+                        <a href="#">更多课程 >></a>
+                    </div>
+                </div>
+                <div class="course-fee" v-if="courseFee">
+                    <ul class="clear">
+                        <li>
+                            <a href="#">
+                                <img src="../assets/image/course.png" alt="course">
+                                <div class="course-title">付费课程名称</div>
+                                <div class="course-info clear">
+                                    <div class="course-price">￥999</div>
+                                    <div class="apply-num">726人已报名</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="../assets/image/course.png" alt="course">
+                                <div class="course-title">付费课程名称</div>
+                                <div class="course-info clear">
+                                    <div class="course-price">￥129</div>
+                                    <div class="apply-num">666人已报名</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="../assets/image/course.png" alt="course">
+                                <div class="course-title">付费课程名称</div>
+                                <div class="course-info clear">
+                                    <div class="course-price">￥419</div>
+                                    <div class="apply-num">123人已报名</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="../assets/image/course.png" alt="course">
+                                <div class="course-title">付费课程名称</div>
+                                <div class="course-info clear">
+                                    <div class="course-price">￥678</div>
+                                    <div class="apply-num">1200人已报名</div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="course-fee" v-if="!courseFee">
+                    <ul class="clear">
+                        <li>
+                            <a href="#">
+                                <img src="../assets/image/course-free.jpg" alt="course">
+                                <div class="course-title">免费课程名称</div>
+                                <div class="course-info clear">
+                                    <div class="course-free">免费</div>
+                                    <div class="apply-num">726人已报名</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="../assets/image/course-free.jpg" alt="course">
+                                <div class="course-title">免费课程名称</div>
+                                <div class="course-info clear">
+                                    <div class="course-free">免费</div>
+                                    <div class="apply-num">604人已报名</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="../assets/image/course-free.jpg" alt="course">
+                                <div class="course-title">免费课程名称</div>
+                                <div class="course-info clear">
+                                    <div class="course-free">免费</div>
+                                    <div class="apply-num">411人已报名</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="../assets/image/course-free.jpg" alt="course">
+                                <div class="course-title">免费课程名称</div>
+                                <div class="course-info clear">
+                                    <div class="course-free">免费</div>
+                                    <div class="apply-num">1314人已报名</div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="project">
+                <div class="header">
+                    <ul class="clear">
+                        <li class="active">最新项目</li>
+                        <li>热门项目</li>
+                    </ul>
+                    <div class="more">
+                        <a href="#">更多项目 >></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <footer-stu></footer-stu>
+    </div>
 </template>
 
 <script>
     import Header from '../components/student/Header'
+    import Footer from '../components/student/Footer'
 
     export default {
         name: "index",
+        data() {
+            return {
+                chargeActive: {active: true},
+                freeActive: {active: false},
+                courseFee: true
+            }
+        },
+        methods: {
+            changeCourseFee() {
+                this.courseFee = !this.courseFee;
+                let temp = this.chargeActive.active;
+                this.chargeActive.active = this.freeActive.active;
+                this.freeActive.active = temp;
+            }
+        },
         components: {
-            "header-stu": Header
+            "header-stu": Header,
+            "footer-stu": Footer
         }
     }
 </script>
 
 <style scoped>
+    * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 14px;
+    }
+
+    *, :after, :before {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box
+    }
+
+    ul, li {
+        list-style: none;
+    }
+
+    img {
+        vertical-align: middle;
+    }
+
+    .clear:after {
+        display: block;
+        content: "";
+        clear: both;
+    }
+
+    .banner-slide {
+        position: relative;
+        height: 400px;
+        min-width: 1240px;
+        z-index: 10;
+        display: block;
+    }
+
+    .banner-slide-a {
+        display: block;
+        width: 100%;
+        height: 400px;
+    }
+
+    .banner-slide-img {
+        display: block;
+        height: 400px;
+        width: 710px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .content .course, .content .project {
+        width: 1200px;
+        margin: 0 auto;
+        min-height: 303px;
+        padding-top: 40px;
+    }
+
+    .content .course a, .content .project a {
+        text-decoration: none;
+        background-color: transparent;
+    }
+
+    .content .header {
+        margin-bottom: 20px;
+    }
+
+    .content .header ul {
+        float: left;
+        height: 22px;
+    }
+
+    .content .header ul .active {
+        color: #202020;
+    }
+
+    .content .header ul li {
+        display: inline-block;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        font-size: 22px;
+        color: #888;
+        line-height: 22px;
+        cursor: pointer;
+    }
+
+    .content .header ul li:first-child {
+        border-right: 1px solid #888;
+        padding-right: 16px;
+        padding-left: 0;
+    }
+
+    .content .header ul li:last-child {
+        padding-left: 16px;
+    }
+
+    .content .header .more {
+        float: right;
+        display: block;
+        line-height: 22px;
+    }
+
+    .content .header .more a {
+        text-decoration: none;
+        color: #888;
+    }
+
+    .content .course .course-fee {
+        display: block;
+    }
+
+    .content .course .course-fee li {
+        float: left;
+        width: 270px;
+        margin-right: 40px;
+    }
+
+    .content .course .course-fee li img {
+        display: inline-block;
+        width: 100%;
+        height: 170px;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+    }
+
+    .content .course .course-fee li .course-title {
+        color: #202020;
+        margin-top: 8px;
+        width: 100%;
+        overflow: hidden;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .content .course .course-fee li:last-child {
+        margin-right: 0;
+    }
+
+    .content .course .course-fee .course-info {
+        margin-top: 2px;
+        text-align: left;
+    }
+
+    .content .course .course-fee .course-info .course-price {
+        float: left;
+        color: #409eff;
+    }
+
+    .content .course .course-fee .course-info .course-free{
+        float: left;
+        color: #42c02e;
+    }
+
+    .content .course .course-fee .course-info .apply-num {
+        float: right;
+        color: #888;
+        font-size: 12px;
+    }
+
 
 </style>

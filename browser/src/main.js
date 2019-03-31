@@ -3,10 +3,12 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
-import {Notification, Button} from 'element-ui'
+import {Notification, Carousel,CarouselItem, Button} from 'element-ui'
 
 
 Vue.use(Button);
+Vue.component(Carousel.name,Carousel);
+Vue.component(CarouselItem.name,CarouselItem);
 Vue.component(Notification.name, Notification);
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;
