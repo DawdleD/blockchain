@@ -70,7 +70,7 @@
 </template>
 
 <script>
-    import {Notification} from 'element-ui'
+    import {Message} from 'element-ui'
 
     export default {
         name: "Login",
@@ -124,11 +124,7 @@
                         data: this.loginForm
                     }).then((response) => {
                         if (response.data.status === 1) {
-                            Notification.success({
-                                title: '登录成功',
-                                message: '登录成功！即将跳转到主页',
-                                duration: 1500
-                            });
+                            Message.success('登录成功！即将跳转到主页');
                             // this.Notification.success({
                             //     title: '登录成功',
                             //     message: '登录成功！即将跳转到主页',
@@ -138,19 +134,21 @@
                             }, 1000);
                         } else {
                             this.changeImage();
-                            Notification.error({
-                                title: '登录失败',
-                                message: response.data.message,
-                                duration: 2500
-                            });
+                            Message.error(response.data.message);
+                            // Notification.error({
+                            //     title: '登录失败',
+                            //     message: response.data.message,
+                            //     duration: 2500
+                            // });
                         }
                     }).catch((error) => {
                         console.log(error);
-                        Notification.warning({
-                            title: '警告',
-                            message: '发生了未知错误',
-                            duration: 2500
-                        });
+                        Message.warning('发生了未知错误');
+                        // Notification.warning({
+                        //     title: '警告',
+                        //     message: '发生了未知错误',
+                        //     duration: 2500
+                        // });
                     });
                 }
             },

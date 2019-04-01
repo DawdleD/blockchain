@@ -20,7 +20,7 @@
         height: 245px;
         box-sizing: border-box;
         text-align: center;
-        position: absolute;
+        position: relative;
         bottom: 0;
         width: 100%;
         left: 0;

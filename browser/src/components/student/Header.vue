@@ -326,6 +326,7 @@
         border: 1px solid #e5e5e5;
         background: #fff;
         box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .12);
+        z-index: 15;
     }
 
     .header-wrap .header .login .user .dropdown-list:before {

@@ -27,8 +27,8 @@
             <div class="course">
                 <div class="header clear">
                     <ul class="clear">
-                        <li v-bind:class="chargeActive" v-on:click="changeCourseFee">付费课程</li>
-                        <li v-bind:class="freeActive" v-on:click="changeCourseFee">免费课程</li>
+                        <li v-bind:class="chargeActive" @click="changeCourseFee">付费课程</li>
+                        <li v-bind:class="freeActive" @click="changeCourseFee">免费课程</li>
                     </ul>
                     <div class="more">
                         <a href="#">更多课程 >></a>
@@ -38,7 +38,7 @@
                     <ul class="clear">
                         <li>
                             <a href="#">
-                                <img src="../assets/image/course.png" alt="course">
+                                <img src="../assets/image/course.png" alt="course" title="付费课程名称">
                                 <div class="course-title">付费课程名称</div>
                                 <div class="course-info clear">
                                     <div class="course-price">￥999</div>
@@ -48,7 +48,7 @@
                         </li>
                         <li>
                             <a href="#">
-                                <img src="../assets/image/course.png" alt="course">
+                                <img src="../assets/image/course.png" alt="course" title="付费课程名称">
                                 <div class="course-title">付费课程名称</div>
                                 <div class="course-info clear">
                                     <div class="course-price">￥129</div>
@@ -58,7 +58,7 @@
                         </li>
                         <li>
                             <a href="#">
-                                <img src="../assets/image/course.png" alt="course">
+                                <img src="../assets/image/course.png" alt="course" title="付费课程名称">
                                 <div class="course-title">付费课程名称</div>
                                 <div class="course-info clear">
                                     <div class="course-price">￥419</div>
@@ -68,7 +68,7 @@
                         </li>
                         <li>
                             <a href="#">
-                                <img src="../assets/image/course.png" alt="course">
+                                <img src="../assets/image/course.png" alt="course" title="付费课程名称">
                                 <div class="course-title">付费课程名称</div>
                                 <div class="course-info clear">
                                     <div class="course-price">￥678</div>
@@ -82,7 +82,7 @@
                     <ul class="clear">
                         <li>
                             <a href="#">
-                                <img src="../assets/image/course-free.jpg" alt="course">
+                                <img src="../assets/image/course-free.jpg" alt="course" title="免费课程名称">
                                 <div class="course-title">免费课程名称</div>
                                 <div class="course-info clear">
                                     <div class="course-free">免费</div>
@@ -92,7 +92,7 @@
                         </li>
                         <li>
                             <a href="#">
-                                <img src="../assets/image/course-free.jpg" alt="course">
+                                <img src="../assets/image/course-free.jpg" alt="course" title="免费课程名称">
                                 <div class="course-title">免费课程名称</div>
                                 <div class="course-info clear">
                                     <div class="course-free">免费</div>
@@ -102,7 +102,7 @@
                         </li>
                         <li>
                             <a href="#">
-                                <img src="../assets/image/course-free.jpg" alt="course">
+                                <img src="../assets/image/course-free.jpg" alt="course" title="免费课程名称">
                                 <div class="course-title">免费课程名称</div>
                                 <div class="course-info clear">
                                     <div class="course-free">免费</div>
@@ -112,7 +112,7 @@
                         </li>
                         <li>
                             <a href="#">
-                                <img src="../assets/image/course-free.jpg" alt="course">
+                                <img src="../assets/image/course-free.jpg" alt="course" title="免费课程名称">
                                 <div class="course-title">免费课程名称</div>
                                 <div class="course-info clear">
                                     <div class="course-free">免费</div>
@@ -124,16 +124,229 @@
                 </div>
             </div>
             <div class="project">
-                <div class="header">
+                <div class="header clear">
                     <ul class="clear">
-                        <li class="active">最新项目</li>
-                        <li>热门项目</li>
+                        <li v-bind:class="newActive" @click="changeProjectType">最新项目</li>
+                        <li v-bind:class="hotActive" @click="changeProjectType">热门项目</li>
                     </ul>
                     <div class="more">
-                        <a href="#">更多项目 >></a>
+                        <a @click="canDown = !canDown" v-if="canDown">展开 <i class="fa fa-angle-double-down"></i></a>
+                        <a @click="canDown = !canDown" v-if="!canDown">收起 <i class="fa fa-angle-double-up"></i></a>
                     </div>
                 </div>
-
+                <div v-if="projectNew" v-bind:class="{'project-container':true,down: !canDown}">
+                    <ul class="clear">
+                        <li>
+                            <a>
+                                <img alt="" src="../assets/image/project.jpg" title="最新项目标题">
+                                <div class="project-title">最新项目标题</div>
+                                <div class="duration">
+                                    <i class="fa fa-calendar-alt"></i>
+                                    2019.04.01 - 2019.07.26
+                                </div>
+                                <div class="project-info">
+                                    <div class="apply-num">1人已申请</div>
+                                    <div class="reward" title="1 ETH(以太币) = 1000 Finney">
+                                        <i class="fab fa-ethereum"></i>
+                                        可获得 10 Finney
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <img alt="" src="../assets/image/project.jpg" title="最新项目标题">
+                                <div class="project-title">最新项目标题</div>
+                                <div class="duration">
+                                    <i class="fa fa-calendar-alt"></i>
+                                    2019.04.01 - 2019.07.26
+                                </div>
+                                <div class="project-info">
+                                    <div class="apply-num">1人已申请</div>
+                                    <div class="reward" title="1 ETH(以太币) = 1000 Finney">
+                                        <i class="fab fa-ethereum"></i>
+                                        可获得 9 Finney
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <img alt="" src="../assets/image/project.jpg" title="最新项目标题">
+                                <div class="project-title">最新项目标题</div>
+                                <div class="duration">
+                                    <i class="fa fa-calendar-alt"></i>
+                                    2019.04.01 - 2019.07.26
+                                </div>
+                                <div class="project-info">
+                                    <div class="apply-num">1人已申请</div>
+                                    <div class="reward" title="1 ETH(以太币) = 1000 Finney">
+                                        <i class="fab fa-ethereum"></i>
+                                        可获得 7 Finney
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <img alt="" src="../assets/image/project.jpg" title="最新项目标题">
+                                <div class="project-title">最新项目标题</div>
+                                <div class="duration">
+                                    <i class="fa fa-calendar-alt"></i>
+                                    2019.04.01 - 2019.07.26
+                                </div>
+                                <div class="project-info">
+                                    <div class="apply-num">1人已申请</div>
+                                    <div class="reward" title="1 ETH(以太币) = 1000 Finney">
+                                        <i class="fab fa-ethereum"></i>
+                                        可获得 6 Finney
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <img alt="" src="../assets/image/project.jpg" title="最新项目标题">
+                                <div class="project-title">最新项目标题</div>
+                                <div class="duration">
+                                    <i class="fa fa-calendar-alt"></i>
+                                    2019.04.01 - 2019.07.26
+                                </div>
+                                <div class="project-info">
+                                    <div class="apply-num">1人已申请</div>
+                                    <div class="reward" title="1 ETH(以太币) = 1000 Finney">
+                                        <i class="fab fa-ethereum"></i>
+                                        可获得 12 Finney
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div v-if="!projectNew" v-bind:class="{'project-container':true,down: !canDown}">
+                    <ul class="clear">
+                        <li>
+                            <a>
+                                <img alt="" src="../assets/image/project-hot.png" title="热门项目标题">
+                                <div class="project-title">热门项目标题</div>
+                                <div class="duration">
+                                    <i class="fa fa-calendar-alt"></i>
+                                    2019.04.01 - 2019.07.26
+                                </div>
+                                <div class="project-info">
+                                    <div class="apply-num hot">
+                                        <i class="fab fa-hotjar"></i>
+                                        10人已申请
+                                    </div>
+                                    <div class="reward" title="1 ETH(以太币) = 1000 Finney">
+                                        <i class="fab fa-ethereum"></i>
+                                        可获得 400 Finney
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <img alt="" src="../assets/image/project-hot.png" title="热门项目标题">
+                                <div class="project-title">热门项目标题</div>
+                                <div class="duration">
+                                    <i class="fa fa-calendar-alt"></i>
+                                    2019.04.01 - 2019.07.26
+                                </div>
+                                <div class="project-info">
+                                    <div class="apply-num hot">
+                                        <i class="fab fa-hotjar"></i>
+                                        12人已申请
+                                    </div>
+                                    <div class="reward" title="1 ETH(以太币) = 1000 Finney">
+                                        <i class="fab fa-ethereum"></i>
+                                        可获得 411 Finney
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <img alt="" src="../assets/image/project-hot.png" title="热门项目标题">
+                                <div class="project-title">热门项目标题</div>
+                                <div class="duration">
+                                    <i class="fa fa-calendar-alt"></i>
+                                    2019.04.01 - 2019.07.26
+                                </div>
+                                <div class="project-info">
+                                    <div class="apply-num hot">
+                                        <i class="fab fa-hotjar"></i>
+                                        18人已申请
+                                    </div>
+                                    <div class="reward" title="1 ETH(以太币) = 1000 Finney">
+                                        <i class="fab fa-ethereum"></i>
+                                        可获得 726 Finney
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <img alt="" src="../assets/image/project-hot.png" title="热门项目标题">
+                                <div class="project-title">热门项目标题</div>
+                                <div class="duration">
+                                    <i class="fa fa-calendar-alt"></i>
+                                    2019.04.01 - 2019.07.26
+                                </div>
+                                <div class="project-info">
+                                    <div class="apply-num hot">
+                                        <i class="fab fa-hotjar"></i>
+                                        10人已申请
+                                    </div>
+                                    <div class="reward" title="1 ETH(以太币) = 1000 Finney">
+                                        <i class="fab fa-ethereum"></i>
+                                        可获得 200 Finney
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <img alt="" src="../assets/image/project-hot.png" title="热门项目标题">
+                                <div class="project-title">热门项目标题</div>
+                                <div class="duration">
+                                    <i class="fa fa-calendar-alt"></i>
+                                    2019.04.01 - 2019.07.26
+                                </div>
+                                <div class="project-info">
+                                    <div class="apply-num hot">
+                                        <i class="fab fa-hotjar"></i>
+                                        10人已申请
+                                    </div>
+                                    <div class="reward" title="1 ETH(以太币) = 1000 Finney">
+                                        <i class="fab fa-ethereum"></i>
+                                        可获得 400 Finney
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <img alt="" src="../assets/image/project-hot.png" title="热门项目标题">
+                                <div class="project-title">热门项目标题</div>
+                                <div class="duration">
+                                    <i class="fa fa-calendar-alt"></i>
+                                    2019.04.01 - 2019.07.26
+                                </div>
+                                <div class="project-info">
+                                    <div class="apply-num hot">
+                                        <i class="fab fa-hotjar"></i>
+                                        10人已申请
+                                    </div>
+                                    <div class="reward" title="1 ETH(以太币) = 1000 Finney">
+                                        <i class="fab fa-ethereum"></i>
+                                        可获得 400 Finney
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <footer-stu></footer-stu>
@@ -150,7 +363,11 @@
             return {
                 chargeActive: {active: true},
                 freeActive: {active: false},
-                courseFee: true
+                courseFee: true,
+                newActive: {active: true},
+                hotActive: {active: false},
+                projectNew:true,
+                canDown: true
             }
         },
         methods: {
@@ -159,6 +376,16 @@
                 let temp = this.chargeActive.active;
                 this.chargeActive.active = this.freeActive.active;
                 this.freeActive.active = temp;
+            },
+            changeProjectType(){
+                this.canDown = true;
+                this.projectNew = !this.projectNew;
+                let temp = this.newActive.active;
+                this.newActive.active = this.hotActive.active;
+                this.hotActive.active = temp;
+            },
+            projectDown() {
+                this.canDown = false;
             }
         },
         components: {
@@ -169,6 +396,8 @@
 </script>
 
 <style scoped>
+    @import "../assets/css/fontawasome/css/all.min.css";
+
     * {
         margin: 0;
         padding: 0;
@@ -270,6 +499,10 @@
         line-height: 22px;
     }
 
+    .content .header .more:hover a {
+        color: #409eff;
+    }
+
     .content .header .more a {
         text-decoration: none;
         color: #888;
@@ -319,7 +552,7 @@
         color: #409eff;
     }
 
-    .content .course .course-fee .course-info .course-free{
+    .content .course .course-fee .course-info .course-free {
         float: left;
         color: #42c02e;
     }
@@ -330,5 +563,88 @@
         font-size: 12px;
     }
 
+    .content .project .project-container {
+        display: block;
+        width: 100%;
+        height: 280px;
+        overflow: hidden;
+    }
+
+    .content .project .down {
+        height: 560px;
+    }
+
+    .content .project .project-container ul {
+        width: 100%;
+    }
+
+    .content .project .project-container ul li {
+        float: left;
+        width: 270px;
+        border-radius: 6px;
+        border: 1px solid #eee;
+        margin-right: 40px;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    .content .project .project-container ul li a {
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .content .project .project-container ul li img {
+        display: inline-block;
+        width: 100%;
+        height: 170px;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+    }
+
+    .content .project .project-container ul li:nth-child(4n) {
+        margin-right: 0;
+    }
+
+    .content .project .project-container ul li .project-title {
+        width: 100%;
+        text-align: center;
+        margin-top: 13px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .content .project .project-container .duration {
+        color: #42c02e;
+        margin-top: 8px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .content .project .project-container .project-info {
+        margin-top: 2px;
+        text-align: left;
+    }
+
+    .content .project .project-container .project-info .reward {
+        margin-right: 10px;
+        margin-bottom: 5px;
+        float: right;
+        color: gold;
+    }
+
+    .content .project .project-container .project-info .apply-num {
+        float: left;
+        color: #888;
+        margin-left: 10px;
+        margin-bottom: 5px;
+    }
+
+    .content .project .project-container .project-info .hot{
+        color: red;
+    }
 
 </style>

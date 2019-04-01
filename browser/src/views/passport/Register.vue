@@ -69,7 +69,7 @@
 </template>
 
 <script>
-    import {Notification} from 'element-ui'
+    import {Message} from 'element-ui'
 
     export default {
         name: "Register",
@@ -175,24 +175,12 @@
                     option: "register"
                 }).then((response) => {
                     if (response.data.status === 0)
-                        Notification.error({
-                            title: '发送失败',
-                            message: response.data.message,
-                            duration: 2500
-                        });
+                        Message.error(response.data.message);
                     else
-                        Notification.success({
-                            title: '发送成功',
-                            message: response.data.message,
-                            duration: 2500
-                        });
+                        Message.success(response.data.message);
                 }).catch((err) => {
                     console.log(err);
-                    Notification.warning({
-                        title: '警告',
-                        message: '发生了未知错误',
-                        duration: 2500
-                    });
+                    Message.warning('发生了未知错误');
                 })
             },
             //注册按钮
@@ -206,25 +194,13 @@
                         data: this.registerForm
                     }).then((response) => {
                         if (response.data.status === 1) {
-                            Notification.success({
-                                title: '注册成功',
-                                message: response.data.message,
-                                duration: 1500
-                            });
+                            Message.success(response.data.message);
                             setTimeout(() => {
                                 window.location.href = '/';
                             }, 1000);
-                        } else Notification.error({
-                            title: '注册失败',
-                            message: response.data.message,
-                            duration: 2500
-                        })
+                        } else Message.error(response.data.message);
                     }).catch((error) => {
-                        Notification.warning({
-                            title: '警告',
-                            message: '发生了未知错误',
-                            duration: 2500
-                        });
+                        Message.warning( '发生了未知错误');
                         console.log(error);
                     });
                 }

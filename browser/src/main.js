@@ -3,13 +3,12 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
-import {Notification, Carousel,CarouselItem, Button} from 'element-ui'
-
+import {Carousel, CarouselItem, Button, Message} from 'element-ui'
 
 Vue.use(Button);
-Vue.component(Carousel.name,Carousel);
-Vue.component(CarouselItem.name,CarouselItem);
-Vue.component(Notification.name, Notification);
+Vue.component(Carousel.name, Carousel);
+Vue.component(CarouselItem.name, CarouselItem);
+Vue.component(Message.name, Message);
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;
 router.beforeEach((to, from, next) => {

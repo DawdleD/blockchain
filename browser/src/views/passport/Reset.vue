@@ -80,7 +80,7 @@
 </template>
 
 <script>
-    import {Notification} from 'element-ui'
+    import {Message} from 'element-ui'
 
     export default {
         name: "Reset",
@@ -214,22 +214,12 @@
                     account: this.resetForm.account,
                     option: "reset"
                 }).then((response) => {
-                    if (response.data.status === 1) Notification.success({
-                        title: '发送成功',
-                        message: response.data.message,
-                        duration: 2500
-                    });
-                    else Notification.error({
-                        title: '发送失败',
-                        message: response.data.message,
-                        duration: 2500
-                    })
+                    if (response.data.status === 1)
+                        Message.success(response.data.message);
+                    else
+                        Message.error(response.data.message);
                 }).catch((error) => {
-                    Notification.warning({
-                        title: '警告',
-                        message: '发生了未知错误',
-                        duration: 2500
-                    });
+                    Message.warning('发生了未知错误');
                     console.log(error);
                 })
             },
@@ -245,25 +235,13 @@
                         type: (this.accountChooseClass.phone.active) ? "phone" : "email"
                     }).then((response) => {
                         if (response.data.status === 1) {
-                            Notification.success({
-                                title: '重置成功',
-                                message: response.data.message,
-                                duration: 1500
-                            });
+                            Message.success(response.data.message);
                             setTimeout(() => {
                                 this.$router.push('/passport/login');
                             }, 1000);
-                        } else Notification.error({
-                            title: '重置失败',
-                            message: response.data.message,
-                            duration: 2500
-                        })
+                        } else Message.error(response.data.message);
                     }).catch((error) => {
-                        Notification.warning({
-                            title: '警告',
-                            message: '发生了未知错误',
-                            duration: 2500
-                        });
+                        Message.warning('发生了未知错误');
                         console.log(error);
                     })
                 }
