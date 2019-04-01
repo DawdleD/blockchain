@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <header-stu v-bind:page="page"></header-stu>
+    <div id="container">
+        <header-stu :page="page"></header-stu>
         <div class="banner-slide">
             <el-carousel trigger="click" height="400px">
                 <el-carousel-item>
@@ -16,9 +16,9 @@
                     </a>
                 </el-carousel-item>
                 <el-carousel-item>
-                    <a style="background-color: #131c2f" class="banner-slide-a" href="https://www.ethereum.org/"
+                    <a style="background-color: #131313" class="banner-slide-a" href="https://www.ethereum.org/"
                        target="_blank">
-                        <img alt="" src="../assets/image/ethereum.jpg" class="banner-slide-img">
+                        <img alt="" src="../assets/image/ethereum.png" class="banner-slide-img">
                     </a>
                 </el-carousel-item>
             </el-carousel>
@@ -418,6 +418,14 @@
 
     img {
         vertical-align: middle;
+    }
+
+    #container{
+        position:relative;
+        width:100%;
+        min-height:100%;
+        padding-bottom: 245px;
+        box-sizing: border-box;
     }
 
     .clear:after {

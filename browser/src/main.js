@@ -3,9 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
-import {Carousel, CarouselItem, Button, Message} from 'element-ui'
+import {Carousel, CarouselItem, Message} from 'element-ui'
 
-Vue.use(Button);
 Vue.component(Carousel.name, Carousel);
 Vue.component(CarouselItem.name, CarouselItem);
 Vue.component(Message.name, Message);

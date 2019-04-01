@@ -22,7 +22,7 @@
                     <div class="user">
                         <div class="info">
                             <a>
-                                <img alt="头像" src="../../assets/logo.png">
+                                <img alt="头像" src="../../assets/image/head-url.jpg">
                                 <span>测试用户</span>
                             </a>
                             <ul class="dropdown-list">
@@ -30,10 +30,10 @@
                                     <a><i class="fa fa-wallet"></i> 我的钱包</a>
                                 </li>
                                 <li>
-                                    <a><i class="fa fa-user-circle"></i> 个人信息</a>
+                                    <a><i class="fa fa-cog"></i> 设置</a>
                                 </li>
                                 <li>
-                                    <a @click="exit"><i class="fa fa-sign-out-alt"></i> 退出登录</a>
+                                    <a @click="exit"><i class="fa fa-sign-out-alt"></i> 退出</a>
                                 </li>
                             </ul>
                         </div>
@@ -46,11 +46,13 @@
                 <ul class="left">
                     <li :class="navActive.home">
                         <div class="first">
-                            <a href="/">首页</a>
+                            <router-link to="/">首页</router-link>
                         </div>
                     </li>
                     <li :class="navActive.course">
-                        <div class="first">在线学习</div>
+                        <div class="first">
+                            <router-link to="/course/list">在线学习</router-link>
+                        </div>
                         <div class="second">
                             <ul>
                                 <li>
@@ -370,13 +372,13 @@
 
     .header-wrap .header .login .user .dropdown-list a {
         display: block;
-        text-align: center;
-        margin: 20px 0;
+        text-align: left;
+        margin: 20px 15px;
         line-height: 20px;
         height: 20px;
         background: #fff;
         color: #333;
-        font-size: 14px
+        font-size: 14px;
     }
 
     .header-wrap .header .login .user .dropdown-list a:hover {
