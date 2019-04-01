@@ -1,6 +1,6 @@
 <template>
     <div>
-        <header-stu></header-stu>
+        <header-stu v-bind:page="page"></header-stu>
         <div class="banner-slide">
             <el-carousel trigger="click" height="400px">
                 <el-carousel-item>
@@ -361,12 +361,13 @@
         name: "index",
         data() {
             return {
+                page: "home",
                 chargeActive: {active: true},
                 freeActive: {active: false},
                 courseFee: true,
                 newActive: {active: true},
                 hotActive: {active: false},
-                projectNew:true,
+                projectNew: true,
                 canDown: true
             }
         },
@@ -377,7 +378,7 @@
                 this.chargeActive.active = this.freeActive.active;
                 this.freeActive.active = temp;
             },
-            changeProjectType(){
+            changeProjectType() {
                 this.canDown = true;
                 this.projectNew = !this.projectNew;
                 let temp = this.newActive.active;
@@ -643,7 +644,7 @@
         margin-bottom: 5px;
     }
 
-    .content .project .project-container .project-info .hot{
+    .content .project .project-container .project-info .hot {
         color: red;
     }
 

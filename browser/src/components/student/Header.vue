@@ -33,7 +33,7 @@
                                     <a><i class="fa fa-user-circle"></i> 个人信息</a>
                                 </li>
                                 <li>
-                                    <a v-on:click="exit"><i class="fa fa-sign-out-alt"></i> 退出登录</a>
+                                    <a @click="exit"><i class="fa fa-sign-out-alt"></i> 退出登录</a>
                                 </li>
                             </ul>
                         </div>
@@ -44,12 +44,12 @@
         <div class="nav-wrap">
             <div class="nav">
                 <ul class="left">
-                    <li class="active">
+                    <li :class="navActive.home">
                         <div class="first">
                             <a href="/">首页</a>
                         </div>
                     </li>
-                    <li>
+                    <li :class="navActive.course">
                         <div class="first">在线学习</div>
                         <div class="second">
                             <ul>
@@ -71,7 +71,7 @@
                             </ul>
                         </div>
                     </li>
-                    <li>
+                    <li :class="navActive.exam">
                         <div class="first">考试平台</div>
                         <div class="second">
                             <ul>
@@ -87,10 +87,10 @@
                             </ul>
                         </div>
                     </li>
-                    <li>
+                    <li :class="navActive.project">
                         <div class="first">项目列表</div>
                     </li>
-                    <li>
+                    <li :class="navActive.user">
                         <div class="first">个人中心</div>
                         <div class="second">
                             <ul>
@@ -118,20 +118,35 @@
 <script>
     export default {
         name: "Header",
+        props: {
+            page: {
+                type: String
+            }
+        },
         data() {
             return {
+                navActive: {
+                    home: {active: false},
+                    course: {active: false},
+                    exam: {active: false},
+                    project: {active: false},
+                    user: {active: false}
+                },
                 loginState: false
             }
         },
         methods: {
             exit() {
-                this.$axios.get('/api/passport/exit').then(()=>{
+                this.$axios.get('/api/passport/exit').then(() => {
                     window.location.reload();
-                }).catch((error)=>{
+                }).catch((error) => {
                     console.log(error);
                     window.location.reload();
                 })
             }
+        },
+        mounted() {
+            this.navActive[this.page].active = true;
         },
         beforeMount() {
             this.$axios.get('/api/passport/check-login').then((response) => {
@@ -376,7 +391,7 @@
     .nav-wrap {
         width: 100%;
         background: #fafafa;
-        border-bottom: 1px solid #eee;
+        margin-bottom: 3px;
     }
 
     .nav {
@@ -419,7 +434,7 @@
         bottom: 0;
         left: calc(50% - 30px);
         width: 60px;
-        height: 1px;
+        height: 2px;
         background: #409eff
     }
 
