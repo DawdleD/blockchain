@@ -8,9 +8,18 @@ const moment = require('moment');
 /**
  * 检查用户用户是否登录
  * */
-router.get('/check-login', (req, res) => {
-    if (req.session.loginState) {
-        res.json({status: 1});
+router.get('/check-login', async (req, res) => {
+    if (req['session'].loginState) {
+        const cmd = `select Nickname,AvatarUrl from UserInformation where UserId = ?`;
+        await mysql.query(cmd, [req['session'].userID]).then((rows) => {
+            res.json({
+                status: 1,
+                data: {
+                    nickname: rows[0]['Nickname'],
+                    avatarUrl: rows[0]['AvatarUrl']
+                }
+            });
+        });
     } else {
         res.json({status: 0});
     }
@@ -19,7 +28,7 @@ router.get('/check-login', (req, res) => {
  * 注销
  * */
 router.get('/exit', (req, res) => {
-    req.session.destroy(function (inf) {
+    req['session'].destroy(function (inf) {
         console.log(inf);
         res.json({status: 1});
     });
@@ -59,17 +68,17 @@ router.post('/register', async (req, res) => {
         await mysql.query(cmd, [phone]).then(async (rows) => {
             if (rows.length > 0)
                 res.json({status: 0, message: "该手机号已被注册"});
-            else if (req.session.smsCode !== code) {
+            else if (req['session'].smsCode !== code) {
                 res.json({status: 0, message: "验证码错误"});
             } else {
                 //随机生成用户ID
-                let UserID = Math.random().toString().slice(2, 7);
+                let userID = Math.random().toString().slice(2, 7);
                 cmd = "select * from UserPassport where UserID = ?";
-                await mysql.query(cmd, [UserID]).then(async (rows) => {
+                await mysql.query(cmd, [userID]).then(async (rows) => {
                     //如果用户ID重复则重新生成
                     while (rows.length > 0) {
-                        UserID = Math.random().toString().slice(2, 7);
-                        rows = await mysql.query(cmd, UserID);
+                        userID = Math.random().toString().slice(2, 7);
+                        rows = await mysql.query(cmd, userID);
                     }
                     cmd = `insert into UserPassport 
                     (UserID,Phone,Password,Salt,CreateTime,FailCount,AccessLevel) 
@@ -78,8 +87,9 @@ router.post('/register', async (req, res) => {
                     const encryptedPsw = encryption.encryptPassword(salt, password);  //加密密码
                     const time = new Date();  //获取当前时间
                     time.toLocaleString();
-                    await mysql.query(cmd, [UserID, phone, encryptedPsw, salt, time]).then(() => {
-                        req.session.loginState = true;
+                    await mysql.query(cmd, [userID, phone, encryptedPsw, salt, time]).then(() => {
+                        req['session'].loginState = true;
+                        req['session'].userID = userID;
                         res.json({status: 1, message: "注册成功"});
                     })
                 })
@@ -96,13 +106,13 @@ router.post('/register', async (req, res) => {
  * */
 router.post('/login', async (req, res) => {
     const code = req.body.data.verify;
-    const account = req.body.data.account;
+    const account = req.body.data['account'];
     const password = req.body.data.password;
     let cmd = `select * from UserPassport 
     where Phone = ? or Email = ?`;
-    console.log(req.session.imageCaptcha);
-    if (req.session.imageCaptcha === undefined) res.json({status: 0, message: "服务器错误"});
-    else if (code.toUpperCase() !== req.session.imageCaptcha.toUpperCase())
+    console.log(req['session'].imageCaptcha);
+    if (req['session'].imageCaptcha === undefined) res.json({status: 0, message: "服务器错误"});
+    else if (code.toUpperCase() !== req['session'].imageCaptcha.toUpperCase())
         res.json({status: 0, message: "验证码错误"});
     else {
         await mysql.query(cmd, [account, account]).then(async (rows) => {
@@ -117,6 +127,7 @@ router.post('/login', async (req, res) => {
                     });
                 } else {
                     const salt = rows[0]['Salt'];
+                    let userID = rows[0]['UserID'];
                     let failCount = rows[0]['FailCount'];
                     //如果密码不正确
                     if (rows[0]['Password'] !== encryption.encryptPassword(salt, password)) {
@@ -145,7 +156,8 @@ router.post('/login', async (req, res) => {
                         LoginTime = ?,FailCount = 0,BanTime = null`;
                         let date = moment().format('YYYY-MM-DD HH:mm:ss');
                         await mysql.query(cmd, [date]).then(() => {
-                            req.session.loginState = true;
+                            req['session'].loginState = true;
+                            req['session'].userID = userID;
                             res.json({status: 1, message: "登录成功"});
                         });
                     }
@@ -162,7 +174,7 @@ router.post('/login', async (req, res) => {
  * 重置密码路由
  * */
 router.post('/reset', async (req, res) => {
-    const account = req.body.data.account;
+    const account = req.body.data['account'];
     const password = req.body.data.password;
     const code = req.body.data.verify;
     const type = req.body.type;
@@ -172,7 +184,7 @@ router.post('/reset', async (req, res) => {
         if (rows.length > 0) {
             //用户重置密码方式
             let verifyCode =
-                (type === 'email') ? req.session.mailCode : req.session.smsCode;
+                (type === 'email') ? req['session'].mailCode : req['session'].smsCode;
             if (verifyCode !== code || code === undefined) {
                 res.json({status: 0, message: "验证码错误"});
             } else {

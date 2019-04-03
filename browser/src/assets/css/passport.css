@@ -1,248 +1,249 @@
 *, :after, :before {
-  box-sizing: border-box
+    box-sizing: border-box
 }
 
 button, input, select, textarea {
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit
 }
 
 .passport {
-  height: 100%;
-  min-height: 750px;
-  text-align: center;
-  font-size: 14px;
-  background-color: #f1f1f1;
+    height: 100%;
+    min-height: 750px;
+    text-align: center;
+    font-size: 14px;
+    background-color: #f1f1f1;
 }
 
 .passport:before {
-  content: "";
-  display: inline-block;
-  height: 85%;
-  vertical-align: middle
+    content: "";
+    display: inline-block;
+    height: 85%;
+    vertical-align: middle
 }
 
 .passport .disable, .passport .disable-gray {
-  opacity: .5;
-  pointer-events: none
+    opacity: .5;
+    pointer-events: none
 }
 
 .passport .disable-gray {
-  background-color: #969696
+    background-color: #969696
 }
 
 .passport .logo {
-  position: absolute;
-  top: 20px;
-  margin: auto;
-  width: 100%;
+    position: absolute;
+    top: 20px;
+    margin: auto;
+    width: 100%;
 }
 
 .passport .logo img {
-  width: 80px;
-  height: auto;
+    width: 80px;
+    height: auto;
 }
 
 .passport .main {
-  width: 400px;
-  margin: 100px auto 0;
-  padding: 50px 50px 50px;
-  background-color: #fff;
-  border-radius: 6px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, .1);
-  vertical-align: middle;
-  display: inline-block;
+    width: 400px;
+    margin: 100px auto 0;
+    padding: 50px 50px 50px;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, .1);
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
 }
 
 .passport .reset-title, .passport .title {
-  margin: 0 auto 50px;
-  padding: 10px;
-  font-weight: 400;
-  color: #969696;
-  font-size: 18px;
-  line-height: 1.1;
+    margin: 0 auto 50px;
+    padding: 10px;
+    font-weight: 400;
+    color: #969696;
+    font-size: 18px;
+    line-height: 1.1;
 }
 
 .passport .reset-title a, .passport .title a {
-  padding: 10px;
-  color: #969696;
-  text-decoration: none;
+    padding: 10px;
+    color: #969696;
+    text-decoration: none;
 }
 
 .passport .reset-title a:hover, .passport .title a:hover {
-  border-bottom: 2px solid #42b983;
-  text-decoration: none;
+    border-bottom: 2px solid #42b983;
+    text-decoration: none;
 }
 
 .passport .reset-title .active, .passport .title .active {
-  font-weight: 700;
-  color: #42b983;
-  border-bottom: 2px solid #42b983;
+    font-weight: 700;
+    color: #42b983;
+    border-bottom: 2px solid #42b983;
 }
 
 .passport .reset-title b, .passport .title b {
-  padding: 10px;
+    padding: 10px;
 }
 
 .passport .reset-title {
-  color: #333;
-  font-weight: 700;
+    color: #333;
+    font-weight: 700;
 }
 
 .passport form {
-  margin-bottom: 30px;
+    margin-bottom: 30px;
 }
 
 .passport form .input-prepend, .input-warn {
-  position: relative;
-  width: 100%;
+    position: relative;
+    width: 100%;
 }
 
 .passport form .input-prepend input, .input-warn input {
-  width: 100%;
-  height: 50px;
-  margin-bottom: 0;
-  padding: 4px 12px 4px 35px;
-  border-radius: 0 0 4px 4px;
-  background-color: hsla(0, 0%, 71%, .1);
-  vertical-align: middle;
-  border: 1px solid #c8c8c8;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 0;
+    padding: 4px 12px 4px 35px;
+    border-radius: 0 0 4px 4px;
+    background-color: hsla(0, 0%, 71%, .1);
+    vertical-align: middle;
+    border: 1px solid #c8c8c8;
 }
 
 .passport form .input-prepend i, .input-warn i {
-  position: absolute;
-  top: 17px;
-  left: 10px;
-  font-size: 18px;
-  color: #969696;
+    position: absolute;
+    top: 17px;
+    left: 10px;
+    font-size: 18px;
+    color: #969696;
 }
 
 .passport form .input-prepend span, .input-warn span {
-  color: #333;
+    color: #333;
 }
 
 .passport form .error-show {
-  color: #f00;
-  text-align: left;
+    color: #f00;
+    text-align: left;
 }
 
 .passport form .input-prepend .ic-show, .input-warn .ic-show {
-  top: 18px;
-  left: auto;
-  right: 8px;
-  font-size: 12px;
+    top: 18px;
+    left: auto;
+    right: 8px;
+    font-size: 12px;
 }
 
 .passport form .input-warn input {
-  border-radius: 0;
-  border-color: #f00;
+    border-radius: 0;
+    border-color: #f00;
 }
 
 .passport form .restyle {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .passport form .restyle input {
-  border-bottom: none;
-  border-radius: 4px 4px 0 0;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
 }
 
 .passport form .no-radius input {
-  border-radius: 0;
+    border-radius: 0;
 }
 
 .passport .remember-btn {
-  float: left;
-  margin: 15px 0;
+    float: left;
+    margin: 15px 0;
 }
 
 .passport .remember-btn span {
-  margin-left: 5px;
-  font-size: 15px;
-  color: #969696;
-  vertical-align: middle;
+    margin-left: 5px;
+    font-size: 15px;
+    color: #969696;
+    vertical-align: middle;
 }
 
 .passport .forget-btn {
-  float: right;
-  position: relative;
-  margin: 15px 0;
-  font-size: 14px;
+    float: right;
+    position: relative;
+    margin: 15px 0;
+    font-size: 14px;
 }
 
 .passport .forget-btn a {
-  color: #999;
-  text-decoration: none;
+    color: #999;
+    text-decoration: none;
 }
 
 .passport .forget-btn a:hover {
-  color: #333;
+    color: #333;
 }
 
 .passport .login-button, .passport .register-button {
-  margin-top: 20px;
-  width: 100%;
-  padding: 9px 18px;
-  font-size: 18px;
-  border: none;
-  border-radius: 25px;
-  color: #fff;
-  background: #42c02e;
-  cursor: pointer;
-  outline: none;
-  display: block;
-  clear: both;
+    margin-top: 20px;
+    width: 100%;
+    padding: 9px 18px;
+    font-size: 18px;
+    border: none;
+    border-radius: 25px;
+    color: #fff;
+    background: #42c02e;
+    cursor: pointer;
+    outline: none;
+    display: block;
+    clear: both;
 }
 
 .passport .login-button:hover, .passport .register-button:hover {
-  background: #3db922;
+    background: #3db922;
 }
 
 .passport .login-button {
-  background: #3194d0;
+    background: #3194d0;
 }
 
 .passport .login-button:hover {
-  background: #187cb7;
+    background: #187cb7;
 }
 
 .passport .btn-in-resend {
-  position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 100px;
-  height: 36px;
-  font-size: 13px;
-  color: #fff;
-  background-color: #42c02e;
-  border-radius: 20px;
-  line-height: 36px;
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 100px;
+    height: 36px;
+    font-size: 13px;
+    color: #fff;
+    background-color: #42c02e;
+    border-radius: 20px;
+    line-height: 36px;
 }
 
 .passport .btn-resend {
-  position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 100px;
-  height: 36px;
-  font-size: 13px;
-  color: #fff;
-  border-radius: 20px;
-  line-height: 36px;
-  background-color: #3194d0;
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 100px;
+    height: 36px;
+    font-size: 13px;
+    color: #fff;
+    border-radius: 20px;
+    line-height: 36px;
+    background-color: #3194d0;
 }
 
 .passport .btn-image{
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 100px;
-  height: 45px;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 100px;
+    height: 45px;
 }
 
 .passport .return {
-  margin-left: -8px;
-  color: #969696;
-  text-decoration: none;
+    margin-left: -8px;
+    color: #969696;
+    text-decoration: none;
 }

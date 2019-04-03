@@ -3,11 +3,19 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
-import {Carousel, CarouselItem, Message} from 'element-ui'
+import {
+    Aside, Carousel, CarouselItem, Container, Main, Message,
+    DatePicker,Upload
+} from 'element-ui'
 
+Vue.component(Aside.name, Aside);
+Vue.component(Main.name, Main);
+Vue.component(Container.name, Container);
 Vue.component(Carousel.name, Carousel);
 Vue.component(CarouselItem.name, CarouselItem);
+Vue.component(DatePicker.name, DatePicker);
 Vue.component(Message.name, Message);
+Vue.component(Upload.name,Upload);
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;
 router.beforeEach((to, from, next) => {

@@ -1,0 +1,164 @@
+*, :after, :before {
+    box-sizing: border-box
+}
+
+a {
+    color: #333;
+    text-decoration: none;
+    background: transparent;
+}
+
+.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.main {
+    padding-left: 0;
+    text-align: left;
+}
+
+.main table {
+    width: 100%;
+    background-color: transparent;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.main .base tr {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.main .base tr:first-child {
+    border: none;
+}
+
+.main .base .top-line {
+    padding-top: 0;
+}
+
+.main td {
+    padding: 20px 0;
+}
+
+.main td:first-child {
+    width: 18%;
+}
+
+.main td:last-child {
+    width: 72%;
+}
+
+.main .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
+    cursor: pointer;
+}
+
+.main .avatar img {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.main input {
+    padding: 5px 10px;
+    font-size: 15px;
+    border: 1px solid #c8c8c8;
+    border-radius: 4px;
+    background-color: hsla(0, 0%, 71%, .1);
+}
+
+.main .btn-normal {
+    font-size: 14px;
+    border: 1px solid #409eff;
+    color: #409ef0 !important;
+    cursor: pointer;
+    padding: 4px 12px;
+    font-weight: 400;
+    line-height: normal;
+    border-radius: 40px;
+    background: none;
+}
+
+.main .setting-title {
+    font-size: 15px;
+    color: #969696;
+}
+
+.main span {
+    margin: 0 20px 0 6px;
+    font-size: 15px;
+    vertical-align: middle
+}
+
+.main .label-radio {
+    margin-right: 20px;
+}
+
+.main .set-up div {
+    font-size: 15px;
+    display: inline-block;
+}
+
+.main .set-up i {
+    margin-left: 10px;
+    font-size: 12px;
+    color: #969696;
+    vertical-align: middle;
+}
+
+.main .set-up a, .main .set-up span {
+    margin-left: 3px;
+    font-size: 14px;
+    color: #969696;
+}
+
+.main .set-up a {
+    margin-left: 8px;
+    cursor: pointer;
+}
+
+.main .set-up .change-bind {
+    display: none;
+}
+
+.main .set-up:hover .change-bind {
+    display: inline-block;
+}
+
+.main .input-error {
+    margin: 0 20px 0 15px;
+    color: red;
+}
+
+.main .setting-save {
+    width: 100px;
+    margin: 30px 0 60px;
+    border-radius: 20px;
+    border: none;
+    -webkit-appearance: button;
+    cursor: pointer;
+    color: #fff;
+    background-color: #409eff;
+}

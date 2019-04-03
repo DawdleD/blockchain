@@ -76,6 +76,8 @@
         name: "Login",
         data() {
             return {
+                //进入Login时的fromName
+                fromName: '',
                 //输入框名
                 inputName: ["account", "password", "verify"],
                 //输入框是否为空
@@ -124,31 +126,17 @@
                         data: this.loginForm
                     }).then((response) => {
                         if (response.data.status === 1) {
-                            Message.success('登录成功！即将跳转到主页');
-                            // this.Notification.success({
-                            //     title: '登录成功',
-                            //     message: '登录成功！即将跳转到主页',
-                            // });
+                            Message.success('登录成功！');
                             setTimeout(() => {
-                                this.$router.push('/');
-                            }, 1000);
+                                this.$router.push({name: this.fromName});
+                            }, 500);
                         } else {
                             this.changeImage();
                             Message.error(response.data.message);
-                            // Notification.error({
-                            //     title: '登录失败',
-                            //     message: response.data.message,
-                            //     duration: 2500
-                            // });
                         }
                     }).catch((error) => {
                         console.log(error);
                         Message.warning('发生了未知错误');
-                        // Notification.warning({
-                        //     title: '警告',
-                        //     message: '发生了未知错误',
-                        //     duration: 2500
-                        // });
                     });
                 }
             },
@@ -173,10 +161,15 @@
                 this.inputCss[item] = this.prepend[item];
             }
         },
+        beforeRouteEnter(to, from, next) {
+            let name = from.name;
+            if (from.name === null || from.name === 'Register' || from.name === 'Reset')
+                name = 'Index';
+            next((vm => {
+                vm.fromName = name;
+            }));
+        }
     }
 </script>
 
-<style scoped>
-    @import "../../assets/css/passport.css";
-    @import "../../assets/css/fontawasome/css/all.min.css";
-</style>
+<style src="../../assets/css/passport.css" scoped></style>

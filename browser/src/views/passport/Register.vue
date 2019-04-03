@@ -214,7 +214,4 @@
     }
 </script>
 
-<style scoped>
-    @import "../../assets/css/passport.css";
-    @import "../../assets/css/fontawasome/css/all.min.css";
-</style>
+<style src="../../assets/css/passport.css" scoped></style>

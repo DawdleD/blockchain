@@ -1,6 +1,6 @@
 <template>
     <div id="container">
-        <header-stu :page="page"></header-stu>
+        <app-header :page="page"></app-header>
         <div class="banner-slide">
             <el-carousel trigger="click" height="400px">
                 <el-carousel-item>
@@ -349,13 +349,13 @@
                 </div>
             </div>
         </div>
-        <footer-stu></footer-stu>
+        <app-footer></app-footer>
     </div>
 </template>
 
 <script>
-    import Header from '../components/student/Header'
-    import Footer from '../components/student/Footer'
+    import Header from '../components/common/Header'
+    import Footer from '../components/common/Footer'
 
     export default {
         name: "index",
@@ -385,13 +385,10 @@
                 this.newActive.active = this.hotActive.active;
                 this.hotActive.active = temp;
             },
-            projectDown() {
-                this.canDown = false;
-            }
         },
         components: {
-            "header-stu": Header,
-            "footer-stu": Footer
+            "app-header": Header,
+            "app-footer": Footer
         }
     }
 </script>
