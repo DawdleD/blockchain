@@ -18,7 +18,7 @@
                     <router-link class="login" :to="{name:'Login'}">登录</router-link>
                     <router-link class="register" :to="{name:'Register'}">注册</router-link>
                 </div>
-                <div v-if="loginState" class="login">
+                <div v-else class="login">
                     <div class="user">
                         <div class="info">
                             <a>
@@ -30,7 +30,9 @@
                                     <a><i class="fa fa-wallet"></i> 我的钱包</a>
                                 </li>
                                 <li>
-                                    <a><i class="fa fa-cog"></i> 设置</a>
+                                    <router-link :to="{name:'personal'}">
+                                        <i class="fa fa-cog"></i> 设置
+                                    </router-link>
                                 </li>
                                 <li>
                                     <a @click="exit"><i class="fa fa-sign-out-alt"></i> 退出</a>
@@ -110,7 +112,6 @@
                             </ul>
                         </div>
                     </li>
-
                 </ul>
             </div>
         </div>
@@ -118,7 +119,7 @@
 </template>
 
 <script>
-    import Index from "../../views/Index";
+    import moment from 'moment'
 
     export default {
         name: "Header",
@@ -144,6 +145,7 @@
         methods: {
             exit() {
                 this.$axios.get('/api/passport/exit').then(() => {
+                    this.$store.commit('exit');
                     window.location.reload();
                 }).catch((error) => {
                     console.log(error);
@@ -151,22 +153,52 @@
                 })
             }
         },
+        computed: {
+            newAvatarUrl() {
+                return this.$store.state.avatarUrl;
+            },
+            newNickname() {
+                return this.$store.state.nickname;
+            }
+        },
+        watch: {
+            newAvatarUrl(val) {
+                this.avatarUrl = val;
+            },
+            newNickname(val) {
+                this.nickname = val;
+            }
+        },
         mounted() {
             this.navActive[this.page].active = true;
         },
         created() {
-            this.$axios.get('/api/passport/check-login').then((response) => {
-                this.loginState = response.data.status === 1;
-                if(this.loginState){
-                    if (response.data.data.avatarUrl !== null) {
-                        this.avatarUrl = `http://localhost:3000${response.data.data.avatarUrl}`;
-                    }
-                    this.nickname = response.data.data.nickname;
+            if (this.$store.state.loginState) {
+                let effectiveTime = this.$store.state.effectiveTime;
+                if (moment().isAfter(effectiveTime)) {
+                    this.loginState = false;
+                } else {
+                    this.loginState = true;
+                    this.avatarUrl = this.$store.state.avatarUrl;
+                    this.nickname = this.$store.state.nickname;
                 }
-            }).catch((error) => {
-                console.log(error);
-                this.loginState = false;
-            })
+            } else {
+                this.$axios.get('/api/passport/check-login').then((response) => {
+                    this.loginState = response.data.status === 1;
+                    if (this.loginState) {
+                        this.$store.commit('login',response.data.effectiveTime);
+                        if (response.data.data.avatarUrl !== null) {
+                            this.avatarUrl = `http://localhost:3000${response.data.data.avatarUrl}`;
+                            this.$store.commit('changeAvatarUrl', this.avatarUrl);
+                        }
+                        this.nickname = response.data.data.nickname;
+                        this.$store.commit('changeNickname', this.nickname);
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                    this.loginState = false;
+                })
+            }
         }
     }
 </script>
@@ -188,6 +220,10 @@
 
     li, ol, ul {
         list-style: none
+    }
+
+    a {
+        text-decoration: none;
     }
 
     .header-wrap {
@@ -392,6 +428,7 @@
 
     .header-wrap .header .login .user .dropdown-list a:hover {
         color: #409eff;
+        cursor: pointer;
     }
 
     .header-wrap .header .login .user .info:hover .dropdown-list {
@@ -489,8 +526,9 @@
         text-decoration: none;
     }
 
-    .nav .left .second li.active a, .nav .left .second li:hover a, .nav_right a:hover, .nav_right a:hover div {
+    .nav .left .second li.active a, .nav .left .second li:hover a{
         color: #409eff;
+        cursor: pointer;
     }
 
     .nav .left > li:hover .second {

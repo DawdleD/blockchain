@@ -161,4 +161,5 @@ a {
     cursor: pointer;
     color: #fff;
     background-color: #409eff;
+    outline: none;
 }

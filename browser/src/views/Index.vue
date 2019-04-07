@@ -555,7 +555,7 @@
 
     .content .course .course-fee .course-info .course-price {
         float: left;
-        color: #409eff;
+        color: #e85308;
     }
 
     .content .course .course-fee .course-info .course-free {
@@ -639,7 +639,7 @@
         margin-right: 10px;
         margin-bottom: 5px;
         float: right;
-        color: gold;
+        color: #e85308;
     }
 
     .content .project .project-container .project-info .apply-num {

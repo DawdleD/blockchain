@@ -5,17 +5,23 @@ import store from './store'
 import axios from 'axios'
 import {
     Aside, Carousel, CarouselItem, Container, Main, Message,
-    DatePicker,Upload
+    MessageBox, DatePicker, Upload, Dialog, Step, Steps
 } from 'element-ui'
-
+/* Element-Ui 插件 S*/
 Vue.component(Aside.name, Aside);
 Vue.component(Main.name, Main);
 Vue.component(Container.name, Container);
 Vue.component(Carousel.name, Carousel);
 Vue.component(CarouselItem.name, CarouselItem);
 Vue.component(DatePicker.name, DatePicker);
+Vue.component(Dialog.name, Dialog);
 Vue.component(Message.name, Message);
-Vue.component(Upload.name,Upload);
+Vue.component(MessageBox.name, MessageBox);
+Vue.component(Upload.name, Upload);
+Vue.component(Step.name, Step);
+Vue.component(Steps.name, Steps);
+/* Element-Ui 插件 E*/
+
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;
 router.beforeEach((to, from, next) => {

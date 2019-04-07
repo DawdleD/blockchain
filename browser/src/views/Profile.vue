@@ -2,9 +2,8 @@
     <div id="container">
         <app-header :page="page"></app-header>
         <div class="container-setting">
-
-                <div class="row">
-                    <el-container>
+            <div class="row">
+                <el-container>
                     <!-- 导航栏 -->
                     <el-aside>
                         <div class="aside">
@@ -54,8 +53,8 @@
                             <router-view></router-view>
                         </div>
                     </el-main>
-                    </el-container>
-                </div>
+                </el-container>
+            </div>
 
         </div>
         <app-footer></app-footer>
@@ -63,8 +62,8 @@
 </template>
 
 <script>
-    import Header from '../common/Header'
-    import Footer from '../common/Footer'
+    import Header from '../components/common/Header'
+    import Footer from '../components/common/Footer'
 
     export default {
         name: "Layout",

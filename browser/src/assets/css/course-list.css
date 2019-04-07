@@ -1,0 +1,441 @@
+a {
+    color: #333;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #409eff;
+    text-decoration: none;
+}
+
+li {
+    clear: none;
+    list-style: none;
+}
+
+.content {
+    zoom: 1;
+}
+
+.course-header {
+    width: 940px;
+    background-color: #fafafa;
+    margin-top: 15px;
+    font-size: 16px;
+    border-radius: 3px;
+}
+
+.course-system ul {
+    padding-bottom: 23px;
+    padding-left: 5px;
+    margin: 0;
+    display: table;
+}
+
+.course-system li {
+    padding-top: 23px;
+    width: 180px;
+    height: 30px;
+    line-height: 30px;
+    float: left;
+    margin-right: 7px;
+}
+
+.course-system .system-name {
+    display: inline-block;
+    padding: 0 20px;
+    width: 120px;
+    overflow: hidden;
+}
+
+.course-system .current {
+    background-color: #409eff;
+    color: #ffffff;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.course-system .system-name i {
+    margin-right: 8px;
+    top: 1px;
+    position: relative;
+}
+
+.course-type {
+    border-top: 1px solid #ddd;
+    margin: 0 55px;
+    font-size: 14px;
+}
+
+.course-type ul {
+    display: table;
+    margin: 0;
+    padding: 0;
+}
+
+.course-type li {
+    height: 50px;
+    line-height: 50px;
+    float: left;
+    margin-right: 40px;
+}
+
+.course-type .current {
+    color: #409eff;
+    pointer-events: none;
+    display: inline-block;
+}
+
+.course-body {
+    margin-top: 45px;
+    width: 940px;
+    zoom: 1;
+}
+
+.tag {
+    padding: 10px 5px;
+    border: 1px solid #ddd;
+    outline: none;
+    overflow: hidden;
+}
+
+.tag .left {
+    float: left;
+}
+
+.tag .right {
+    float: right;
+}
+
+.tag .left ul {
+    padding-left: 32px;
+    margin: 0;
+}
+
+.tag .right ul {
+    padding-right: 35px;
+    margin: 0;
+}
+
+.tag li {
+    color: #333;
+    padding: 0 15px;
+    font-size: 14px;
+    line-height: 14px;
+    cursor: pointer;
+    border-right: 1px solid #e6e6e6;
+    float: left;
+}
+
+.tag li:last-child {
+    border-right: none;
+}
+
+.tag li a:hover {
+    color: #409eff;
+}
+
+.tag li:last-child i {
+    font-size: 12px;
+}
+
+.tag .right li:last-child {
+    padding: 0 0 0 15px;
+}
+
+.tag li:last-child i.active {
+    border-color: #00a1d6 rgba(0, 0, 0, 0)
+}
+
+.tag li i {
+    margin-left: 5px;
+    position: relative;
+    font-size: 10px;
+}
+
+.tag .cur {
+    color: #409eff;
+    pointer-events: none;
+    cursor: default;
+}
+
+.sort-item i {
+    color: transparent;
+}
+
+.sort-item {
+    padding-right: 0;
+    position: relative;
+    float: left;
+    color: #222;
+    cursor: pointer;
+}
+
+.sort-item .up, .sort-item .down {
+    display: block;
+    position: absolute;
+    left: 60px;
+    margin: 0 2px;
+    width: 0;
+    height: 0;
+}
+
+.sort-item .up {
+    top: 0;
+    padding: 0;
+    border: 5px dashed rgba(0, 0, 0, 0);
+    border-top: none;
+    border-bottom: 5px solid #ddd;
+}
+
+.sort-item .down {
+    bottom: 0;
+    border: 5px dashed rgba(0, 0, 0, 0);
+    border-top: 5px solid #ddd;
+    border-bottom: none
+}
+
+.course-body .course-list {
+    margin-top: 30px;
+}
+
+.course {
+    z-index: 9;
+    margin-bottom: 0;
+    height: 150px;
+    padding: 20px 0 20px 0;
+    border-bottom: 1px solid #e6e6e6;
+    -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    cursor: pointer;
+    position: relative;
+    background-color: #fff;
+}
+
+.course:hover {
+    background-color: #f5f5f5;
+}
+
+.course:hover .left .c-img img {
+    transform: scale(1.1);
+}
+
+.course .left {
+    position: relative;
+    float: left;
+    width: 225px;
+    margin-right: -225px;
+}
+
+.course .left .c-img {
+    overflow: hidden;
+    float: left;
+}
+
+.course .left .c-img img {
+    transition: all 0.5s ease-in-out 0s;
+    vertical-align: top;
+    border: 0;
+    width: 265px;
+    height: 150px;
+}
+
+.course .right {
+    float: right;
+    width: 100%;
+}
+
+.course .right .info {
+    margin-left: 280px;
+    height: 150px;
+    position: relative;
+    text-align: left;
+}
+
+.course .right .info .title {
+    margin-top: 0;
+    line-height: 20px;
+    font-size: 16px;
+    height: 20px;
+    overflow: hidden;
+}
+
+.course .right .info .title .text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 640px;
+    display: inline-block;
+}
+
+.course .right .info .title .price {
+    padding: 3px 5px;
+    height: 14px;
+    line-height: 14px;
+    vertical-align: top;
+    font-size: 14px;
+    margin-left: 15px;
+    display: inline-block;
+    pointer-events: none;
+}
+
+.course .free {
+    color: #67c23a;
+}
+
+.course .charge {
+    color: #e85308;
+}
+
+.course .right .info .teacher {
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+.course .right .info .teacher a {
+    color: #999;
+}
+
+.course .right .info .teacher a:hover {
+    color: #409ef0;
+}
+
+.course .right .info .description {
+    font-size: 13px;
+    color: #666;
+    position: relative;
+    text-align: left;
+    line-height: 22px;
+    height: 44px;
+    overflow: hidden;
+    margin: 15px 10px 20px 0;
+}
+
+.course .right .info .description:hover {
+    color: #55b929;
+}
+
+.course .right .info .detail {
+    margin-top: 0 !important;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+.course .right .info .detail .hot {
+    font-size: 13px;
+    line-height: 15px;
+    background: transparent !important;
+    color: #999;
+    margin-right: 20px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.course .right .info .detail i {
+    margin-right: 5px;
+}
+
+.course .right .info .detail .praise {
+    margin-right: 45px;
+    margin-top: 0;
+    display: inline-block;
+    color: #e85308;
+    background: transparent !important;
+    font-size: 14px;
+    line-height: 15px;
+}
+
+.sort-page {
+    margin: 40px 0;
+    text-align: center;
+    padding-bottom: 2px;
+}
+
+.sort-page a {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.sort-page span{
+    font-size: 18px;
+}
+
+.sort-page .page-prev-btn {
+    margin-right: 3px
+}
+
+.sort-page .page-btn-dis {
+    border-color: #ededed;
+    color: #bcbcbc;
+    cursor: default !important;
+    background-color: #e3e3e3 !important
+}
+
+.sort-page .page-btn {
+    height: 38px;
+    line-height: 38px;
+    width: 64px;
+    background: #fff;
+    border: 1px solid #d9d9d9;
+    margin: 0 3px;
+    color: #333;
+    font-size: 16px;
+    border-radius: 2px
+}
+
+.sort-page .page-prev-btn {
+    margin-right: 3px
+}
+
+.sort-page .page-next-btn {
+    margin-left: 3px
+}
+
+.sort-page .page-prev-btn:hover,.sort-page .page-next-btn:hover {
+    background-color: #f1f1f1
+}
+
+.sort-page .page-btn:hover {
+    background: #f1f1f1
+}
+
+.sort-page .page-btn-cur {
+    background: #409eff;
+    border-color: #409eff;
+    color: #fff
+}
+
+.sort-page .page-btn-cur:hover {
+    background: #409eff
+}
+
+.sort-page .page-prev-btn, .sort-page .page-next-btn {
+    height: 38px;
+    line-height: 38px;
+    width: 78px;
+    background: #fff;
+    font-size: 16px;
+    border: 1px solid #d9d9d9;
+    text-align: center;
+    position: relative;
+    border-radius: 2px;
+    color: #333
+}
+
+.sort-page .page-prev-btn:before, .sort-page .page-next-btn:before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    line-height: 1
+}
+
+.sort-page .page-prev-btn i, .sort-page .page-next-btn i{
+    font-weight: 800;
+    color: #bcbcbc;
+}
+

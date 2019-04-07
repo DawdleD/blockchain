@@ -22,15 +22,16 @@
                             <input v-model="resetForm.account"
                                    v-on:keyup="checkInput(inputName[0])"
                                    type="text" placeholder="手机号">
+                            <i class="fa fa-mobile-alt"></i>
                         </label>
-                        <i v-if="accountChooseClass.phone.active" class="fa fa-mobile-alt"></i>
+
                         <!--更换验证方式-->
                         <label v-if="accountChooseClass.email.active">
                             <input v-model="resetForm.account"
                                    v-on:keyup="checkInput(inputName[0])"
                                    type="text" placeholder="邮箱">
+                            <i class="fa fa-envelope"></i>
                         </label>
-                        <i v-if="accountChooseClass.email.active" class="fa fa-envelope"></i>
                     </div>
                     <div class="error-show" v-if="inputEmpty.account">{{ inputCheck.account }}</div>
 
@@ -223,7 +224,7 @@
                     console.log(error);
                 })
             },
-            //注册按钮
+            //重置密码
             resetButtonClick: function () {
                 if (this.resetForm.account === '') this.checkInput('account');
                 else if (this.resetForm.password === '') this.checkInput('password');
