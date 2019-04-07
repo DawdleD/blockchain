@@ -16,8 +16,9 @@ router.get('/check-login', async (req, res) => {
                 status: 1,
                 data: {
                     nickname: rows[0]['Nickname'],
-                    avatarUrl: rows[0]['AvatarUrl']
-                }
+                    avatarUrl: rows[0]['AvatarUrl'],
+                },
+                effectiveTime: moment(req['session'].cookie._expires).format('YYYY-MM-DD HH:mm:ss')
             });
         });
     } else {
@@ -40,7 +41,7 @@ router.post('/check-phone', async (req, res) => {
     const phone = req.body.phone;  //手机号
     const cmd = "select * from UserPassport where Phone = ?";
     await mysql.query(cmd, [phone]).then((rows) => {
-        if (rows.length > 0) res.json({status: 1, message: "该手机号已被注册"});
+        if (rows['length'] > 0) res.json({status: 1, message: "该手机号已被注册"});
         else res.json({status: 0})
     }).catch(() => {
         res.json({status: 1, message: "服务器错误"});
@@ -66,7 +67,7 @@ router.post('/register', async (req, res) => {
         //检测手机号是否被注册
         let cmd = "select * from UserPassport where Phone = ?";
         await mysql.query(cmd, [phone]).then(async (rows) => {
-            if (rows.length > 0)
+            if (rows['length'] > 0)
                 res.json({status: 0, message: "该手机号已被注册"});
             else if (req['session'].smsCode !== code) {
                 res.json({status: 0, message: "验证码错误"});
@@ -76,7 +77,7 @@ router.post('/register', async (req, res) => {
                 cmd = "select * from UserPassport where UserID = ?";
                 await mysql.query(cmd, [userID]).then(async (rows) => {
                     //如果用户ID重复则重新生成
-                    while (rows.length > 0) {
+                    while (rows['length'] > 0) {
                         userID = Math.random().toString().slice(2, 7);
                         rows = await mysql.query(cmd, userID);
                     }
@@ -110,17 +111,21 @@ router.post('/login', async (req, res) => {
     const password = req.body.data.password;
     let cmd = `select * from UserPassport 
     where Phone = ? or Email = ?`;
-    console.log(req['session'].imageCaptcha);
     if (req['session'].imageCaptcha === undefined) res.json({status: 0, message: "服务器错误"});
     else if (code.toUpperCase() !== req['session'].imageCaptcha.toUpperCase())
         res.json({status: 0, message: "验证码错误"});
     else {
         await mysql.query(cmd, [account, account]).then(async (rows) => {
             //是否查询到用户
-            if (rows.length > 0) {
+            if (rows['length'] > 0) {
                 //首先判断用户是否被ban（禁止登录）
                 if (rows[0]['BanTime'] !== null) {
                     let date = moment(rows[0]['BanTime']).format('YYYY-MM-DD HH:mm:ss');
+                    //如果到了封禁时间，解封
+                    if (moment().isAfter(moment(rows[0]['BanTime']))) {
+                        cmd = `update UserPassport set FailCount = 0,BanTime = null`;
+                        await mysql.query(cmd, null);
+                    }
                     res.json({
                         status: 0,
                         message: `您的账户已被锁定，请于 ${date} 后登录,或重置密码解锁账号`
@@ -181,7 +186,7 @@ router.post('/reset', async (req, res) => {
     //用户是否存在
     let cmd = `select * from UserPassport where Phone = ? or Email = ?`;
     await mysql.query(cmd, [account, account]).then(async (rows) => {
-        if (rows.length > 0) {
+        if (rows['length'] > 0) {
             //用户重置密码方式
             let verifyCode =
                 (type === 'email') ? req['session'].mailCode : req['session'].smsCode;

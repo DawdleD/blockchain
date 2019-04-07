@@ -24,7 +24,7 @@ let mailOptions;
  * @param toMail 接受地址
  */
 function setMailOptions(randomNum, toMail) {
-    const htmlText = `您的动态码为：<b>${randomNum}</b>，您正在进行密码重置操作，如非本人操作，请忽略本短信！`;
+    const htmlText = `您的动态码为：<b>${randomNum}</b>，您正在进行敏感操作，如非本人操作，请忽略本短信！`;
     mailOptions = {
         from: '区块链在线学习平台 louisdewey@foxmail.com', // 发送地址
         to: toMail, // 接收地址
@@ -36,9 +36,9 @@ function setMailOptions(randomNum, toMail) {
 router.post('/', function (req, res) {
     //获取6位随机字符
     const randomNum = svgCaptcha.randomText(6);
-    req.session.mailCode = randomNum;
+    req['session'].mailCode = randomNum;
     //获取用户输入邮箱
-    const email = req.body.account;
+    const email = req.body['account'];
     //验证用户输入是否正确
     const regMail = /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/;
     if (!email.match(regMail)) {

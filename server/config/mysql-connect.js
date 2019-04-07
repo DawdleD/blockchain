@@ -3,11 +3,11 @@ const mysql = require('mysql');
 
 const pool = mysql.createPool({
     connectionLimit: 100,
-    host: 'cdb-3ta3bkhz.gz.tencentcdb.com',
-    user: 'root',
-    password: 'Dewey1998!!@@',
+    host: '47.102.97.205',
+    user: 'aliserver',
+    password: 'Dewey1998,,..',
     database: 'server',
-    port: 10061
+    port: 3306
 });
 /**
  *
