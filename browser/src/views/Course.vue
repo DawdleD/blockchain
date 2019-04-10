@@ -1,12 +1,7 @@
 <template>
     <div id="container">
         <header-course :page="page"></header-course>
-        <div class="course-all">
-            <div class="course-bread">
-                <a>全部课程</a>
-                <span><i class="fas fa-angle-right"></i></span>
-                <a>计算机</a>
-            </div>
+        <div class="course-all clearfix">
             <router-view></router-view>
         </div>
         <footer-course></footer-course>
@@ -47,6 +42,13 @@
         margin-left: auto;
         padding-left: 15px;
         padding-right: 15px;
+        clear: both;
+    }
+
+    .clearfix:after{
+        content: "";
+        display: table;
+        clear: both;
     }
 
     .course-all .course-bread {

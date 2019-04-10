@@ -19,7 +19,8 @@ const passportRouter = require('./routes/passport/passport');
 const svgCaptcha = require('./config/image-captcha');
 /*  个人中心模块  */
 const profilePersonal = require('./routes/profile/personal');
-
+/* 课程模块 */
+const courseList = require('./routes/course/course-list');
 const app = express();
 
 // view engine setup
@@ -68,7 +69,9 @@ app.use('/passport', express.static(path.join(__dirname, 'public')));
 /*  个人中心模块路由  */
 app.use('/profile/personal', profilePersonal);
 app.use('/profile', express.static(path.join(__dirname, 'public')));
-
+/* 课程模块路由 */
+app.use('/course/list',courseList);
+app.use('/course', express.static(path.join(__dirname, 'public')));
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));

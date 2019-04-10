@@ -1,9 +1,9 @@
 <template>
     <div class="passport">
         <div class="logo">
-            <a href="/">
+            <router-link to="/">
                 <img alt="Logo" src="../../assets/image/logo-bcs.png">
-            </a>
+            </router-link>
         </div>
         <div class="main">
             <h4 class="title">

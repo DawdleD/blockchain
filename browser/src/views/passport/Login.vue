@@ -1,9 +1,9 @@
 <template>
     <div class="passport">
         <div class="logo">
-            <a href="/">
+            <router-link to="/">
                 <img alt="Logo" src="../../assets/image/logo-bcs.png">
-            </a>
+            </router-link>
         </div>
         <div class="main">
             <h4 class="title">
@@ -76,8 +76,8 @@
         name: "Login",
         data() {
             return {
-                //进入Login时的fromName
-                fromName: '',
+                //进入Login时的fromPath
+                fromPath: '',
                 //输入框名
                 inputName: ["account", "password", "verify"],
                 //输入框是否为空
@@ -128,7 +128,7 @@
                         if (response.data.status === 1) {
                             Message.success('登录成功！');
                             setTimeout(() => {
-                                this.$router.push({name: this.fromName});
+                                this.$router.push(this.fromPath);
                             }, 500);
                         } else {
                             this.changeImage();
@@ -162,11 +162,11 @@
             }
         },
         beforeRouteEnter(to, from, next) {
-            let name = from.name;
+            let path = from.fullPath;
             if (from.name === null || from.name === 'Register' || from.name === 'Reset')
-                name = 'Index';
+                path = '/';
             next((vm => {
-                vm.fromName = name;
+                vm.fromPath = path;
             }));
         }
     }

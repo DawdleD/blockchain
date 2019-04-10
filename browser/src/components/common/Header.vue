@@ -57,20 +57,10 @@
                         </div>
                         <div class="second">
                             <ul>
-                                <li>
-                                    <a>区块链</a>
-                                </li>
-                                <li>
-                                    <a>以太坊</a>
-                                </li>
-                                <li>
-                                    <a>智能合约</a>
-                                </li>
-                                <li>
-                                    <a>以太坊钱包</a>
-                                </li>
-                                <li>
-                                    <a>以太坊编程</a>
+                                <li v-for="system in courseSystem" :key="system.id">
+                                    <router-link :to="`/course/list?system=${system.id}`">
+                                        {{system.name}}
+                                    </router-link>
                                 </li>
                             </ul>
                         </div>
@@ -139,7 +129,8 @@
                     project: {active: false},
                     profile: {active: false}
                 },
-                loginState: false
+                loginState: false,
+                courseSystem: null
             }
         },
         methods: {
@@ -186,7 +177,7 @@
                 this.$axios.get('/api/passport/check-login').then((response) => {
                     this.loginState = response.data.status === 1;
                     if (this.loginState) {
-                        this.$store.commit('login',response.data.effectiveTime);
+                        this.$store.commit('login', response.data.effectiveTime);
                         if (response.data.data.avatarUrl !== null) {
                             this.avatarUrl = `http://localhost:3000${response.data.data.avatarUrl}`;
                             this.$store.commit('changeAvatarUrl', this.avatarUrl);
@@ -199,6 +190,12 @@
                     this.loginState = false;
                 })
             }
+            this.$axios.get('/api/course/list/system').then((response) => {
+                if (response.data.status === 1) this.courseSystem = response.data.data;
+                else console.log(response.data.message)
+            }).catch((err) => {
+                console.log(err);
+            })
         }
     }
 </script>
@@ -526,7 +523,7 @@
         text-decoration: none;
     }
 
-    .nav .left .second li.active a, .nav .left .second li:hover a{
+    .nav .left .second li.active a, .nav .left .second li:hover a {
         color: #409eff;
         cursor: pointer;
     }

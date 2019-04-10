@@ -9,6 +9,7 @@ import Reset from './views/passport/Reset'
 
 import Course from './views/Course'
 import CourseList from './components/course/List'
+import CourseInformation from './components/course/Information'
 
 import Profile from './views/Profile'
 import ProfileCourse from './components/profile/Course'
@@ -27,7 +28,13 @@ export default new Router({
         {path: '/home', name: 'Home', component: Home},
         {
             path: '/course', name: 'Course', component: Course, children: [
-                {path: '/course/list', name: 'CourseList', component: CourseList},
+                {path: '/course/list', name: 'CourseList', component: CourseList, meta: {title: '在线学习'}},
+                {
+                    path: '/course/:courseID/information',
+                    name: 'CourseInformation',
+                    component: CourseInformation,
+                    meta: {title: '课程信息'}
+                }
             ]
         },
         {path: '/passport/login', name: 'Login', component: Login, meta: {title: '登录'}},

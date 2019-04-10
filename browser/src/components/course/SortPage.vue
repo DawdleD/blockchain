@@ -257,17 +257,8 @@
                 else if (pageSum - pageIndex === 1) this.pageShow[5].cur = true;
                 else this.pageShow[pageIndex - 1].cur = true;
             },
-        },
-        computed: {
-            getPageIndex() {
-                return this.$route.query.page === undefined ? 1 : this.$route.query.page;
-            }
-        },
-        watch: {
-            getPageIndex(val) {
-                this.pageIndex = val;
-            },
-            pageIndex() {
+            //分页
+            sortPage() {
                 let pageSum = parseInt(this.pageSum), pageIndex = parseInt(this.pageIndex);
                 if (pageSum > 7) this.sortPageMax();
                 else this.sortPageMin();
@@ -290,10 +281,51 @@
                 }
             }
         },
+        computed: {
+            getPageIndex() {
+                return this.$route.query.page === undefined ? 1 : this.$route.query.page;
+            },
+            getPageUrl() {
+                return this.page.pageUrl;
+            }
+        },
+        watch: {
+            getPageIndex(val) {
+                this.pageIndex = val;
+            },
+            getPageUrl(val) {
+                this.pageUrl = val;
+                this.$axios.post(`/api/course/list/count`, {
+                    system: this.$route.query.system,
+                    type: this.$route.query.type,
+                    filter: this.$route.query.filter
+                }).then((response) => {
+                    if (response.data.status === 1) {
+                        this.pageSum = response.data['count'];
+                        this.sortPage();
+                    } else console.log(response.data.message);
+                }).catch((err) => {
+                    console.log(err);
+                });
+            },
+            pageIndex() {
+                this.sortPage();
+            }
+        },
         created() {
-            this.pageIndex = this.$route.query.page === undefined ? 1 : this.$route.query.page;
-            this.pageSum = this.page.pageSum;
-            this.pageUrl = this.page.pageUrl;
+            this.$axios.post(`/api/course/list/count`, {
+                system: this.$route.query.system,
+                type: this.$route.query.type,
+                filter: this.$route.query.filter
+            }).then((response) => {
+                if (response.data.status === 1) {
+                    this.pageSum = response.data['count'];
+                    this.pageIndex = this.$route.query.page === undefined ? 1 : this.$route.query.page;
+                    this.pageUrl = this.page.pageUrl;
+                } else console.log(response.data.message);
+            }).catch((err) => {
+                console.log(err);
+            });
         }
     }
 </script>
