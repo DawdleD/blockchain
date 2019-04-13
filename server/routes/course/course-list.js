@@ -11,7 +11,7 @@ router.get('/system', async (req, res) => {
     const cmd = `select * from CourseSystem`;
     await mysql.query(cmd, null).then((rows) => {
         let system = [];
-        for (let row in rows) {
+        for (let row in rows) if (rows.hasOwnProperty(row)) {
             system.push({
                 id: rows[row]['SystemID'],
                 name: rows[row]['SystemName']
@@ -37,10 +37,11 @@ router.get('/type', async (req, res) => {
         const cmd = `select TypeID,TypeName from CourseType where SystemID = ?`;
         await mysql.query(cmd, [systemID]).then((rows) => {
             let type = [];
-            for (let row in rows) type.push({
-                id: rows[row]['TypeID'],
-                name: rows[row]['TypeName']
-            });
+            for (let row in rows) if (rows.hasOwnProperty(row))
+                type.push({
+                    id: rows[row]['TypeID'],
+                    name: rows[row]['TypeName']
+                });
             res.json({
                 status: 1,
                 data: type
