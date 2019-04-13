@@ -25,6 +25,7 @@ router.get('/check-login', async (req, res) => {
         res.json({status: 0});
     }
 });
+
 /**
  * 注销
  * */
@@ -34,6 +35,7 @@ router.get('/exit', (req, res) => {
         res.json({status: 1});
     });
 });
+
 /**
  * 检查用户手机号是否已被注册
  * */
@@ -47,6 +49,7 @@ router.post('/check-phone', async (req, res) => {
         res.json({status: 1, message: "服务器错误"});
     })
 });
+
 /**
  * 注册路由
  * post
@@ -101,6 +104,7 @@ router.post('/register', async (req, res) => {
         });
     }
 });
+
 /**
  * 登录路由
  * post
@@ -175,6 +179,7 @@ router.post('/login', async (req, res) => {
         });
     }
 });
+
 /**
  * 重置密码路由
  * */
@@ -207,4 +212,5 @@ router.post('/reset', async (req, res) => {
         res.json({status: 0, message: "服务器错误"})
     })
 });
+
 module.exports = router;

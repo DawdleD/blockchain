@@ -1,19 +1,26 @@
 <template>
     <div id="header">
+        <!--第一排布局 S-->
         <div class="header-wrap">
             <div class="header">
+                <!--Logo S-->
                 <div class="logo">
                     <router-link class="active" to="/">
                         <img src="../../assets/image/logo-text.png" alt="">
                     </router-link>
                 </div>
-                <div class="search clearfix">
+                <!--Logo E-->
+                <!--搜索框 S-->
+                <div class="search clearfix" v-if="page === 'course' || page === 'project'">
                     <i class="fa fa-search"></i>
                     <label>
-                        <input type="text" placeholder="你想搜索的内容">
+                        <input type="text" :placeholder="`搜索${page==='course'?'课程':'项目'}`"
+                               v-model="searchContent" @keydown.enter="search">
                     </label>
-                    <div class="btn-search">搜索</div>
+                    <div class="btn-search" @click="search">搜索</div>
                 </div>
+                <!--搜索框 E-->
+                <!--登录注册模块 S-->
                 <div v-if="!loginState" class="un-login clearfix">
                     <router-link class="login" :to="{name:'Login'}">登录</router-link>
                     <router-link class="register" :to="{name:'Register'}">注册</router-link>
@@ -41,8 +48,11 @@
                         </div>
                     </div>
                 </div>
+                <!--登录注册模块 E-->
             </div>
         </div>
+        <!--第一排布局 E-->
+        <!--第二排布局 S-->
         <div class="nav-wrap">
             <div class="nav">
                 <ul class="left">
@@ -105,6 +115,7 @@
                 </ul>
             </div>
         </div>
+        <!--第二排布局 E-->
     </div>
 </template>
 
@@ -130,7 +141,8 @@
                     profile: {active: false}
                 },
                 loginState: false,
-                courseSystem: null
+                courseSystem: null,
+                searchContent: '',
             }
         },
         methods: {
@@ -142,6 +154,10 @@
                     console.log(error);
                     window.location.reload();
                 })
+            },
+            search() {
+                let url = this.page === 'course' ? `/course/list/${this.searchContent}` : '';
+                this.$router.push(url);
             }
         },
         computed: {
@@ -278,8 +294,9 @@
         z-index: 1;
         left: 35px;
         width: 267px;
-        height: 90%;
+        height: 95%;
         border: 0;
+        outline: none;
         background: #409eff;
         color: #fff;
         font: inherit;
@@ -436,7 +453,6 @@
     .nav-wrap {
         width: 100%;
         background: #fafafa;
-        margin-bottom: 3px;
     }
 
     .nav {

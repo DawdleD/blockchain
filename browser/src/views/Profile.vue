@@ -83,15 +83,25 @@
         beforeRouteEnter(to, from, next) {
             let type = to.name;
             next((vm => {
-                vm.active[type] = true;
+                vm.$axios.get('/api/passport/check-login').then((response) => {
+                    if (response.data.status !== 1) {
+                        vm.$router.push('/passport/login');
+                    } else {
+                        vm.active[type] = true;
+                    }
+                })
             }));
         },
         beforeRouteUpdate(to, from, next) {
-            let type = from.name;
-            this.active[type] = false;
-            type = to.name;
-            this.active[type] = true;
-            next();
+            if (this.$store.state.loginState) {
+                let type = from.name;
+                this.active[type] = false;
+                type = to.name;
+                this.active[type] = true;
+                next();
+            } else {
+                next('/passport/login')
+            }
         },
     }
 </script>

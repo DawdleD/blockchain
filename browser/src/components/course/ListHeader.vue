@@ -12,7 +12,7 @@
                         </router-link>
                     </li>
                     <li v-for="system in systems" :key="system.id">
-                        <router-link :to="`/course/list?system=${system.id}`">
+                        <router-link :to="`${$route.path}?system=${system.id}`">
                         <span :class="{'system-name':true, current:system.id.toString() === $route.query.system}">
                             {{system.name}}
                         </span>
@@ -25,12 +25,12 @@
             <div class="course-type" v-if="$route.query.system !== undefined">
                 <ul>
                     <li>
-                        <router-link :to="`/course/list?system=${$route.query.system}`">
+                        <router-link :to="`${$route.path}?system=${$route.query.system}`">
                             <span :class="{current:$route.query.type === undefined}">全部</span>
                         </router-link>
                     </li>
                     <li v-for="type in types" :key="type.id">
-                        <router-link :to="`/course/list?system=${$route.query.system}&type=${type.id}`">
+                        <router-link :to="`${$route.path}?system=${$route.query.system}&type=${type.id}`">
                         <span :class="{current:type.id.toString() === $route.query.type}">
                             {{type.name}}
                         </span>

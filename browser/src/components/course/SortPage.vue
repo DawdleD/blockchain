@@ -298,10 +298,12 @@
                 this.$axios.post(`/api/course/list/count`, {
                     system: this.$route.query.system,
                     type: this.$route.query.type,
-                    filter: this.$route.query.filter
+                    filter: this.$route.query.filter,
+                    search:this.$route.params.search
                 }).then((response) => {
                     if (response.data.status === 1) {
-                        this.pageSum = response.data['count'];
+                        const count = response.data['count'];
+                        this.pageSum = count % 10 === 0 ? Math.floor(count / 10) : Math.floor(count / 10) + 1;
                         this.sortPage();
                     } else console.log(response.data.message);
                 }).catch((err) => {
@@ -313,13 +315,16 @@
             }
         },
         created() {
+            /* 获取总数，分页需要 */
             this.$axios.post(`/api/course/list/count`, {
                 system: this.$route.query.system,
                 type: this.$route.query.type,
-                filter: this.$route.query.filter
+                filter: this.$route.query.filter,
+                search:this.$route.params.search
             }).then((response) => {
                 if (response.data.status === 1) {
-                    this.pageSum = response.data['count'];
+                    const count = response.data['count'];
+                    this.pageSum = count % 10 === 0 ? Math.floor(count / 10) : Math.floor(count / 10) + 1;
                     this.pageIndex = this.$route.query.page === undefined ? 1 : this.$route.query.page;
                     this.pageUrl = this.page.pageUrl;
                 } else console.log(response.data.message);

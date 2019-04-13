@@ -28,7 +28,8 @@ export default new Router({
         {path: '/home', name: 'Home', component: Home},
         {
             path: '/course', name: 'Course', component: Course, children: [
-                {path: '/course/list', name: 'CourseList', component: CourseList, meta: {title: '在线学习'}},
+                {path: '/course/list', name: 'CourseListSearch', component: CourseList, meta: {title: '在线学习'}},
+                {path: '/course/list/:search', name: 'CourseList', component: CourseList, meta: {title: '在线学习'}},
                 {
                     path: '/course/:courseID/information',
                     name: 'CourseInformation',
@@ -42,7 +43,13 @@ export default new Router({
         {path: '/passport/reset', name: 'Reset', component: Reset, meta: {title: '重置密码'}},
         {path: '/', name: 'Index', component: Index, meta: {title: "以太坊在线学习平台"}},
         {
-            path: '/profile', name: 'Profile', component: Profile, children: [
+            path: '/profile', name: 'Profile', component: Profile,
+            beforeRouteEnter(to,from,next){
+              if($store.state.loginState){
+
+              }
+            },
+            children: [
                 {path: '/profile/personal', name: 'personal', component: ProfilePersonal, meta: {title: '个人信息'}},
                 {path: '/profile/wallet', name: 'wallet', component: ProfileWallet, meta: {title: '我的钱包'}},
                 {path: '/profile/course', name: 'course', component: ProfileCourse, meta: {title: '我的课程'}},

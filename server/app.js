@@ -21,6 +21,8 @@ const svgCaptcha = require('./config/image-captcha');
 const profilePersonal = require('./routes/profile/personal');
 /* 课程模块 */
 const courseList = require('./routes/course/course-list');
+const courseInformation = require('./routes/course/course-information');
+
 const app = express();
 
 // view engine setup
@@ -71,6 +73,7 @@ app.use('/profile/personal', profilePersonal);
 app.use('/profile', express.static(path.join(__dirname, 'public')));
 /* 课程模块路由 */
 app.use('/course/list',courseList);
+app.use('/course/information',courseInformation);
 app.use('/course', express.static(path.join(__dirname, 'public')));
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

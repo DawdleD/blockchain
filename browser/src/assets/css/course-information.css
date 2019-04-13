@@ -1,0 +1,511 @@
+.course-banner {
+    padding: 20px 0 30px;
+    background: #fff;
+    min-height: 400px;
+}
+
+.inner-center {
+    width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+.inner-center .course-img-text {
+    min-height: 360px;
+    position: relative;
+}
+
+.course-img-text .course-img-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.course-img-left img {
+    border: 0;
+    width: 600px;
+    height: 338px;
+    vertical-align: middle;
+}
+
+.course-img-text .course-text-right {
+    margin-left: 630px;
+    width: 570px;
+    text-align: left;
+}
+
+.course-text-right .text-title {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    font-size: 22px;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    font-weight: 400;
+}
+
+.course-text-right .enroll-info:after {
+    display: block;
+    visibility: hidden;
+}
+
+.enroll-info .enroll-course-info {
+    padding: 15px;
+    margin-bottom: 30px;
+    background-color: #f5f5f5;
+}
+
+.enroll-course-info .teacher-name {
+    margin-bottom: 8px;
+    color: #409eff;
+    font-size: 14px;
+}
+
+.enroll-course-info .workload {
+    background: transparent;
+    line-height: 32px;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.enroll-course-info .course-time {
+    margin-bottom: 8px;
+    color: #67c23a;
+    font-size: 12px;
+}
+
+.course-time .start-time {
+    float: left;
+}
+
+.course-time .finish-time {
+    float: right;
+}
+
+.enroll-info .enroll {
+    margin-top: 10px;
+}
+
+.enroll .course-apply {
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #999999;
+}
+
+.enroll .enroll-apply-btn {
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.enroll-apply-btn .enroll-button {
+    border-radius: 4px;
+    height: 52px;
+    line-height: 52px;
+    font-size: 18px;
+    background-color: #409eff;
+    width: 220px;
+    margin: 0;
+    overflow: visible;
+    cursor: pointer;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0 12px;
+    border: 1px solid #409eff;
+    color: white;
+}
+
+.course-content .info-main {
+    display: block;
+}
+
+.info-main .main {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 30px 0;
+}
+
+.info-main .main .tabs {
+    margin-right: 340px;
+    padding: 0 20px 30px;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.tabs .tabs-title-bar {
+    height: 45px;
+    margin-bottom: 20px;
+    margin-left: -20px;
+}
+
+.tabs-title-bar .tabs-title {
+    margin-top: 0;
+    border-top: 5px solid #fff;
+    line-height: 50px;
+    padding: 0 40px;
+    font-size: 16px;
+    float: left;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.tabs-title-bar .active {
+    color: #409eff;
+    border-top-color: #409eff;
+}
+
+.tabs .tabs-content {
+    display: block;
+    text-align: left;
+}
+
+.tabs-content .chapter-list, .tabs-content .file-list {
+    padding-top: 20px !important;
+    padding-bottom: 1px;
+}
+
+.hide {
+    display: none;
+}
+
+.disable {
+    cursor: default;
+}
+
+.chapter-list .chapter-item, .file-list .file-item {
+    margin-bottom: 10px;
+}
+
+.chapter-item .chapter-title, .file-item .file-title {
+    margin-bottom: 5px;
+    padding-top: 5px;
+    line-height: 40px;
+    height: 40px;
+    position: relative;
+}
+
+.chapter-title span, .file-title span {
+    width: 42px;
+    margin-left: 22px;
+    float: left;
+    color: #000;
+    font-size: 20px;
+}
+
+.chapter-title h3, .file-title h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.chapter-item .chapter-course-list, .file-item .file-course-list {
+    margin: 0 10px;
+    font-size: 14px;
+}
+
+.chapter-course-list .chapter-course-item, .file-course-list .file-course-item {
+    position: relative;
+    line-height: 50px;
+    padding-left: 53px;
+    display: block;
+    width: 100%;
+    color: #333;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+    margin-bottom: 20px;
+    text-decoration: none;
+}
+
+.chapter-course-item i, .file-course-item i {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 53px;
+    text-align: center;
+    font-size: 24px;
+    color: #a3d2f8;
+    margin-top: -12px;
+}
+
+.chapter-course-item .course-item-title, .file-course-item .course-item-title {
+    margin: 0;
+}
+
+.course-item-title .text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-wrap: normal;
+}
+
+.course-item-title .duration {
+    color: #999;
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.tabs-content .course-details {
+    padding: 20px 20px 1px;
+}
+
+.course-details .details-title {
+    padding: 0 0 10px 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.details-title i {
+    color: #409eff;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.course-details .details-content {
+    margin-bottom: 50px;
+    position: relative;
+}
+
+.details-content .details-text {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    text-align: left;
+    color: #666;
+    line-height: 22px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.details-text p {
+    white-space: normal;
+}
+
+.details-text span {
+    font-size: 14px;
+}
+
+.tabs-content .course-comment {
+    padding: 20px 0 60px 20px;
+}
+
+.course-comment .comment-head {
+    margin-bottom: 14px;
+    height: 64px;
+}
+
+.comment-head .rating-scores {
+    line-height: 64px;
+    font-size: 48px;
+    width: 73px;
+    color: #ffb200;
+    font-weight: bold;
+    margin-right: 15px;
+    float: left;
+}
+
+.comment-head .rating {
+    width: 150px;
+    margin-top: 12px;
+    float: left;
+}
+
+.rating .rating-stars {
+    height: 25px;
+}
+
+.stars {
+    display: inline-block;
+    position: relative;
+    white-space: nowrap;
+}
+
+.rating-stars .stars .star {
+    font-size: 18px;
+    display: inline-block;
+    margin-right: 9px;
+    overflow: hidden;
+}
+
+.rating-stars .stars .dislike {
+    font-size: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.rating-stars .stars .dislike i {
+    color: #dddddd;
+}
+
+.rating-stars .stars .like {
+    font-size: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.rating-stars .stars .like i {
+    color: #ffb200;
+}
+
+.rating .rating-sum {
+    font-size: 13px;
+    color: #999999;
+}
+
+.comment-head .comment-button-area {
+    margin-top: 12px;
+    float: right;
+}
+
+.comment-head .comment-button {
+    width: 96px;
+    background-color: #409eff;
+    color: white;
+    margin: 0;
+    cursor: pointer;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0 12px;
+    height: 34px;
+    line-height: 34px;
+    border: 1px solid #409eff;
+    font-size: 14px;
+}
+
+.course-comment .comment-filter {
+    text-align: left;
+}
+
+.comment-filter .filter-box {
+    text-align: center;
+    display: inline-block;
+    padding: 7px 15px;
+    border: 1px solid #ededed;
+    color: #999;
+    font-size: 13px;
+}
+
+.filter-box .selected {
+    color: #409eff;
+}
+
+.filter-box span {
+    border-right: 1px solid #ededed;
+    cursor: pointer;
+    padding: 0 25px;
+}
+
+.filter-box span:first-child {
+    padding-left: 0;
+}
+
+.filter-box span:last-child {
+    border-right: 0;
+}
+
+.course-comment .comment-list {
+    outline: none;
+}
+
+.comment-list .comment-list-item {
+    padding-top: 30px;
+    font-size: 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.comment-list-item .comment-list-item-avatar {
+    float: left;
+    width: 40px;
+}
+
+.comment-list-item-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    vertical-align: top;
+}
+
+.comment-list-item .comment-list-item-body {
+    float: right;
+    padding-bottom: 30px;
+    margin-left: 17px;
+    width: calc(-58px + 100%);
+}
+
+.comment-list-item-body .user-info {
+    margin-bottom: 9px;
+}
+
+.comment-list-item-body .user-info a {
+    color: #333;
+    font-size: 13px;
+    text-decoration: none;
+    margin-right: 10px;
+    float: left;
+}
+
+.user-info .user-info-rating {
+    font-size: 13px;
+}
+
+.user-info .user-info-rating i {
+    margin-right: 5px;
+    color: #ffb200;
+}
+
+.comment-list-item-body .comment-content {
+    color: #666;
+    font-size: 14px;
+    position: relative;
+    line-height: 24px;
+    margin-bottom: 10px;
+}
+
+.comment-list-item-body .comment-time {
+    color: #999;
+    font-size: 13px;
+}
+
+.comment-list .page-sort {
+    text-align: center;
+    padding-top: 35px;
+}
+
+.info-main .main-aside {
+    float: left;
+    width: 330px;
+    box-sizing: border-box;
+    margin: 30px 0 30px -330px;
+    display: block;
+}
+
+.main-aside .aside-blocks {
+    padding: 0 30px;
+    background-color: #fff;
+}
+
+.aside-blocks .exam-schedule {
+    padding: 20px 0 35px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.exam-schedule .exam-title {
+    font-size: 16px;
+    color: #409eff;
+    text-align: center;
+}
+
+.exam-schedule .exam-time {
+    margin-top: 20px;
+    color: #67c23a;
+}
+
+.exam-schedule .exam-text{
+    margin-top: 20px;
+    color: #666666;
+}

@@ -23,6 +23,7 @@ router.get('/system', async (req, res) => {
         res.json({status: 0, message: '服务器错误'});
     })
 });
+
 /**
  * 获取课程类别
  */
@@ -51,6 +52,7 @@ router.get('/type', async (req, res) => {
     }
 
 });
+
 /**
  * 插入（测试用）
  */
@@ -90,6 +92,7 @@ router.get('/insert', async (req, res) => {
         value: "正在执行"
     })
 });
+
 /**
  * 获取课程页数
  */
@@ -97,12 +100,13 @@ router.post('/count', async (req, res) => {
     const system = req.body['system'];
     const type = req.body['type'];
     const filter = req.body['filter'];
-    const countCmd = courseSelect.getCourseSql(system, type, filter, null, null, true);
+    const search = req.body['search'];
+    const countCmd = courseSelect.getCourseSql(system, type, filter, null, null, true, search);
     await mysql.query(countCmd, [system, type]).then((rows) => {
         let courseSum = rows[0]['count(*)'];
         res.json({
             status: 1,
-            count: courseSum % 10 === 0 ? Math.floor(courseSum / 10) : Math.floor(courseSum / 10) + 1
+            count: courseSum
         })
     }).catch((err) => {
         console.log(err);
@@ -112,6 +116,7 @@ router.post('/count', async (req, res) => {
         })
     })
 });
+
 /**
  * 获取课程
  */
@@ -121,7 +126,7 @@ router.get('/', async (req, res) => {
     const filter = req.query['filter'];
     const sort = req.query['sort'];
     const page = req.query['page'];
-    const cmd = courseSelect.getCourseSql(system, type, filter, sort, page, false);
+    const cmd = courseSelect.getCourseSql(system, type, filter, sort, page, false, undefined);
     await mysql.query(cmd, [system, type]).then((rows) => {
         res.json({
             status: 1,
@@ -135,6 +140,7 @@ router.get('/', async (req, res) => {
         })
     });
 });
+
 /**
  * 获取推荐课程
  */
@@ -154,4 +160,30 @@ router.get('/recommend', async (req, res) => {
         })
     })
 });
+
+/**
+ * 搜索课程
+ */
+router.get('/:search', async (req, res) => {
+    const search = req.params.search;
+    const system = req.query['system'];
+    const type = req.query['type'];
+    const filter = req.query['filter'];
+    const sort = req.query['sort'];
+    const page = req.query['page'];
+    const cmd = courseSelect.getCourseSql(system, type, filter, sort, page, false, search);
+    await mysql.query(cmd, [system, type]).then((rows) => {
+        res.json({
+            status: 1,
+            course: rows
+        })
+    }).catch((err) => {
+        console.log(err);
+        res.json({
+            status: 0,
+            message: '服务器错误'
+        })
+    });
+});
+
 module.exports = router;

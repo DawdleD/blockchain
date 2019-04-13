@@ -398,7 +398,7 @@
                     Message.error(error);
                 })
             }
-        }
+        },
     }
 </script>
 <!--本页面用src导入方式防止全局引用-->

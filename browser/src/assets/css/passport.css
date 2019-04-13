@@ -72,14 +72,14 @@ button, input, select, textarea {
 }
 
 .passport .reset-title a:hover, .passport .title a:hover {
-    border-bottom: 2px solid #42b983;
+    border-bottom: 2px solid #409eff;
     text-decoration: none;
 }
 
 .passport .reset-title .active, .passport .title .active {
     font-weight: 700;
-    color: #42b983;
-    border-bottom: 2px solid #42b983;
+    color: #409eff;
+    border-bottom: 2px solid #409eff;
 }
 
 .passport .reset-title b, .passport .title b {
@@ -189,7 +189,7 @@ button, input, select, textarea {
     border: none;
     border-radius: 25px;
     color: #fff;
-    background: #42c02e;
+    background: #409eff;
     cursor: pointer;
     outline: none;
     display: block;
@@ -197,7 +197,7 @@ button, input, select, textarea {
 }
 
 .passport .login-button:hover, .passport .register-button:hover {
-    background: #3db922;
+    background: #409eff;
 }
 
 .passport .login-button {
@@ -216,7 +216,7 @@ button, input, select, textarea {
     height: 36px;
     font-size: 13px;
     color: #fff;
-    background-color: #42c02e;
+    background-color: #409eff;
     border-radius: 20px;
     line-height: 36px;
 }

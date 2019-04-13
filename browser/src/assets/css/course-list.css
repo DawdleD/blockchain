@@ -14,12 +14,62 @@ li {
     list-style: none;
 }
 
-.content {
-    zoom: 1;
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
-.content .content-left {
+.course-list {
+    background-color: #fff;
+}
+
+.course-content {
+    zoom: 1;
+    width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.course-content .content-left {
     width: 940px;
+    float: left;
+}
+
+.content-left .search-bar {
+    padding: 20px 0;
+}
+
+.search-bar span {
+    color: #409eff;
+    font-style: normal;
+}
+
+.search-bar .keywords {
+    border: 1px dotted #409eff;
+    height: 23px;
+    line-height: 23px;
+    padding: 0 26px 0 8px;
+    position: relative;
+    float: left;
+}
+
+.search-bar .keywords .button-clear {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 23px;
+    width: 20px;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: center;
+    color: #409eff;
+}
+
+.search-bar .search-result {
+    height: 25px;
+    line-height: 25px;
+    margin-left: 20px;
     float: left;
 }
 
@@ -96,32 +146,32 @@ li {
     zoom: 1;
 }
 
-.tag {
+.course-tag {
     padding: 10px 5px;
     border: 1px solid #ddd;
     outline: none;
     overflow: hidden;
 }
 
-.tag .left {
+.course-tag .left {
     float: left;
 }
 
-.tag .right {
+.course-tag .right {
     float: right;
 }
 
-.tag .left ul {
+.course-tag .left ul {
     padding-left: 32px;
     margin: 0;
 }
 
-.tag .right ul {
+.course-tag .right ul {
     padding-right: 35px;
     margin: 0;
 }
 
-.tag li {
+.course-tag li {
     color: #333;
     padding: 0 15px;
     font-size: 14px;
@@ -131,33 +181,33 @@ li {
     float: left;
 }
 
-.tag li:last-child {
+.course-tag li:last-child {
     border-right: none;
 }
 
-.tag li a:hover {
+.course-tag li a:hover {
     color: #409eff;
 }
 
-.tag li:last-child i {
+.course-tag li:last-child i {
     font-size: 12px;
 }
 
-.tag .right li:last-child {
+.course-tag .right li:last-child {
     padding: 0 0 0 15px;
 }
 
-.tag li:last-child i.active {
+.course-tag li:last-child i.active {
     border-color: #00a1d6 rgba(0, 0, 0, 0)
 }
 
-.tag li i {
+.course-tag li i {
     margin-left: 5px;
     position: relative;
     font-size: 10px;
 }
 
-.tag .cur {
+.course-tag .cur {
     color: #409eff;
 }
 
@@ -201,7 +251,32 @@ li {
     margin-top: 30px;
 }
 
-.course {
+.course-list .no-course{
+    text-align: center;
+    margin: 200px 0;
+}
+
+.no-course .message{
+    display: inline-block;
+    padding-left: 50px;
+    width: 200px;
+}
+
+.no-course .message i{
+    color: #409eff;
+    font-size: 25px;
+    margin-right: 8px;
+    float: left;
+}
+
+.no-course .message .text{
+    color: #999;
+    text-align: left;
+    font-size: 18px;
+    line-height: 25px;
+}
+
+.course-list .course {
     z-index: 9;
     margin-bottom: 0;
     height: 150px;
@@ -473,9 +548,10 @@ li {
     width: 220px;
     padding: 7px 7px 9px 9px;
     position: relative;
+    cursor: pointer;
 }
 
-.course-card-item:hover{
+.course-card-item:hover {
     border: #ddd;
     box-shadow: 1px 1px 2px 1px #ececec;
 }
@@ -510,7 +586,7 @@ li {
     white-space: pre-wrap;
 }
 
-.item-title .item-title-link:hover{
+.item-title .item-title-link:hover {
     color: #409eff;
 }
 
@@ -527,11 +603,11 @@ li {
     float: left;
 }
 
-.item-info .charge{
+.item-info .charge {
     color: #e85308;
 }
 
-.item-info .free{
+.item-info .free {
     color: #67c23a;
 }
 
@@ -540,15 +616,3 @@ li {
     color: #999;
     margin-left: 10px;
 }
-
-.content-left .course-banner {
-    padding: 20px 0 30px;
-    margin-bottom: 20px;
-    background: #fff;
-    min-height: 400px;
-}
-
-.course-banner .inner-center {
-    width: 1200px;
-}
-

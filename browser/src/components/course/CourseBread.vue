@@ -40,4 +40,28 @@
     }
 </script>
 
-<style src="../../assets/css/course-list.css"></style>
+<style>
+    .course-bread {
+        margin-top: 30px !important;
+        font-size: 14px;
+        text-align: left;
+    }
+
+    .course-bread a {
+        color: #333333;
+        cursor: pointer;
+    }
+
+    .course-bread a:hover {
+        text-decoration: none;
+        color: #409eff;
+    }
+
+    .course-bread span {
+        color: #999999;
+    }
+
+    .course-bread i {
+        margin: 0 10px;
+    }
+</style>
