@@ -18,7 +18,7 @@ router.get('/check-login', async (req, res) => {
                     nickname: rows[0]['Nickname'],
                     avatarUrl: rows[0]['AvatarUrl'],
                 },
-                effectiveTime: moment(req['session'].cookie._expires).format('YYYY-MM-DD HH:mm:ss')
+                effectiveTime: moment(req['session'].cookie['_expires']).format('YYYY-MM-DD HH:mm:ss')
             });
         });
     } else {
@@ -59,9 +59,9 @@ router.post('/register', async (req, res) => {
     const code = req.body.data.verify;  //验证码
     const password = req.body.data.password;  //密码
     //手机号验证
-    const regPhone = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/;
+    const regPhone = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3-8])|(18[0-9])|166|198|199|(147))\d{8}$/;
     //密码验证
-    const regPsw = /^[\w!#$%&'*+/=?^_`{|}~,.';":]{8,16}$/;
+    const regPsw = /^[\w!#$%&'*+/=?^_`{|}~,.;":]{8,16}$/;
     //验证手机号、密码、验证码输入是否合格
     if (!phone.toString().match(regPhone) || !password.toString().match(regPsw) || code === undefined)
         res.json({status: 0, message: "输入有误"});
