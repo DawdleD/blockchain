@@ -10,13 +10,13 @@ const session = require('express-session');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 /*  发送短信验证码模块  */
-const smsRouter = require('./config/short-message');
+const smsRouter = require('./routes/short-message');
 /*  发送邮箱验证码模块  */
-const emailSend = require('./config/email-send');
+const emailSend = require('./routes/email-send');
 /*  用户登录、注册、重置密码模块  */
 const passportRouter = require('./routes/passport/passport');
 /*  图像验证码模块  */
-const svgCaptcha = require('./config/image-captcha');
+const svgCaptcha = require('./routes/image-captcha');
 /*  个人中心模块  */
 const profilePersonal = require('./routes/profile/personal');
 /* 课程模块 */
@@ -72,8 +72,8 @@ app.use('/passport', express.static(path.join(__dirname, 'public')));
 app.use('/profile/personal', profilePersonal);
 app.use('/profile', express.static(path.join(__dirname, 'public')));
 /* 课程模块路由 */
-app.use('/course/list',courseList);
-app.use('/course/information',courseInformation);
+app.use('/course/list', courseList);
+app.use('/course/information', courseInformation);
 app.use('/course', express.static(path.join(__dirname, 'public')));
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

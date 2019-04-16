@@ -42,7 +42,7 @@ router.post('/', function (req, res) {
     //验证用户输入是否正确
     const regMail = /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/;
     if (!email.match(regMail)) {
-        const output = {status: 0, message: "输入邮箱有误！"};
+        const output = {status: 0, msg: "输入邮箱有误！"};
         res.json(output);
     } else {
         //设置邮箱
@@ -50,11 +50,11 @@ router.post('/', function (req, res) {
         //发送邮件
         transporter.sendMail(mailOptions, function (error) {
             if (!error) {
-                const output = {status: 1, message: "已发送验证码至您的邮箱，注意查收！"};
+                const output = {status: 1, msg: "已发送验证码至您的邮箱，注意查收！"};
                 res.json(output);
             } else {
                 console.log(error);
-                const output = {status: 0, message: "发送邮件失败，请联系管理员"};
+                const output = {status: 0, msg: "发送邮件失败，请联系管理员"};
                 res.json(output);
             }
         });

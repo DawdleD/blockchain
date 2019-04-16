@@ -96,7 +96,7 @@
                     return x.id === parseInt(type);
                 }).name;
                 document.title = this.bread.typeName;
-                this.bread.typeUrl = `/course/list?system=${this.$route.query.system}&type=${type}`
+                this.bread.typeUrl = `/course/list?system=${this.$route.query.system}&type=${type}`;
                 this.bread.courseName = false;
             }
         },

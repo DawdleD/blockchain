@@ -1,216 +1,40 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-const mysql = require('../../config/mysql-connect');
-const encryption = require('../../config/encryption');
+const mysql = require('../../utils/mysql-connect');
 const moment = require('moment');
+const {login, checkLogin} = require('../../controllers/passport/login');
+const {register, checkPhone} = require('../../controllers/passport/register');
+const {reset} = require('../../controllers/passport/reset');
 
 /**
  * 检查用户用户是否登录
  * */
-router.get('/check-login', async (req, res) => {
-    if (req['session'].loginState) {
-        const cmd = `select Nickname,AvatarUrl from UserInformation where UserId = ?`;
-        await mysql.query(cmd, [req['session'].userID]).then((rows) => {
-            res.json({
-                status: 1,
-                data: {
-                    nickname: rows[0]['Nickname'],
-                    avatarUrl: rows[0]['AvatarUrl'],
-                },
-                effectiveTime: moment(req['session'].cookie['_expires']).format('YYYY-MM-DD HH:mm:ss')
-            });
-        });
-    } else {
-        res.json({status: 0});
-    }
-});
-
+router.get('/check-login', checkLogin);
 /**
  * 注销
  * */
 router.get('/exit', (req, res) => {
-    req['session'].destroy(function (inf) {
+    req['session'].destroy(inf => {
         console.log(inf);
         res.json({status: 1});
     });
 });
-
 /**
  * 检查用户手机号是否已被注册
  * */
-router.post('/check-phone', async (req, res) => {
-    const phone = req.body.phone;  //手机号
-    const cmd = "select * from UserPassport where Phone = ?";
-    await mysql.query(cmd, [phone]).then((rows) => {
-        if (rows['length'] > 0) res.json({status: 1, message: "该手机号已被注册"});
-        else res.json({status: 0})
-    }).catch(() => {
-        res.json({status: 1, message: "服务器错误"});
-    })
-});
-
+router.post('/check-phone', checkPhone);
 /**
  * 注册路由
- * post
  * */
-router.post('/register', async (req, res) => {
-    const phone = req.body.data.phone;  //手机号
-    const code = req.body.data.verify;  //验证码
-    const password = req.body.data.password;  //密码
-    //手机号验证
-    const regPhone = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3-8])|(18[0-9])|166|198|199|(147))\d{8}$/;
-    //密码验证
-    const regPsw = /^[\w!#$%&'*+/=?^_`{|}~,.;":]{8,16}$/;
-    //验证手机号、密码、验证码输入是否合格
-    if (!phone.toString().match(regPhone) || !password.toString().match(regPsw) || code === undefined)
-        res.json({status: 0, message: "输入有误"});
-    else {
-        console.log("验证通过");
-        //检测手机号是否被注册
-        let cmd = "select * from UserPassport where Phone = ?";
-        await mysql.query(cmd, [phone]).then(async (rows) => {
-            if (rows['length'] > 0)
-                res.json({status: 0, message: "该手机号已被注册"});
-            else if (req['session'].smsCode !== code) {
-                res.json({status: 0, message: "验证码错误"});
-            } else {
-                //随机生成用户ID
-                let userID = Math.random().toString().slice(2, 7);
-                cmd = "select * from UserPassport where UserID = ?";
-                await mysql.query(cmd, [userID]).then(async (rows) => {
-                    //如果用户ID重复则重新生成
-                    while (rows['length'] > 0) {
-                        userID = Math.random().toString().slice(2, 7);
-                        rows = await mysql.query(cmd, userID);
-                    }
-                    cmd = `insert into UserPassport 
-                    (UserID,Phone,Password,Salt,CreateTime,FailCount,AccessLevel) 
-                    values(?,?,?,?,?,0,0)`;
-                    const salt = encryption.getRandomHash();  //随机生成盐值
-                    const encryptedPsw = encryption.encryptPassword(salt, password);  //加密密码
-                    const time = new Date();  //获取当前时间
-                    time.toLocaleString();
-                    await mysql.query(cmd, [userID, phone, encryptedPsw, salt, time]).then(() => {
-                        req['session'].loginState = true;
-                        req['session'].userID = userID;
-                        res.json({status: 1, message: "注册成功"});
-                    })
-                })
-            }
-        }).catch((err) => {
-            console.log(err);
-            res.json({status: 0, message: "注册失败"});
-        });
-    }
-});
-
+router.post('/register', register);
 /**
  * 登录路由
- * post
  * */
-router.post('/login', async (req, res) => {
-    const code = req.body.data.verify;
-    const account = req.body.data['account'];
-    const password = req.body.data.password;
-    let cmd = `select * from UserPassport 
-    where Phone = ? or Email = ?`;
-    if (req['session'].imageCaptcha === undefined) res.json({status: 0, message: "服务器错误"});
-    else if (code.toUpperCase() !== req['session'].imageCaptcha.toUpperCase())
-        res.json({status: 0, message: "验证码错误"});
-    else {
-        await mysql.query(cmd, [account, account]).then(async (rows) => {
-            //是否查询到用户
-            if (rows['length'] > 0) {
-                //首先判断用户是否被ban（禁止登录）
-                if (rows[0]['BanTime'] !== null) {
-                    let date = moment(rows[0]['BanTime']).format('YYYY-MM-DD HH:mm:ss');
-                    //如果到了封禁时间，解封
-                    if (moment().isAfter(moment(rows[0]['BanTime']))) {
-                        cmd = `update UserPassport set FailCount = 0,BanTime = null`;
-                        await mysql.query(cmd, null);
-                    }
-                    res.json({
-                        status: 0,
-                        message: `您的账户已被锁定，请于 ${date} 后登录,或重置密码解锁账号`
-                    });
-                } else {
-                    const salt = rows[0]['Salt'];
-                    let userID = rows[0]['UserID'];
-                    let failCount = rows[0]['FailCount'];
-                    //如果密码不正确
-                    if (rows[0]['Password'] !== encryption.encryptPassword(salt, password)) {
-                        failCount++;   //输错密码次数+1
-                        if (failCount === 6) {  //超过最多连续输错密码次数
-                            cmd = `update UserPassport set BanTime = ?`;
-                            let date = moment().add(1, "hour")
-                                .format('YYYY-MM-DD HH:mm:ss');  //封禁用户至指定时间
-                            await mysql.query(cmd, [date]).then(() => {
-                                res.json({
-                                    status: 0,
-                                    message: `您已连续输错密码6次，账号将被封禁至 ${date},可重置密码解锁账号`
-                                });
-                            })
-                        } else {  //连续输错密码
-                            cmd = `update UserPassport set FailCount = ?`;
-                            await mysql.query(cmd, [failCount]).then(() => {
-                                res.json({
-                                    status: 0,
-                                    message: `密码错误(今日还剩${6 - failCount}次机会)`
-                                });
-                            })
-                        }
-                    } else {    //密码正确
-                        cmd = `update UserPassport set 
-                        LoginTime = ?,FailCount = 0,BanTime = null`;
-                        let date = moment().format('YYYY-MM-DD HH:mm:ss');
-                        await mysql.query(cmd, [date]).then(() => {
-                            req['session'].loginState = true;
-                            req['session'].userID = userID;
-                            res.json({status: 1, message: "登录成功"});
-                        });
-                    }
-                }
-
-            } else res.json({status: 0, message: "用户名或密码错误"});
-        }).catch((err) => {
-            console.log(err);
-            res.json({status: 0, message: "服务器错误"});
-        });
-    }
-});
-
+router.post('/login', login);
 /**
  * 重置密码路由
  * */
-router.post('/reset', async (req, res) => {
-    const account = req.body.data['account'];
-    const password = req.body.data.password;
-    const code = req.body.data.verify;
-    const type = req.body.type;
-    //用户是否存在
-    let cmd = `select * from UserPassport where Phone = ? or Email = ?`;
-    await mysql.query(cmd, [account, account]).then(async (rows) => {
-        if (rows['length'] > 0) {
-            //用户重置密码方式
-            let verifyCode =
-                (type === 'email') ? req['session'].mailCode : req['session'].smsCode;
-            if (verifyCode !== code || code === undefined) {
-                res.json({status: 0, message: "验证码错误"});
-            } else {
-                const salt = rows[0]['Salt'];
-                let newPassword = encryption.encryptPassword(salt, password);
-                cmd = `update UserPassport set 
-                Password = ?,FailCount = 0,BanTime = null`;
-                await mysql.query(cmd, [newPassword]).then(() => {
-                    res.json({status: 1, message: "重置密码成功"});
-                });
-            }
-        } else res.json({status: 0, message: "账号不存在"});
-    }).catch((err) => {
-        console.log(err);
-        res.json({status: 0, message: "服务器错误"})
-    })
-});
+router.post('/reset', reset);
 
 module.exports = router;

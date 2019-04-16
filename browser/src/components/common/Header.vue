@@ -208,7 +208,7 @@
             }
             this.$axios.get('/api/course/list/system').then((response) => {
                 if (response.data.status === 1) this.courseSystem = response.data.data;
-                else console.log(response.data.message)
+                else console.log(response.data.msg)
             }).catch((err) => {
                 console.log(err);
             })

@@ -1,7 +1,7 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-const mysql = require('../../config/mysql-connect');
+const mysql = require('../../utils/mysql-connect');
 const courseSelect = require('./course-select');
 
 /**

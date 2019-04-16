@@ -23,6 +23,7 @@ function encryptPassword(salt, password) {
     const md5 = crypto.createHash('md5');
     return md5.update(saltPassword).digest('hex');
 }
+
 /**
  * 加密文本
  * @returns {string}

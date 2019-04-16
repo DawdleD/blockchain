@@ -2,7 +2,10 @@
     <div class="course-information">
         <div class="course-banner">
             <div class="inner-center clearfix">
+                <!--面包屑导航 S-->
                 <course-bread :bread="bread"></course-bread>
+                <!--面包屑导航 E-->
+                <!--课程详情 S-->
                 <div class="course-img-text">
                     <div class="course-img-left">
                         <img src="../../assets/image/project.jpg" alt="">
@@ -33,6 +36,7 @@
                         </div>
                     </div>
                 </div>
+                <!--课程详情 E-->
             </div>
         </div>
         <div class="info-main">
@@ -78,74 +82,18 @@
                             <!--课程详情 E-->
                             <!--课程目录 S-->
                             <div :class="{'chapter-list':true,hide:!tabsTitle.chapterList}">
-                                <div class="chapter-item">
+                                <div class="chapter-item" v-for="chapter in courseChapter" :key="chapter.number">
                                     <div class="chapter-title">
-                                        <span>01</span>
-                                        <h3>区块链技术入门必修课</h3>
+                                        <span>{{chapter.number}}</span>
+                                        <h3>{{chapter.name}}</h3>
                                     </div>
                                     <div class="chapter-course-list">
-                                        <a class="chapter-course-item">
+                                        <a class="chapter-course-item" v-for="video in chapter.video"
+                                           :key="video.id">
                                             <i class="fas fa-play-circle"></i>
                                             <p class="course-item-title">
-                                                <span title="区块链起源思想" class="text">区块链起源思想</span>
-                                                <span class="duration">(10分钟)</span>
-                                            </p>
-                                        </a>
-                                        <a class="chapter-course-item">
-                                            <i class="fas fa-play-circle"></i>
-                                            <p class="course-item-title">
-                                                <span title="区块链起源思想" class="text">区块链本质</span>
-                                                <span class="duration">(24分钟)</span>
-                                            </p>
-                                        </a>
-                                        <a class="chapter-course-item">
-                                            <i class="fas fa-play-circle"></i>
-                                            <p class="course-item-title">
-                                                <span title="区块链起源思想" class="text">区块链与比特币的差别</span>
-                                                <span class="duration">(22分钟)</span>
-                                            </p>
-                                        </a>
-                                        <a class="chapter-course-item">
-                                            <i class="fas fa-play-circle"></i>
-                                            <p class="course-item-title">
-                                                <span title="区块链起源思想" class="text">区块链产业形态和企业布局</span>
-                                                <span class="duration">(46分钟)</span>
-                                            </p>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="chapter-item">
-                                    <div class="chapter-title">
-                                        <span>02</span>
-                                        <h3>区块链技术入门必修课</h3>
-                                    </div>
-                                    <div class="chapter-course-list">
-                                        <a class="chapter-course-item">
-                                            <i class="fas fa-play-circle"></i>
-                                            <p class="course-item-title">
-                                                <span title="区块链起源思想" class="text">区块链起源思想</span>
-                                                <span class="duration">(10分钟)</span>
-                                            </p>
-                                        </a>
-                                        <a class="chapter-course-item">
-                                            <i class="fas fa-play-circle"></i>
-                                            <p class="course-item-title">
-                                                <span title="区块链起源思想" class="text">区块链本质</span>
-                                                <span class="duration">(24分钟)</span>
-                                            </p>
-                                        </a>
-                                        <a class="chapter-course-item">
-                                            <i class="fas fa-play-circle"></i>
-                                            <p class="course-item-title">
-                                                <span title="区块链起源思想" class="text">区块链与比特币的差别</span>
-                                                <span class="duration">(22分钟)</span>
-                                            </p>
-                                        </a>
-                                        <a class="chapter-course-item">
-                                            <i class="fas fa-play-circle"></i>
-                                            <p class="course-item-title">
-                                                <span title="区块链起源思想" class="text">区块链产业形态和企业布局</span>
-                                                <span class="duration">(46分钟)</span>
+                                                <span :title="video.name" class="text">{{video.name}}</span>
+                                                <span class="duration">({{video.duration}}分钟)</span>
                                             </p>
                                         </a>
                                     </div>
@@ -432,13 +380,16 @@
                     typeName: '', typeUrl: '',
                     courseName: '', courseUrl: ''
                 },
-                course: '',
+                course: {
+                    details: '', info: '',
+                },
                 tabsTitle: {
                     courseDetail: true,
                     chapterList: false,
                     fileList: false,
                     courseComment: false
-                }
+                },
+                courseChapter: '',
             }
         },
         components: {
@@ -461,7 +412,7 @@
                 this.tabsTitle[val] = true;
             }
         },
-        created() {
+        beforeCreate() {
             this.$axios.post('/api/course/information', {
                 courseID: this.$route.params.courseID
             }).then((response) => {
@@ -477,6 +428,12 @@
                     this.bread.courseName = course.info.courseName;
                     document.title = course.info.courseName;
                 }
+            }).catch((err) => {
+                console.log(err);
+            });
+            this.$axios.get(`/api/course/information/chapter?courseID=${this.$route.params.courseID}`).then((response) => {
+                if (response.data.status === 1) this.courseChapter = response.data.data;
+                else console.log(response.data.message)
             }).catch((err) => {
                 console.log(err);
             })

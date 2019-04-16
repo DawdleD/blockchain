@@ -132,7 +132,7 @@
                             }, 500);
                         } else {
                             this.changeImage();
-                            Message.error(response.data.message);
+                            Message.error(response.data.msg);
                         }
                     }).catch((error) => {
                         console.log(error);
@@ -158,7 +158,8 @@
                 this.loginForm.account = localStorage.getItem('account');
             }
             for (let item in this.inputCss) {
-                this.inputCss[item] = this.prepend[item];
+                if (this.inputCss.hasOwnProperty(item))
+                    this.inputCss[item] = this.prepend[item];
             }
         },
         beforeRouteEnter(to, from, next) {

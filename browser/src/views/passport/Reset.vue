@@ -137,9 +137,11 @@
             //清空输入内容
             setInputEmpty: function () {
                 for (let item in this.resetForm) {
-                    this.resetForm[item] = "";
-                    this.changeInput(item, 0, null);
-                    this.sendCodeCss.disable = true;
+                    if (this.resetForm.hasOwnProperty(item)) {
+                        this.resetForm[item] = "";
+                        this.changeInput(item, 0, null);
+                        this.sendCodeCss.disable = true;
+                    }
                 }
             },
             //改变用户类型 邮箱 - 手机
@@ -168,8 +170,8 @@
             //检查用户手机号，密码是否输入合格
             checkInput: function (value) {
                 //首先检查是否为空值
-                const regAccount = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/;
-                const regPassword = /^[\w!#$%&'*+/=?^_`{|}~,.';":]{8,16}$/;
+                const regAccount = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3-8])|(18[0-9])|166|198|199|(147))\d{8}$/;
+                const regPassword = /^[\w!#$%&'*+/=?^_`{|}~,.;":]{8,16}$/;
                 const regMail = /^[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/;
                 if (this.resetForm[value] === '')  //任何输入框为空
                     this.changeInput(value, 1, this.inputCheckText[value][0]);
@@ -216,9 +218,9 @@
                     option: "reset"
                 }).then((response) => {
                     if (response.data.status === 1)
-                        Message.success(response.data.message);
+                        Message.success(response.data.msg);
                     else
-                        Message.error(response.data.message);
+                        Message.error(response.data.msg);
                 }).catch((error) => {
                     Message.warning('发生了未知错误');
                     console.log(error);
@@ -236,11 +238,11 @@
                         type: (this.accountChooseClass.phone.active) ? "phone" : "email"
                     }).then((response) => {
                         if (response.data.status === 1) {
-                            Message.success(response.data.message);
+                            Message.success(response.data.msg);
                             setTimeout(() => {
                                 this.$router.push('/passport/login');
                             }, 1000);
-                        } else Message.error(response.data.message);
+                        } else Message.error(response.data.msg);
                     }).catch((error) => {
                         Message.warning('发生了未知错误');
                         console.log(error);
@@ -250,7 +252,8 @@
         },
         mounted() {
             for (let item in this.inputCss) {
-                this.inputCss[item] = this.prepend[item];
+                if (this.inputCss.hasOwnProperty(item))
+                    this.inputCss[item] = this.prepend[item];
             }
         }
     }

@@ -129,8 +129,8 @@
             //检查用户手机号，密码是否输入合格
             checkInput: function (value) {
                 //首先检查是否为空值
-                const regPhone = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/;
-                const regPassword = /^[\w!#$%&'*+/=?^_`{|}~,.';":]{8,16}$/;
+                const regPhone = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3-8])|(18[0-9])|166|198|199|(147))\d{8}$/;
+                const regPassword = /^[\w!#$%&'*+/=?^_`{|}~,.;":]{8,16}$/;
                 if (this.registerForm[value] === '')  //任何输入框为空
                     this.changeInputClass(value, 1, this.inputCheckText[value][0]);
                 else if (value === "phone" && !this.registerForm.phone.match(regPhone))    //用户账号不合法
@@ -140,13 +140,12 @@
                     this.$axios.post('/api/passport/check-phone', {
                         phone: register.registerForm.phone
                     }).then((response) => {
-                        if (response.data.status === 1) register.changeInputClass(value, 1, response.data.message);
+                        if (response.data.status === 1) register.changeInputClass(value, 1, response.data.msg);
                         else {
                             this.sendCodeCss.disable = false;
                             register.changeInputClass(value, 0, null);
                         }
-                    }).catch((err) => {
-                        //console.log(err);
+                    }).catch(() => {
                         register.changeInputClass(value, 1, "发生了未知的错误");
                     })
                 } else if (value === "password" && !this.registerForm.password.match(regPassword))   //密码输入不合法
@@ -175,9 +174,9 @@
                     option: "register"
                 }).then((response) => {
                     if (response.data.status === 0)
-                        Message.error(response.data.message);
+                        Message.error(response.data.msg);
                     else
-                        Message.success(response.data.message);
+                        Message.success(response.data.msg);
                 }).catch((err) => {
                     console.log(err);
                     Message.warning('发生了未知错误');
@@ -194,13 +193,13 @@
                         data: this.registerForm
                     }).then((response) => {
                         if (response.data.status === 1) {
-                            Message.success(response.data.message);
+                            Message.success(response.data.msg);
                             setTimeout(() => {
                                 window.location.href = '/';
                             }, 1000);
-                        } else Message.error(response.data.message);
+                        } else Message.error(response.data.msg);
                     }).catch((error) => {
-                        Message.warning( '发生了未知错误');
+                        Message.warning('发生了未知错误');
                         console.log(error);
                     });
                 }
@@ -208,7 +207,8 @@
         },
         mounted() {
             for (let item in this.inputCss) {
-                this.inputCss[item] = this.prepend[item];
+                if (this.inputCss.hasOwnProperty(item))
+                    this.inputCss[item] = this.prepend[item];
             }
         }
     }

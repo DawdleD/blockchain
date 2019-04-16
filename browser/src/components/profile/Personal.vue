@@ -225,7 +225,7 @@
         created() {
             this.$axios.get('/api/profile/personal').then((response) => {
                 if (response.data.status === 1) {
-                    let data = response.data.message;
+                    let data = response.data.msg;
                     this.informationForm.nickname = data.nickname;
                     this.informationForm.realName = data.realName;
                     this.informationForm.sex = data.sex;
@@ -248,7 +248,7 @@
                         `http://localhost:3000${res.avatarUrl}`);
                     Message.success('更换头像成功');
                 } else
-                    Message.error(res.message);
+                    Message.error(res.msg);
             },
             /* 在提交头像之前检查 */
             beforeAvatarUpload(file) {
@@ -268,9 +268,9 @@
                     this.$axios.get('/api/profile/personal/delete-email').then((response) => {
                         if (response.data.status === 1) {
                             this.informationForm.email = '';
-                            Message.success(response.data.message);
+                            Message.success(response.data.msg);
                         } else {
-                            Message.error(response.data.message);
+                            Message.error(response.data.msg);
                         }
                     })
                 }).catch(() => {
@@ -298,7 +298,7 @@
             /* 验证邮箱/手机号是否合法 */
             verifyDialogInput(option) {
                 const regMail = /^[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/;
-                const regMobile = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/;
+                const regMobile = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3-8])|(18[0-9])|166|198|199|(147))\d{8}$/;
                 let pass = option === 'bindEmail' ? this.dialogForm.account.match(regMail) : this.dialogForm.account.match(regMobile);
                 if (option === 'bindEmail') this.dialogFormInfo.bindEmail.sendButton = pass;
                 else this.dialogFormInfo.changeMobile.sendButton = pass;
@@ -324,8 +324,8 @@
                     account: this.dialogForm.account,
                     option: "change"
                 }).then((response) => {
-                    if (response.data.status === 1) Message.success(response.data.message);
-                    else Message.error(response.data.message);
+                    if (response.data.status === 1) Message.success(response.data.msg);
+                    else Message.error(response.data.msg);
                 }).catch((error) => {
                     console.log(error);
                 })
@@ -341,9 +341,9 @@
                             this.dialogForm.account = '';
                             this.dialogForm.verifyCode = '';
                             this.informationForm.email = response.data.email;
-                            Message.success(response.data.message);
+                            Message.success(response.data.msg);
                             this.dialogFormVisible = false;
-                        } else Message.error(response.data.message);
+                        } else Message.error(response.data.msg);
                     }).catch((err) => {
                         console.log(err);
                     });
@@ -373,11 +373,11 @@
                             } else if (this.stepsActive === 1) {
                                 this.dialogFormInfo.oldMobile.show = false;
                                 this.dialogFormInfo.newMobile.show = false;
-                                this.informationForm.mobile = response.data.message;
+                                this.informationForm.mobile = response.data.msg;
                                 this.stepsActive += 1;
                             }
                             this.stepsActive += 1;
-                        } else Message.error(response.data.message);
+                        } else Message.error(response.data.msg);
                     }).catch((err) => {
                         console.log(err);
                     });
@@ -390,10 +390,10 @@
                 }).then((response) => {
                     if (response.data.status === 1) {
                         this.$store.commit('changeNickname', this.informationForm.nickname);
-                        Message.success(response.data.message);
+                        Message.success(response.data.msg);
 
                     } else
-                        Message.error(response.data.message);
+                        Message.error(response.data.msg);
                 }).catch((error) => {
                     Message.error(error);
                 })

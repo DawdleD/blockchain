@@ -44,11 +44,6 @@ export default new Router({
         {path: '/', name: 'Index', component: Index, meta: {title: "以太坊在线学习平台"}},
         {
             path: '/profile', name: 'Profile', component: Profile,
-            beforeRouteEnter(to,from,next){
-              if($store.state.loginState){
-
-              }
-            },
             children: [
                 {path: '/profile/personal', name: 'personal', component: ProfilePersonal, meta: {title: '个人信息'}},
                 {path: '/profile/wallet', name: 'wallet', component: ProfileWallet, meta: {title: '我的钱包'}},

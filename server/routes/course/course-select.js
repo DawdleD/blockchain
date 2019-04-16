@@ -37,7 +37,7 @@ function getCourseSql(system, type, filter, sort, page, isCount, search) {
     if (systemExist) cmd = `${select} where ${systemSql}`;
     if (systemExist && typeExist) cmd = `${cmd} and ${typeSql}`;
     if (filterExist && filterSql[filter] !== undefined) cmd = `${cmd} ${select === cmd ? 'where' : 'and'} ${filterSql[filter]}`;
-    if(searchExist) cmd = `${cmd} ${select === cmd ? 'where' : 'and'} ${`CourseName like '%${search}%'`}`;
+    if (searchExist) cmd = `${cmd} ${select === cmd ? 'where' : 'and'} ${`CourseName like '%${search}%'`}`;
     if (sortExist && sortSql[sort] !== undefined && !isCount) cmd = `${cmd} order by ${sortSql[sort]}`;
     if (pageExist) cmd = `${cmd} limit ${10 * (parseInt(page) - 1)},10`;
     return cmd;

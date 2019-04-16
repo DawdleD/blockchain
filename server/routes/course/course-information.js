@@ -1,9 +1,11 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-const mysql = require('../../config/mysql-connect');
+const mysql = require('../../utils/mysql-connect');
 const moment = require('moment');
-
+/**
+ * 获取课程基本信息
+ */
 router.post('/', async (req, res) => {
     const courseID = req.body['courseID'];
     let cmd = `select * from CourseInformation where CourseID = ?`;
@@ -13,7 +15,7 @@ router.post('/', async (req, res) => {
     };
     let detail = {
         teacherName: '李老师', courseSummary: '', courseTarget: '', startTime: '',
-        finishTime: '',courseArrange:''
+        finishTime: '', courseArrange: ''
     };
     await mysql.query(cmd, [courseID]).then(async (info) => {
         information.courseName = info[0]['CourseName'];
@@ -51,4 +53,42 @@ router.post('/', async (req, res) => {
     })
 });
 
+/**
+ * 获取课程章节
+ */
+router.get('/chapter', async (req, res) => {
+    const courseID = req.query['courseID'];
+    let cmd = `select * from CourseChapter where CourseID = ?`;
+    let courseChapter = [];
+    await mysql.query(cmd, courseID).then(async (chapters) => {
+        cmd = `select * from CourseVideo where ChapterID = ?`;
+        for (let chapter in chapters) if (chapters.hasOwnProperty(chapter)) {
+            let courseVideo = [];
+            await mysql.query(cmd, chapters[chapter]['ChapterID']).then((videos) => {
+                for (let video in videos) if (videos.hasOwnProperty(video)) {
+                    courseVideo.push({
+                        id: videos[video]['VideoID'],
+                        name: videos[video]['VideoName'],
+                        url: videos[video]['VideoUrl'],
+                        duration: videos[video]['VideoDuration']
+                    })
+                }
+            });
+            courseChapter.push({
+                number: chapter > 9 ? chapter : `0${parseInt(chapter) + 1}`,
+                name: chapters[chapter]['ChapterName'],
+                video: courseVideo
+            })
+        }
+        res.json({
+            status: 1,
+            data: courseChapter
+        })
+    }).catch(() => {
+        res.json({
+            status: 0,
+            message: '服务器错误'
+        })
+    })
+});
 module.exports = router;
