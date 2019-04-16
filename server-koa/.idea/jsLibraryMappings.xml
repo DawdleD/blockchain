@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <file url="PROJECT" libraries="{@types/busboy, @types/koa, @types/koa-bodyparser, @types/koa-json, @types/koa-router, @types/koa-session, @types/multer, @types/mysql, @types/nodemailer}" />
+    <includedPredefinedLibrary name="Node.js Core" />
+  </component>
+</project>
