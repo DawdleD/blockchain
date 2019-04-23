@@ -8,7 +8,14 @@ module.exports = {
                 target: 'http://localhost:3000',
                 ws: true,
                 changeOrigin: true,
-                pathRewrite: {'^/api': ''}
+                pathRewrite: {'^/api': '/api'}
+            },
+            '/img': {
+                target: 'http://127.0.0.1:3000',//设置你调用的接口域名和端口号 别忘了加http
+                changeOrigin: true,
+                pathRewrite: {
+                  '^/img': '/img'
+                }
             }
         }
     }

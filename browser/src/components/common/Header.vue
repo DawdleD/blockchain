@@ -92,7 +92,7 @@
                         </div>
                     </li>
                     <li :class="navActive.project">
-                        <div class="first">项目列表</div>
+                        <div class="first"><router-link to="/project/list">项目实践</router-link></div>
                     </li>
                     <li :class="navActive.profile">
                         <router-link tag="div" class="first" :to="{name:'personal'}">个人中心</router-link>

@@ -5,9 +5,12 @@ import store from './store'
 import axios from 'axios'
 import {
     Aside, Carousel, CarouselItem, Container, Main, Message,
-    MessageBox, DatePicker, Upload, Dialog, Pagination, Step, Steps
+    MessageBox, DatePicker, Upload, Dialog, Pagination, Step, Steps,Table,TableColumn,Button
 } from 'element-ui'
 /* Element-Ui 插件 S*/
+Vue.component(Button.name, Button);
+Vue.component(TableColumn.name, TableColumn);
+Vue.component(Table.name, Table);
 Vue.component(Aside.name, Aside);
 Vue.component(Main.name, Main);
 Vue.component(Container.name, Container);

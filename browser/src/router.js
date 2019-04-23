@@ -11,6 +11,11 @@ import Course from './views/Course'
 import CourseList from './components/course/List'
 import CourseInformation from './components/course/Information'
 
+
+import Project from './views/Project'
+import ProjectList from './components/project/List'
+import ProjectInformation from './components/project/Information'
+
 import Profile from './views/Profile'
 import ProfileCourse from './components/profile/Course'
 import ProfileCertificate from './components/profile/Certificate'
@@ -38,6 +43,18 @@ export default new Router({
                 }
             ]
         },
+        {
+            path: '/project', name: 'Project', component: Project, children: [
+                {path: '/project/list', name: 'ProjectListSearch', component: ProjectList, meta: {title: '项目实践'}},
+                {path: '/project/list/:search', name: 'ProjectList', component: ProjectList, meta: {title: '项目实践'}},
+                {
+                    path: '/project/:projectId/information',
+                    name: 'ProjectInformation',
+                    component: ProjectInformation,
+                    meta: {title: '项目信息'}
+                }
+            ]
+        },        
         {path: '/passport/login', name: 'Login', component: Login, meta: {title: '登录'}},
         {path: '/passport/register', name: 'Register', component: Register, meta: {title: '注册'}},
         {path: '/passport/reset', name: 'Reset', component: Reset, meta: {title: '重置密码'}},
