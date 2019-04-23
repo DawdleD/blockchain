@@ -1,12 +1,9 @@
 'use strict';
-
 const encryption = require('../../utils/encryption');
-const {findAllByPhoneOrEmail, updateByUserID} = require('../../service/user/passport');
+const UserPass = require('../../service/user-passport');
+
 /**
  * 重置密码
- * @param req
- * @param res
- * @returns {Promise<void>}
  */
 exports.reset = async (req, res) => {
     const account = req.body.data['account'];
@@ -14,7 +11,7 @@ exports.reset = async (req, res) => {
     const code = req.body.data.verify;
     const type = req.body.type;
     //用户是否存在
-    await findAllByPhoneOrEmail(account, account).then(async rows => {
+    await UserPass.selectOr([{email: account}, {phone: account}]).then(async rows => {
         if (rows.length > 0) {
             //用户重置密码方式
             let verifyCode =
@@ -24,7 +21,11 @@ exports.reset = async (req, res) => {
             } else {
                 const salt = rows[0].salt;
                 let newPassword = encryption.encryptPassword(salt, password);
-                await updateByUserID(rows[0].userID, {password: newPassword, failCount: 0, banTime: null}).then(() => {
+                await UserPass.update({userID: rows[0].userID}, {
+                    password: newPassword,
+                    failCount: 0,
+                    banTime: null
+                }).then(() => {
                     res.json({status: 1, msg: "重置密码成功"});
                 })
             }

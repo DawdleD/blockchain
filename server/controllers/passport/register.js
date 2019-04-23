@@ -1,13 +1,10 @@
 'use strict';
-
 const encryption = require('../../utils/encryption');
-const {findAllByPhoneOrEmail, addUser} = require('../../service/user/passport');
-const {addUserInfo} = require('../../service/user/information');
+const UserPass = require('../../service/user-passport');
+const UserInfo = require('../../service/user-information');
+
 /**
  * 注册
- * @param req
- * @param res
- * @returns {Promise<void>}
  */
 exports.register = async (req, res) => {
     const phone = req.body.data.phone;  //手机号
@@ -23,7 +20,7 @@ exports.register = async (req, res) => {
     else {
         console.log("验证通过");
         //检测手机号是否被注册
-        await findAllByPhoneOrEmail(phone, phone).then(async rows => {
+        await UserPass.select({phone: phone}).then(async rows => {
             if (rows.length > 0)
                 res.json({status: 0, msg: "该手机号已被注册"});
             else if (req.session.smsCode !== code)
@@ -37,8 +34,16 @@ exports.register = async (req, res) => {
                 time.toLocaleString();
                 let state = true;
                 while (state) {
-                    await addUser(userID, phone, encryptedPsw, salt, time, 0, 0).then(async () => {
-                        await addUserInfo({userID:userID});
+                    await UserPass.insert({
+                        userID: userID,
+                        phone: phone,
+                        password: encryptedPsw,
+                        salt: salt,
+                        loginTime: time,
+                        failCount: 0,
+                        accessLevel: 0
+                    }).then(async () => {
+                        await UserInfo.insert({userID: userID});
                         req.session.loginState = true;
                         req.session.userID = userID;
                         res.json({status: 1, msg: "注册成功"});
@@ -54,15 +59,13 @@ exports.register = async (req, res) => {
         })
     }
 };
+
 /**
  * 检查手机号是否已存在
- * @param req
- * @param res
- * @returns {Promise<void>}
  */
 exports.checkPhone = async (req, res) => {
     const phone = req.body.phone;  //手机号
-    await findAllByPhoneOrEmail(phone, phone).then(rows => {
+    await UserPass.select({phone: phone}).then(rows => {
         if (rows.length > 0) res.json({status: 1, msg: "该手机号已被注册"});
         else res.json({status: 0})
     }).catch(() => {

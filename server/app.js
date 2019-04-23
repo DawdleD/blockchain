@@ -8,20 +8,18 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 /*  发送短信验证码模块  */
 const smsRouter = require('./routes/short-message');
 /*  发送邮箱验证码模块  */
 const emailSend = require('./routes/email-send');
 /*  用户登录、注册、重置密码模块  */
-const passportRouter = require('./routes/passport/passport');
+const passportRouter = require('./routes/passport');
 /*  图像验证码模块  */
 const svgCaptcha = require('./routes/image-captcha');
 /*  个人中心模块  */
-const profilePersonal = require('./routes/profile/personal');
+const profilePersonal = require('./routes/profile');
 /* 课程模块 */
-const courseList = require('./routes/course/course-list');
-const courseInformation = require('./routes/course/course-information');
+const course = require('./routes/course');
 
 const app = express();
 
@@ -58,7 +56,6 @@ app.use(session({
 }));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 /*  发送短信验证码路由  */
 app.use('/sms', smsRouter);
 /*  发送邮箱验证码路由  */
@@ -69,11 +66,10 @@ app.use('/image-captcha', svgCaptcha);
 app.use('/passport', passportRouter);
 app.use('/passport', express.static(path.join(__dirname, 'public')));
 /*  个人中心模块路由  */
-app.use('/profile/personal', profilePersonal);
+app.use('/profile', profilePersonal);
 app.use('/profile', express.static(path.join(__dirname, 'public')));
 /* 课程模块路由 */
-app.use('/course/list', courseList);
-app.use('/course/information', courseInformation);
+app.use('/course', course);
 app.use('/course', express.static(path.join(__dirname, 'public')));
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -81,7 +77,7 @@ app.use(function (req, res, next) {
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};

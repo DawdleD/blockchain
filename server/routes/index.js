@@ -1,17 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const Login = require('../controllers/passport/login')
-const {findAllByPhoneOrEmail, addUser} = require('../service/user/passport')
-const {updateByUserID} = require('../service/user/information')
+const {getDetail} = require('../controllers/course/information')
 
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
-    let object = {birthday: Date.now(), sex: 'F'};
-    await updateByUserID(12345, object);
+/*    console.log(dealOrder(1));
+    console.log(dealOrder(2));
+    console.log(dealOrder(3));
+    console.log(dealOrder(4));
+    console.log(dealOrder(5));*/
+
 
     res.render('index', {title: 'Express'});
 });
 
-router.post('/login', Login.login);
+router.post('/test', getDetail);
 module.exports = router;

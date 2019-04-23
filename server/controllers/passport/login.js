@@ -1,14 +1,11 @@
 'use strict';
-
 const encryption = require('../../utils/encryption');
 const moment = require('moment');
-const {findAllByPhoneOrEmail, updateByUserID} = require('../../service/user/passport');
-const {findAllByUserID} = require('../../service/user/information');
+const UserPass = require('../../service/user-passport');
+const UserInfo = require('../../service/user-information');
+
 /**
  * 登录
- * @param req
- * @param res
- * @returns {Promise<void>}
  */
 exports.login = async (req, res) => {
     const code = req.body.data.verify;
@@ -20,15 +17,17 @@ exports.login = async (req, res) => {
         else if (code.toUpperCase() !== req.session.imageCaptcha.toUpperCase())
             res.json({status: 0, msg: "验证码错误"});
         else {
-            await findAllByPhoneOrEmail(account, account).then(async (rows) => {
+            await UserPass.selectOr([{phone: account}, {email: account}]).then(async (rows) => {
                     if (rows.length > 0) {
                         //首先判断用户是否被ban（禁止登录）
                         if (rows[0].banTime !== null) {
                             let date = moment(rows[0].banTime).format('YYYY-MM-DD HH:mm:ss');
                             //如果到了封禁时间，解封
-                            if (moment().isAfter(moment(rows[0].banTime)))
-                                await updateByUserID(rows[0].userID, {failCount: 0, banTime: null});
-                            res.json({status: 0, msg: `您的账户已被锁定，请于 ${date} 后登录,或重置密码解锁账号`});
+                            if (moment().isAfter(moment(rows[0].banTime))){
+                                await UserPass.update({userID: rows[0].userID}, {failCount: 0, banTime: null});
+                                res.json({status: 0, msg: `登录有误，请重试`});
+                            }
+                            else res.json({status: 0, msg: `您的账户已被锁定，请于 ${date} 后登录,或重置密码解锁账号`});
                         } else {
                             const salt = rows[0].salt;
                             let userID = rows[0].userID;
@@ -39,15 +38,19 @@ exports.login = async (req, res) => {
                                 if (failCount === 6) {  //超过最多连续输错密码次数
                                     let date = moment().add(1, "hour")
                                         .format('YYYY-MM-DD HH:mm:ss');  //封禁用户至指定时间
-                                    await updateByUserID(userID, {failCount: 6, banTime: date});
+                                    await UserPass.update({userID: userID}, {failCount: 6, banTime: date});
                                     res.json({status: 0, msg: `您已连续输错密码6次，账号将被封禁至 ${date},可重置密码解锁账号`});
                                 } else {  //连续输错密码
-                                    await updateByUserID(userID, {failCount: failCount});
+                                    await UserPass.update({userID: userID}, {failCount: failCount});
                                     res.json({status: 0, msg: `密码错误(今日还剩${6 - failCount}次机会)`});
                                 }
                             } else {    //密码正确
                                 let date = moment().format('YYYY-MM-DD HH:mm:ss');
-                                await updateByUserID(rows[0].userID, {loginTime: date, failCount: 0, banTime: null});
+                                await UserPass.update({userID: userID}, {
+                                    loginTime: date,
+                                    failCount: 0,
+                                    banTime: null
+                                });
                                 req.session.loginState = true;
                                 req.session.userID = userID;
                                 res.json({status: 1, msg: "登录成功"});
@@ -67,13 +70,10 @@ exports.login = async (req, res) => {
 
 /**
  * 检查登录状态
- * @param req
- * @param res
- * @returns {Promise<void>}
  */
 exports.checkLogin = async (req, res) => {
     if (req.session.loginState) {
-        await findAllByUserID(req.session.userID).then(rows => {
+        await UserInfo.select({userID: req.session.userID}).then(rows => {
             res.json({
                 status: 1,
                 data: {

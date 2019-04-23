@@ -5,8 +5,8 @@ const uploadSetting =
     uploadFile.uploadSetting('image/jpeg', 'public/images/avatar', 2 * 1024 * 1024);
 const uploadImg = uploadSetting.single('avatar');
 const deleteFile = require('../../utils/delete-file');
-const Information = require('../../service/user/information');
-const Passport = require('../../service/user/passport');
+const UserInfo = require('../../service/user-information');
+const UserPass = require('../../service/user-passport');
 
 
 /**
@@ -70,10 +70,10 @@ exports.getUserInfo = async (req, res) => {
         res.json({status: 0})
     } else {
         const userID = req.session.userID;
-        await Information.findAllByUserID(userID).then(async (rows) => {
+        await UserInfo.select({userID: userID}).then(async (rows) => {
             let birthday = rows[0].birthday === null ?
                 null : moment(rows[0].birthday).format('YYYY-MM-DD');
-            let result = await Passport.findAllByUserID(userID);
+            let result = await UserPass.select({userID: userID});
             let email = result[0].email === null ?
                 null : hiddenEmail(result[0].email);
             res.json({
@@ -102,7 +102,7 @@ exports.deleteEmail = async (req, res) => {
     if (req.session.userID === undefined) {
         res.json({status: 0, msg: '解绑失败'})
     } else {
-        await Passport.updateByUserID(req.session.userID, {email: null}).then(() => {
+        await UserPass.update({userID: req.session.userID}, {email: null}).then(() => {
             res.json({status: 1, msg: '已解除绑定邮箱'})
         }).catch((err) => {
             console.log(err);
@@ -121,7 +121,7 @@ exports.addEmail = async (req, res) => {
         const verifyCode = req.body.data['verifyCode'];
         if (verifyCode !== req['session'].mailCode) res.json({status: 0, msg: '验证码错误'});
         else {
-            await Passport.updateByUserID(req.session.userID, {email: req.body.data['account']}).then(() => {
+            await UserPass.update({userID: req.session.userID}, {email: req.body.data['account']}).then(() => {
                 delete req.session.mailCode;
                 res.json({status: 1, msg: '绑定邮箱成功', email: hiddenEmail(req.body.data['account'])})
             }).catch((err) => {
@@ -145,7 +145,7 @@ exports.changePhone = async (req, res) => {
         if (step === 0) {
             if (req.session.smsCode !== code) res.json({status: 0, msg: '验证码错误'});
             else {
-                await Passport.findAllByUserID(req.session.userID).then((rows) => {
+                await UserPass.select({userID: req.session.userID}).then((rows) => {
                     if (rows[0].phone === phone) {
                         delete req.session.smsCode;
                         res.json({status: 1});
@@ -158,10 +158,10 @@ exports.changePhone = async (req, res) => {
         } else if (step === 1) {
             if (req.session.smsCode !== code) res.json({status: 0, msg: '验证码错误'});
             else {
-                await Passport.findAll({phone: phone}).then(async (rows) => {
+                await UserPass.select({phone: phone}).then(async (rows) => {
                     if (rows.length > 0) res.json({status: 0, msg: '该手机号已被注册'});
                     else {
-                        await Passport.updateByUserID(req.session.userID, {phone: phone}).then(() => {
+                        await UserPass.update({userID: req.session.userID}, {phone: phone}).then(() => {
                             delete req.session.smsCode;
                             res.json({status: 1, msg: hiddenPhone(phone),})
                         })
@@ -190,7 +190,7 @@ exports.updateUserInfo = async (req, res) => {
             validateLength(nickname, 0, 15) &&
             validateLength(realName, 0, 15) &&
             validateSex(sex) && date !== 'Invalid date') {
-            await Information.updateByUserID(req.session.userID, {
+            await UserInfo.update({userID: req.session.userID}, {
                 nickname: nickname,
                 realName: realName,
                 birthday: date,
@@ -219,7 +219,7 @@ exports.updateAvatar = (req, res) => {
             /* 文件是否合法 */
             if (err === undefined) {
                 /* 如果头像已经存在，则在数据库中得到头像地址 */
-                await Information.findAllByUserID(req.session.userID).then(async (rows) => {
+                await UserInfo.select({userID: req.session.userID}).then(async (rows) => {
                     if (rows[0].avatarUrl !== null) {
                         /* 删除原来的头像 */
                         deleteFile.unLink(`public/${rows[0]['AvatarUrl']}`);
@@ -227,7 +227,7 @@ exports.updateAvatar = (req, res) => {
                     /* 新的头像地址 */
                     const avatar = `/images/avatar/${req['file'].filename}`;
                     /* 更新头像地址 */
-                    await Information.updateByUserID(req.session.userID, {avatarUrl: avatar}).then(() => {
+                    await UserInfo.update({userID: req.session.userID}, {avatarUrl: avatar}).then(() => {
                         res.json({status: 1, avatarUrl: avatar, msg: '上传成功'});
                     })
                 }).catch((error) => {
