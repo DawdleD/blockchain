@@ -21,6 +21,9 @@ const profilePersonal = require('./routes/profile');
 /* 课程模块 */
 const course = require('./routes/course');
 
+// 项目模块 
+const project = require('./routes/project');
+
 const app = express();
 
 // view engine setup
@@ -55,6 +58,22 @@ app.use(session({
     saveUninitialized: true
 }));
 
+// 载入特殊钱包账号
+var contractFun=require("./ethereum/contractFun")
+async function importWalletAccount(){
+  try {
+    await contractFun.importSpeAccount();
+    console.log("Import special right account succeed!");
+    return true
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+
+}
+importWalletAccount()
+
+
 app.use('/', indexRouter);
 /*  发送短信验证码路由  */
 app.use('/sms', smsRouter);
@@ -71,6 +90,15 @@ app.use('/profile', express.static(path.join(__dirname, 'public')));
 /* 课程模块路由 */
 app.use('/course', course);
 app.use('/course', express.static(path.join(__dirname, 'public')));
+
+app.use('/api/project', project);
+
+/** 测试功能，模拟用户登录过程*/
+app.get('/api/chguser',(req,res)=>{
+    req.session.userID=req.query.userID;
+    req.session.accessLevel=req.query.accessLevel
+    res.json({userID:req.session.userID,accessLevel:req.session.accessLevel});
+  });
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));

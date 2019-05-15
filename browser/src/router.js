@@ -24,6 +24,12 @@ import ProfilePersonal from './components/profile/Personal'
 import ProfileProject from './components/profile/Project'
 import ProfileWallet from './components/profile/Wallet'
 
+import ProfileAttendApplyManagement_teacher from './components/profile/AttendApplyManagement_teacher'
+import ProfileCreateApplyManagement_teacher from './components/profile/CreateApplyManagement_teacher'
+import ProfileProject_teacher from './components/profile/Project_teacher'
+import ProfileProjectMember_teacher from './components/profile/ProjectMember_teacher'
+
+
 Vue.use(Router);
 
 export default new Router({
@@ -48,7 +54,7 @@ export default new Router({
                 {path: '/project/list', name: 'ProjectListSearch', component: ProjectList, meta: {title: '项目实践'}},
                 {path: '/project/list/:search', name: 'ProjectList', component: ProjectList, meta: {title: '项目实践'}},
                 {
-                    path: '/project/:projectId/information',
+                    path: '/project/:projectID/information',
                     name: 'ProjectInformation',
                     component: ProjectInformation,
                     meta: {title: '项目信息'}
@@ -67,6 +73,11 @@ export default new Router({
                 {path: '/profile/course', name: 'course', component: ProfileCourse, meta: {title: '我的课程'}},
                 {path: '/profile/exam', name: 'exam', component: ProfileExam, meta: {title: '我的考试'}},
                 {path: '/profile/project', name: 'project', component: ProfileProject, meta: {title: '我的项目'}},
+                {path: '/profile/project_teacher', name: 'project_teacher', component: ProfileProject_teacher, meta: {title: '我的项目'}},
+                {path: '/profile/attendapply_teacher', name: 'attendapply_teacher', component: ProfileAttendApplyManagement_teacher, meta: {title: '项目参加请求管理'}},
+                {path: '/profile/createapply_teacher', name: 'createapply_teacher', component: ProfileCreateApplyManagement_teacher, meta: {title: '项目创建请求管理'}},
+                {path: '/profile/projectmember_teacher', name: 'projectmember_teacher', component: ProfileProjectMember_teacher, meta: {title: '项目成员管理'}},
+
                 {
                     path: '/profile/certificate',
                     name: 'certificate',

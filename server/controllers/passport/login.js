@@ -77,7 +77,7 @@ exports.checkLogin = async (req, res) => {
             res.json({
                 status: 1,
                 data: {
-                    nickname: rows[0].nickname,
+                    nickName: rows[0].nickName,
                     avatarUrl: rows[0].avatarUrl === null ? '/images/avatar/default-avatar.jpg' : rows[0].avatarUrl
                 },
                 effectiveTime: moment(req.session.cookie['_expires']).format('YYYY-MM-DD HH:mm:ss')

@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import {store} from '../store/'
+import store from '../store'
 
 let web3 = window.web3;
 web3 = new Web3(web3.currentProvider);

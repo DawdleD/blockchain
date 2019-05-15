@@ -67,7 +67,7 @@ exports.selectCount = (courseID, filter) => {
  */
 exports.selectUser = where => {
     return UserInformation.findAll({
-        attributes: {include: ['nickname', 'avatarUrl']},
+        attributes: {include: ['nickName', 'avatarUrl']},
         where: where,
         raw: true
     })

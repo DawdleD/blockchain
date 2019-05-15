@@ -98,7 +98,7 @@ exports.selectCourse = (system, type, filter, sort, page, search) => {
             attributes: ['teacherID'],
             model: CourseDetail,
             include: [{
-                attributes: ['nickname'],
+                attributes: ['nickName'],
                 model: UserInformation,
             }]
         }],

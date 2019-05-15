@@ -35,9 +35,9 @@
                                 <li :class="{'active':active.project}">
                                     <router-link :to="{name:'project'}">
                                         <div class="setting-icon"><i class="fas fa-tasks"></i></div>
-                                        <span>我的项目</span>
+                                        <span>我的项目/项目参加申请</span>
                                     </router-link>
-                                </li>
+                                </li>                  
                                 <li :class="{'active':active.certificate}">
                                     <router-link :to="{name:'certificate'}">
                                         <div class="setting-icon"><i class="fas fa-award"></i></div>
@@ -72,7 +72,7 @@
                 page: "profile",
                 active: {
                     personal: false, wallet: false, course: false,
-                    exam: false, project: false, certificate: false
+                    exam: false, project: false, certificate: false,
                 }
             }
         },
@@ -84,16 +84,18 @@
             let type = to.name;
             next((vm => {
                 vm.$axios.get('/api/passport/check-login').then((response) => {
-                    if (response.data.status !== 1) {
-                        vm.$router.push('/passport/login');
-                    } else {
-                        vm.active[type] = true;
-                    }
+                    // if (response.data.status !== 1) {
+                    //     vm.$router.push('/passport/login');
+                    // } else {
+                    //     vm.active[type] = true;
+                    // }
+                    vm.active[type] = true;
                 })
             }));
         },
         beforeRouteUpdate(to, from, next) {
-            if (this.$store.state.loginState) {
+            // if (this.$store.state.loginState) {
+            if(true){
                 let type = from.name;
                 this.active[type] = false;
                 type = to.name;

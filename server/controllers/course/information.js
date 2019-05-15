@@ -21,7 +21,7 @@ exports.getDetail = async (req, res) => {
         let details = await Detail.select({courseID: courseID});
         let detail = details[0], inf = infos[0];
         let teacherInfo = await Detail.selectTeacher({courseID: courseID});
-        detail.teacherName = teacherInfo[0]['nickname'];
+        detail.teacherName = teacherInfo[0]['nickName'];
         detail.startTime = moment(detail.startTime).format('YYYY-MM-DD');
         detail.finishTime = moment(detail.finishTime).format('YYYY-MM-DD');
         let systems = await System.selectName(inf.systemID);
@@ -127,7 +127,7 @@ exports.getComment = async (req, res) => {
         for (let cmt in comments) if (comments.hasOwnProperty(cmt)) {
             let userInfo = await Comment.selectUser({userID: comments[cmt].userID});
             comment.push({
-                nickname: userInfo[0].nickname,
+                nickName: userInfo[0].nickName,
                 avatarUrl: userInfo[0].avatarUrl === null ?
                     '/images/avatar/default-avatar.jpg' : userInfo[0].avatarUrl,
                 star: comments[cmt].star,

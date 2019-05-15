@@ -5,7 +5,8 @@ import store from './store'
 import axios from 'axios'
 import {
     Aside, Carousel, CarouselItem, Container, Main, Message,
-    MessageBox, DatePicker, Upload, Dialog, Pagination, Step, Steps,Table,TableColumn,Button
+    MessageBox, DatePicker, Upload, Dialog, Pagination, Step, Steps,Table,TableColumn,Button,Tabs,TabPane,
+    Form,FormItem,Input,InputNumber,Dropdown,DropdownItem,DropdownMenu,Select,Option
 } from 'element-ui'
 /* Element-Ui 插件 S*/
 Vue.component(Button.name, Button);
@@ -24,6 +25,17 @@ Vue.component(Upload.name, Upload);
 Vue.component(Pagination.name, Pagination);
 Vue.component(Step.name, Step);
 Vue.component(Steps.name, Steps);
+Vue.component(Tabs.name,Tabs);
+Vue.component(TabPane.name,TabPane);
+Vue.component(Form.name, Form);
+Vue.component(FormItem.name, FormItem);
+Vue.component(Input.name,Input);
+Vue.component(InputNumber.name,InputNumber);
+Vue.component(Dropdown.name, Dropdown);
+Vue.component(DropdownItem.name,DropdownItem);
+Vue.component(DropdownMenu.name,DropdownMenu);
+Vue.component(Select.name,Select);
+Vue.component(Option.name,Option);
 /* Element-Ui 插件 E*/
 
 Vue.prototype.$axios = axios;

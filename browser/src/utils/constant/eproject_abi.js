@@ -7,12 +7,12 @@ const eprojectABI=[
     "inputs": [
       {
         "indexed": true,
-        "name": "creatorId",
+        "name": "creatorID",
         "type": "uint256"
       },
       {
         "indexed": true,
-        "name": "projectId",
+        "name": "projectID",
         "type": "uint256"
       },
       {
@@ -42,7 +42,7 @@ const eprojectABI=[
       },
       {
         "indexed": false,
-        "name": "memberId",
+        "name": "memberID",
         "type": "uint256[]"
       },
       {
@@ -59,12 +59,12 @@ const eprojectABI=[
     "inputs": [
       {
         "indexed": true,
-        "name": "memberId",
+        "name": "memberID",
         "type": "uint256"
       },
       {
         "indexed": true,
-        "name": "projectId",
+        "name": "projectID",
         "type": "uint256"
       },
       {
@@ -86,12 +86,12 @@ const eprojectABI=[
     "inputs": [
       {
         "indexed": true,
-        "name": "memberId",
+        "name": "memberID",
         "type": "uint256"
       },
       {
         "indexed": true,
-        "name": "projectId",
+        "name": "projectID",
         "type": "uint256"
       },
       {
@@ -116,12 +116,12 @@ const eprojectABI=[
       },
       {
         "indexed": false,
-        "name": "rewardId",
+        "name": "rewardID",
         "type": "uint256"
       },
       {
         "indexed": false,
-        "name": "senderId",
+        "name": "senderID",
         "type": "uint256"
       }
     ],
@@ -133,7 +133,7 @@ const eprojectABI=[
     "inputs": [
       {
         "indexed": false,
-        "name": "scoreMemberID",
+        "name": "scorememberID",
         "type": "uint256[]"
       },
       {
@@ -153,7 +153,7 @@ const eprojectABI=[
       },
       {
         "indexed": true,
-        "name": "projectId",
+        "name": "projectID",
         "type": "uint256"
       },
       {
@@ -170,7 +170,7 @@ const eprojectABI=[
     "inputs": [
       {
         "indexed": true,
-        "name": "userId",
+        "name": "userID",
         "type": "uint256"
       },
       {
@@ -237,11 +237,11 @@ const eprojectABI=[
     "constant": false,
     "inputs": [
       {
-        "name": "memberId",
+        "name": "memberID",
         "type": "uint256"
       },
       {
-        "name": "projectId",
+        "name": "projectID",
         "type": "uint256"
       },
       {
@@ -261,11 +261,11 @@ const eprojectABI=[
         "type": "string"
       },
       {
-        "name": "rewardId",
+        "name": "rewardID",
         "type": "uint256"
       },
       {
-        "name": "senderId",
+        "name": "senderID",
         "type": "uint256"
       }
     ],
@@ -279,7 +279,7 @@ const eprojectABI=[
     "constant": false,
     "inputs": [
       {
-        "name": "scoreMemberID",
+        "name": "scorememberID",
         "type": "uint256[]"
       },
       {
@@ -295,7 +295,7 @@ const eprojectABI=[
         "type": "uint8[]"
       },
       {
-        "name": "projectId",
+        "name": "projectID",
         "type": "uint256"
       },
       {
@@ -313,11 +313,11 @@ const eprojectABI=[
     "constant": false,
     "inputs": [
       {
-        "name": "creatorId",
+        "name": "creatorID",
         "type": "uint256"
       },
       {
-        "name": "projectId",
+        "name": "projectID",
         "type": "uint256"
       },
       {
@@ -341,7 +341,7 @@ const eprojectABI=[
         "type": "uint256"
       },
       {
-        "name": "memberId",
+        "name": "memberID",
         "type": "uint256[]"
       },
       {
@@ -359,7 +359,7 @@ const eprojectABI=[
     "constant": false,
     "inputs": [
       {
-        "name": "userId",
+        "name": "userID",
         "type": "uint256"
       },
       {

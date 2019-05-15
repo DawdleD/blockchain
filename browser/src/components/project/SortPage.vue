@@ -295,7 +295,7 @@
             },
             getPageUrl(val) {
                 this.pageUrl = val;
-                this.$axios.post(`/api/course/list/count`, {
+                this.$axios.post(`/api/project/query/getProjectCount`, {
                     projectField: this.$route.query.projectField,
                     type: this.$route.query.type,
                     filter: this.$route.query.filter,
@@ -316,7 +316,7 @@
         },
         created() {
             /* 获取总数，分页需要 */
-            this.$axios.post(`/api/course/list/count`, {
+            this.$axios.post(`/api/project/query/getProjectCount`, {
                 projectField: this.$route.query.projectField,
                 type: this.$route.query.type,
                 filter: this.$route.query.filter,

@@ -14,7 +14,7 @@
                         <h1 class="text-title">{{project.projectName}}</h1>
                         <div class="enroll-info">
                             <div class="enroll-course-info">
-                                <div class="teacher-name">项目发起人ID：{{project.creatorId}}</div>
+                                <div class="teacher-name">项目发起人：{{project.ProjectCreator.nickName}}</div>
                                 <div class="workload">项目开始时间：{{project.createTime}}</div>
                                 <div class="workload">项目方向：{{myTotalOption.labelProjectField[project.projectField]}}</div>
                                 <div class="workload">项目费用：{{project.projectFee}}</div>
@@ -22,9 +22,8 @@
 
                             </div>
                             <div class="enroll">
-                                <!-- <div class="course-apply">已有{{course.info['applyCount']}}人报名</div> -->
                                 <div class="enroll-apply-btn">
-                                    <div class="enroll-button">
+                                    <div class="enroll-button" @click="attendProject">
                                         提交报名申请
                                     </div>
                                 </div>
@@ -58,9 +57,12 @@
                                 </div>
                                 <div class="details-content">
                                     <el-table :data="memberInfo" border style="width: 100%">
-                                        <el-table-column prop="memberId" label="成员ID" width="180">
+                                        <el-table-column prop="memberID" label="成员ID" width="180">
                                         </el-table-column>
-                                        <el-table-column prop="userName" label="姓名" width="180">
+                                        <el-table-column  label="昵称" width="180">
+                                            <template slot-scope="scope">
+                                                {{scope.row.UserInformation.nickName}}
+                                            </template>                                                
                                         </el-table-column>
                                         <el-table-column prop="memberType" label="成员类型">
                                             <template slot-scope="scope">
@@ -73,7 +75,7 @@
                                             <template slot-scope="scope">
                                             <div>
                                                 <el-button
-                                                @click.native.prevent="queryMemberInfo(scope.row.memberId)"
+                                                @click.native.prevent="queryMemberInfo(scope.row.memberID)"
                                                 type="text"
                                                 size="small">
                                                 成员详情
@@ -95,9 +97,9 @@
                             <!--课程目录 S-->
                             <div :class="{'chapter-list':true,hide:!tabsTitle.projectRewardTab}">
                                 <el-table :data="rewardInfo" border >
-                                    <el-table-column prop="rewardId" label="记录ID号" width="180">
+                                    <el-table-column prop="rewardID" label="记录ID号" width="180">
                                     </el-table-column>
-                                    <el-table-column prop="userId" label="受奖惩成员ID" width="140">
+                                    <el-table-column prop="userID" label="受奖惩成员ID" width="140">
                                     </el-table-column>
                                     <el-table-column  label="奖惩类型">
                                         <template slot-scope="scope">
@@ -128,7 +130,7 @@
                                     <i class="fa fa-exclamation-circle"></i><span>评分尚未生成!</span>
                                 </p>
                                 <el-table :data="memberInfo" border  v-else>
-                                    <el-table-column prop="userId" label="受评分成员ID" width="140">
+                                    <el-table-column prop="memberID" label="受评分成员ID" width="140">
                                     </el-table-column>
                                     <el-table-column prop="attitudeScore" label="态度评分">
                                     </el-table-column>
@@ -171,14 +173,27 @@
                 </div>
             </div>
         </div>
+        <information-dialog @dialogClose="handleDialogClose" :infoArr="infoArr" :infoTableWidth="infoTableWidth" :infoDialogVisible="infoDialogVisible" :infoTable="infoTable"></information-dialog>
     </div>
 </template>
 
 <script>
     import CourseBread from './CourseBread'
+    import InformationDialog from '../common/InformationDialog'
     import {
         TotalOption,
     } from '../../utils/constant/options'; 
+    import {
+        Message,
+        MessageBox,
+        ElTabs
+    } from 'element-ui';
+    import {
+        eprojectABI
+    } from '../../utils/constant/eproject_abi'
+    ///Read log from raw data
+    import getFormatFromAbi from '../../utils/getFormatFromAbi'
+
     export default {
         name: "Information",
         data() {
@@ -201,10 +216,16 @@
                 },
                 courseChapter: '',
                 myTotalOption:[],
+
+                infoDialogVisible:false,
+                infoArr:[{title:'defualt',value:'default'}],
+                infoTableWidth:0,
+                infoTable:[],
             }
         },
         components: {
-            'course-bread': CourseBread
+            'course-bread': CourseBread,
+            "information-dialog":InformationDialog,            
         },
         methods: {
             tabsInit() {
@@ -221,20 +242,226 @@
             tabsChange(val) {
                 this.tabsInit();
                 this.tabsTitle[val] = true;
-            }
+            },
+
+            // InformationDialog
+            handleDialogClose(){
+                this.infoDialogVisible=false;
+            },            
+            async checkProjectStateOnChain(){
+                try {
+                    if (this.project.txHash == "") {
+                        Message.info("项目状态未登记");
+                        return;
+                    }
+                    const receipt = await this.$store.state.web3.web3Instance().eth.getTransactionReceipt(
+                        this.project.txHash, this.project.logIndex
+                    );
+
+                    var content = this.$store.state.web3.web3Instance().eth.abi.decodeLog(
+                        getFormatFromAbi("LogRegisterProject", eprojectABI),
+                        receipt.logs[this.project.logIndex].data,
+                        receipt.logs[this.project.logIndex].topics.slice(1)
+                    );
+                    console.log(content);
+                    this.infoArr = [{
+                            "title": "区块链编号",
+                            "value": this.project.txHash
+                        },
+                        {
+                            "title": "日志编号",
+                            "value": this.project.logIndex
+                        },
+                        {
+                            "title": "元数据",
+                            "value": content
+                        },
+                        {
+                            "title": "项目ID",
+                            "value": content.projectID
+                        },   
+                        {
+                            "title": "时间戳",
+                            "value": content.regTime
+                        },  
+                        {
+                            "title": "项目名称",
+                            "value": content.projectName
+                        },  
+                        {
+                            "title": "项目介绍",
+                            "value": content.projectIntro
+                        },  
+                        {
+                            "title": "项目创建人ID",
+                            "value": content.creatorID
+                        },                                                                                                           
+                        // {"title":"数据格式：","value":"成员ID:态度评分/代码评分/设计评分"},
+                    ]
+                    this.infoTable = [];
+                    this.infoTableWidth = 2;
+                    this.infoTable.push("成员ID")
+                    this.infoTable.push("冻结资产")
+                    for (var index in content.memberID) {
+                        this.infoTable.push(content.memberID[index])
+                        this.infoTable.push(content.FrozenBalanceList[index])
+                    }
+                    this.infoDialogVisible = true;
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+            async checkScoreOnChain(){
+                try {
+                    if (this.project.scoreTxHash == "") {
+                        this.$message.info("未登记");
+                        return;
+                    }
+                    const receipt = await this.$store.state.web3.web3Instance().eth.getTransactionReceipt(
+                        this.project.scoreTxHash, this.project.scoreLogIndex
+                    );
+                    console.log('receipt',receipt);
+                    // console.log(receipt.logs[rewardItem.logIndex]);
+
+                    var content = this.$store.state.web3.web3Instance().eth.abi.decodeLog(
+                        getFormatFromAbi("LogScoreEvent", eprojectABI),
+                        receipt.logs[this.project.scoreLogIndex].data,
+                        receipt.logs[this.project.scoreLogIndex].topics.slice(1));
+                    console.log('content:',content);
+                    this.infoArr = [{
+                            "title": "区块链编号",
+                            "value": this.project.scoreTxHash
+                        },
+                        {
+                            "title": "日志编号",
+                            "value": this.project.scoreLogIndex
+                        },
+                        {
+                            "title": "元数据",
+                            "value": content
+                        },
+                        {
+                            "title": "项目ID",
+                            "value": content.projectID
+                        },   
+                        {
+                            "title": "时间戳",
+                            "value": content.scoreTime
+                        },                                               
+                        // {"title":"数据格式：","value":"成员ID:态度评分/代码评分/设计评分"},
+                    ]
+                    this.infoTable = [];
+                    this.infoTableWidth = 4;
+                    this.infoTable.push("成员ID")
+                    this.infoTable.push("态度评分")
+                    this.infoTable.push("代码评分")
+                    this.infoTable.push("设计评分")
+                    for (var index in content.scoreMemberID) {
+                        this.infoTable.push(content.scoreMemberID[index])
+                        this.infoTable.push(content.attitudeScore[index].toString())
+                        this.infoTable.push(content.codeScore[index].toString())
+                        this.infoTable.push(content.designScore[index].toString())
+                    }
+                    this.infoDialogVisible = true;
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+            rewardItemInfo(val){
+                this.infoDialogVisible=true;
+                this.infoArr=[
+                    {'title':'奖惩原因','value':val.awardReason},
+                    {'title':'奖惩时间','value':val.awardTime},
+                ]
+                this.infoTableWidth=0;
+            },
+            async checkRewardOnChain(rewardItem){
+                try {
+                    if (rewardItem.txHash == "") {
+                        Message.info("未登记");
+                        return;
+                    }
+                    const receipt = await this.$store.state.web3.web3Instance().eth.getTransactionReceipt(rewardItem.txHash);
+                    console.log('receipt',receipt);
+                    // console.log(receipt.logs[rewardItem.logIndex]);
+                    console.log(getFormatFromAbi("LogRewardMessage", eprojectABI))
+
+                    var content = this.$store.state.web3.web3Instance().eth.abi.decodeLog(
+                        getFormatFromAbi("LogRewardMessage", eprojectABI),
+                        receipt.logs[rewardItem.logIndex].data,
+                        receipt.logs[rewardItem.logIndex].topics.slice(1));
+                    console.log(content);
+                    this.infoArr = [{
+                            "title": "区块链编号",
+                            "value": rewardItem.txHash
+                        },
+                        {
+                            "title": "日志编号",
+                            "value": rewardItem.logIndex
+                        },
+                        {
+                            "title": "元数据",
+                            "value": content
+                        },
+                        {
+                            "title": "奖惩类型",
+                            "value": content.awardType
+                        },                    
+                        {
+                            "title": "奖惩金额",
+                            "value": content.awardAmount
+                        },
+                        {
+                            "title": "奖惩理由",
+                            "value": content.awardReason
+                        },
+                        {
+                            "title": "受奖惩人员",
+                            "value": content.memberID
+                        },
+                        {
+                            "title": "项目编号",
+                            "value": content.projectID
+                        },
+                        {
+                            "title": "奖惩记录ID",
+                            "value": content.rewardID
+                        },
+                    ]
+                            
+                    this.infoTableWidth = 0;
+                    this.infoDialogVisible = true;
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+            async attendProject(){
+                try {
+                    var res=await this.$axios.post('/api/project/ApplyRecord/createapply',{
+                        projectID:this.$route.params.projectID,
+                    });
+                    if(res.data.status==0){
+                        Message.error('非法操作!')
+                    }else Message.success('操作成功');
+                } catch (error) {
+                    console.log(error);
+                    Message.error('通信失败');
+                }
+            },
         },
         created(){
             this.myTotalOption=TotalOption;
-            this.$axios.post('/api/project/query/getProjectInfo', {
-                projectId: this.$route.params.projectId
+            this.$axios.get('/api/project/query/projectdetail', {
+                params: {
+                    projectID: this.$route.params.projectID
+                },
             }).then((response) => {
-                if (response.data.flag == 0)
+                if (response.data.status == 0)
                     console.log(response.data.message);
                 else {
-                    this.project = response.data.sqlres1[0];
-                    this.memberInfo = response.data.sqlres2;
-                    console.log(this.memberInfo)
-                    this.rewardInfo = response.data.sqlres3;
+                    this.project = response.data.sqlres;
+                    this.memberInfo = response.data.sqlres.ProjectMembers;
+                    this.rewardInfo = response.data.sqlres.ProjectRewards;
                     // this.bread.systemName = course.info.systemName;
                     // this.bread.systemUrl = `/course/list?system=${course.info['systemID']}`;
                     // this.bread.typeName = course.info.typeName;

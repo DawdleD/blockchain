@@ -83,7 +83,7 @@ exports.getUserInfo = async (req, res) => {
                     email: email,
                     birthday: birthday,
                     sex: rows[0].sex,
-                    nickname: rows[0].nickname,
+                    nickName: rows[0].nickName,
                     realName: rows[0].realName,
                     avatarUrl: rows[0].avatarUrl
                 }
@@ -182,16 +182,16 @@ exports.updateUserInfo = async (req, res) => {
     if (req.session.userID === undefined) {
         res.json({status: 0, msg: '保存失败'})
     } else {
-        const nickname = req.body.data['nickname'];
+        const nickName = req.body.data['nickName'];
         const realName = req.body.data['realName'];
         const sex = req.body.data['sex'];
         let date = moment(req.body.data['birthday']).format('YYYY-MM-DD');
         if (
-            validateLength(nickname, 0, 15) &&
+            validateLength(nickName, 0, 15) &&
             validateLength(realName, 0, 15) &&
             validateSex(sex) && date !== 'Invalid date') {
             await UserInfo.update({userID: req.session.userID}, {
-                nickname: nickname,
+                nickName: nickName,
                 realName: realName,
                 birthday: date,
                 sex: sex

@@ -5,7 +5,7 @@
                 <div class="search-bar" v-if="$route.params.search!==undefined">
                     <div class="keywords">
                         关键词：<span>{{$route.params.search}}</span>
-                        <router-link to="/course/list" class="button-clear">×</router-link>
+                        <router-link to="/project/list" class="button-clear">×</router-link>
                     </div>
                     <div class="search-result">
                         共找到<span>{{` ${searchCount} `}}</span>门<span>{{` ${$route.params.search} `}}</span>相关课程
@@ -91,8 +91,8 @@
                                 <div class="text">该分类下无课程</div>
                             </div>
                         </div>
-                        <div class="course" v-for="project in projects" :key="project['projectId']"
-                             @click="gotoCourseInfo(`/project/${project['projectId']}/information`)">
+                        <div class="course" v-for="project in projects" :key="project['projectID']"
+                             @click="gotoCourseInfo(`/project/${project['projectID']}/information`)">
                             <!--图片-->
                             <div class="left">
                                 <div class="c-img">
@@ -109,14 +109,14 @@
                                             {{project['projectFee'] === 0 ? '免费' : `${project['projectFee']} Wei`}}</a>
                                     </div>
                                     <!--授课老师/机构-->
-                                    <div class="teacher"><a>机构/老师名称</a></div>
+                                    <div class="teacher"><a>机构/老师名称:{{project.ProjectCreator.nickName}}</a></div>
                                     <!--描述-->
                                     <div class="description">{{project['projectIntro']}}</div>
                                     <!--细节-->
                                     <div class="detail">
                                         <span class="hot"><i class="fa fa-tasks"></i>项目状态:{{myTotalOption.labelProjectStatus[project['projectStatue']]}}</span>
                                         <div class="praise">
-                                            状态登记: {{project['txHash'].startsWith('0x')?"已登记":"未登记"}}
+                                            状态登记: {{(project['txHash']!=null&&project['txHash'].startsWith('0x'))?"已登记":"未登记"}}
                                         </div>
                                     </div>
                                 </div>
@@ -207,16 +207,13 @@
                 this.filterUrl = `${this.$route.path}?${systemQuery}${systemQuery === '' ? '' : '&'}` +
                     `${typeQuery}${typeQuery === '' ? '' : '&'}` +
                     `${sortQuery}${sortQuery === '' ? '' : '&'}`;
-                console.log(this.filterUrl);
                 this.sortUrl = `${this.$route.path}?${systemQuery}${systemQuery === '' ? '' : '&'}` +
                     `${typeQuery}${typeQuery === '' ? '' : '&'}` +
                     `${filterQuery}${filterQuery === '' ? '' : '&'}`;
-                console.log(this.sortUrl);
                 this.pageUrl = `${this.$route.path}?${systemQuery}${systemQuery === '' ? '' : '&'}` +
                     `${typeQuery}${typeQuery === '' ? '' : '&'}` +
                     `${filterQuery}${filterQuery === '' ? '' : '&'}` +
                     `${sortQuery}${sortQuery === '' ? '' : '&'}`;
-                console.log(this.pageUrl);
             }
         },
         components: {
@@ -242,22 +239,22 @@
         watch: {
             /* 改变URL */
             urlChanged(val) {
-                // if (this.$route.params.search !== undefined)
-                //     this.$axios.post(`/api/course/list/count`, {
-                //         search: this.$route.params.search
-                //     }).then((response) => {
-                //         if (response.data.status === 1) {
-                //             this.searchCount = response.data['count'];
-                //         } else console.log(response.data.message);
-                //     }).catch((err) => {
-                //         console.log(err);
-                //     });
+                if (this.$route.params.search !== undefined)
+                    this.$axios.post(`/api/project/query/getProjectCount`, {
+                        search: this.$route.params.search
+                    }).then((response) => {
+                        if (response.data.status === 1) {
+                            this.searchCount = response.data['count'];
+                        } else console.log(response.data.message);
+                    }).catch((err) => {
+                        console.log(err);
+                    });
                 var myStr=this.$route.fullPath;
                 var argList=myStr.indexOf('?')==-1?'':myStr.substr(myStr.indexOf("?"));
-                var apiUrl=`/api/project/query/getprojectlist/${argList}`
+                var apiUrl=`/api/project/query/getproject/${argList}`
                 console.log(apiUrl)
                 this.$axios.get(apiUrl).then((response) => {
-                    if (response.data.flag === true) {
+                    if (response.data.status === 1) {
                         this.projects = response.data.sqlres;
                     } else console.log(response.data.message);
                 }).catch((err) => {
@@ -277,7 +274,7 @@
             };
             /* 如果有搜索课程先获取符合条件的课程总数 */
             if (this.$route.params.search !== undefined){
-                this.$axios.post(`/api/course/list/count`, {
+                this.$axios.post(`/api/project/query/getProjectCount`, {
                     search: this.$route.params.search
                 }).then((response) => {
                     if (response.data.status === 1) {
@@ -297,10 +294,11 @@
             /* 获取项目 */
             var myStr=this.$route.fullPath;
             var argList=myStr.indexOf('?')==-1?'':myStr.substr(myStr.indexOf("?"));
-            var apiUrl=`/api/project/query/getprojectlist/${argList}`        
+            var apiUrl=`/api/project/query/getproject/${argList}`        
             this.$axios.get(apiUrl).then((response) => {
-                if (response.data.flag == true) {
+                if (response.data.status == 1) {
                     this.projects = response.data.sqlres;
+                    console.log(this.projects);
                 } else console.log(response.data.message);
             }).catch((err) => {
                 console.log(err);

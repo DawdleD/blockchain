@@ -19,6 +19,19 @@ const CourseComment = sequelize.import('./course-comment.js');
 const CourseClass = sequelize.import('./course-class.js');
 
 /**
+ * 项目模块
+ */
+const ProjectApplyRecord = sequelize.import('./project-applyrecord');
+const ProjectCreateRecord = sequelize.import('./project-createrecord');
+const ProjectInformation = sequelize.import('./project-information');
+const ProjectPaymentRecord = sequelize.import('./project-paymentrecord');
+const ProjectMember = sequelize.import('./project-projectmember');
+const ProjectRewardRecord = sequelize.import('./project-rewardrecord');
+const ProjectScoreRecord = sequelize.import('./project-scorerecord');
+
+
+
+/**
  * 一个用户登录信息对应一个用户信息
  * 一对一关系
  */
@@ -90,6 +103,118 @@ CourseComment.belongsTo(UserInformation, {foreignKey: 'userID'});
 UserInformation.belongsToMany(CourseInformation, {through: CourseClass, foreignKey: 'userID'});
 CourseInformation.belongsToMany(UserInformation, {through: CourseClass, foreignKey: 'courseID'});
 
+
+/**
+ * Project 部分
+ */
+
+/**
+ * 项目创建者与项目为一对多关系
+ */
+UserInformation.hasMany(ProjectInformation,{foreignKey:'creatorID',as:'CreateProjects'});
+ProjectInformation.belongsTo(UserInformation,{foreignKey:'creatorID',as:'ProjectCreator'});
+
+/**
+ * 接收奖励用户与奖励记录为一对多关系
+ */
+UserInformation.hasMany(ProjectRewardRecord,{foreignKey:'userID',as:'ReceivedRewards'});
+ProjectRewardRecord.belongsTo(UserInformation,{foreignKey:'userID',as:'RewardReceiver'});
+
+/**
+ * 发起奖励用户与奖励记录为一对多关系
+ */
+UserInformation.hasMany(ProjectRewardRecord,{foreignKey:'senderID',as:'SendRewards'});
+ProjectRewardRecord.belongsTo(UserInformation,{foreignKey:'senderID',as:'RewardSender'});
+
+/**
+ * 接收评分用户与评分记录为一对多关系
+ */
+UserInformation.hasMany(ProjectScoreRecord,{foreignKey:'userID',as:'ReceivedScores'});
+ProjectScoreRecord.belongsTo(UserInformation,{foreignKey:'userID',as:'ScoreReceiver'});
+
+/**
+ * 发起评分用户与评分记录为一对多关系
+ */
+UserInformation.hasMany(ProjectScoreRecord,{foreignKey:'scorerID',as:'SendScores'});
+ProjectScoreRecord.belongsTo(UserInformation,{foreignKey:'scorerID',as:'ScoreSender'});
+
+/**
+ * 支付用户与项目支付记录为一对多关系
+ */
+UserInformation.hasMany(ProjectPaymentRecord,{foreignKey:'userID',as:'SendPayments'});
+ProjectPaymentRecord.belongsTo(UserInformation,{foreignKey:'userID',as:'PaymentSender'});
+
+/**
+ * 用户与项目创建申请记录为一对多关系
+ */
+UserInformation.hasMany(ProjectCreateRecord,{foreignKey:'userID',as:'SendCreateApplys'});
+ProjectCreateRecord.belongsTo(UserInformation,{foreignKey:'userID',as:'CreateApplySender'});
+
+/**
+ * 用户与项目参加申请记录为一对多关系
+ */
+UserInformation.hasMany(ProjectApplyRecord,{foreignKey:'userID',as:'SendAttendApplys'});
+ProjectApplyRecord.belongsTo(UserInformation,{foreignKey:'userID',as:'AttendApplySender'});
+
+/**
+ * 用户与参加项目为多对多关系
+ */
+
+/**
+ * ProjectMember与ProjectInformation为多对一关系
+ * ProjectMember与UserInformation为多对一关系
+ */
+
+UserInformation.belongsToMany(ProjectInformation, {  through: 'projectMember', foreignKey: 'memberID',as:'AttendProjects' })
+ProjectInformation.belongsToMany(UserInformation, {  through: 'projectMember', foreignKey: 'projectID',as:'AttendMembers' })
+ProjectMember.belongsTo(UserInformation,{foreignKey:'memberID'});
+ProjectMember.belongsTo(ProjectInformation,{foreignKey:'projectID'});
+UserInformation.hasMany(ProjectMember,{foreignKey:'memberID'});
+ProjectInformation.hasMany(ProjectMember,{foreignKey:'projectID'});
+/**
+ * 项目与项目奖励记录为一对多关系
+ */
+ProjectInformation.hasMany(ProjectRewardRecord,{foreignKey:'projectID',as:'ProjectRewards'});
+ProjectRewardRecord.belongsTo(ProjectInformation,{foreignKey:'projectID',as:'RewardInProject'});
+
+
+/**
+ * 项目与项目评分记录为一对多关系
+ */
+ProjectInformation.hasMany(ProjectScoreRecord,{foreignKey:'projectID',as:'ProjectScores'});
+ProjectScoreRecord.belongsTo(ProjectInformation,{foreignKey:'projectID',as:'ScoreInProject'});
+
+
+/**
+ * 被投资项目与投资记录为一对多关系
+ */
+ProjectInformation.hasMany(ProjectPaymentRecord,{foreignKey:'objectID',as:'ObjectPayments'});
+ProjectPaymentRecord.belongsTo(ProjectInformation,{foreignKey:'objectID',as:'PaymentInProject'});
+
+/**
+ * 项目与项目申请记录为一对多关系
+ */
+ProjectInformation.hasMany(ProjectApplyRecord,{foreignKey:'projectID',as:'ProjectApplys'});
+ProjectApplyRecord.belongsTo(ProjectInformation,{foreignKey:'projectID',as:'ApplyInProject'});
+
+
+/**
+ * 项目创建记录与项目支付记录为一对一关系
+ */
+ProjectCreateRecord.belongsTo(ProjectPaymentRecord,{foreignKey:'paymentID',as:'RecordPayment'});
+ProjectPaymentRecord.hasOne(ProjectCreateRecord,{foreignKey:'paymentID',as:'PaymentInCreateRecord'});
+
+/**
+ * 项目申请记录与项目支付记录为一对一关系
+ */
+ProjectApplyRecord.belongsTo(ProjectPaymentRecord,{foreignKey:'paymentID',as:'RecordPayment'});
+ProjectPaymentRecord.hasOne(ProjectApplyRecord,{foreignKey:'paymentID',as:'PaymentInApplyRecord'});
+
+/**
+ * Project部分 结束
+ */
+
+
 sequelize.sync({force: false}).then(() => {
     console.log('success to create all table')
 }).catch((err) => {
@@ -97,8 +222,12 @@ sequelize.sync({force: false}).then(() => {
     console.log('fail to create all table')
 });
 
+
+
 module.exports = {
     UserPassport, UserInformation,
     CourseInformation, CourseClass, CourseComment, CourseChapter,
-    CourseVideo, CourseType, CourseSystem, CourseDetail, CourseFile
+    CourseVideo, CourseType, CourseSystem, CourseDetail, CourseFile,
+    ProjectApplyRecord,ProjectCreateRecord,ProjectInformation,ProjectMember,
+    ProjectPaymentRecord,ProjectRewardRecord,ProjectScoreRecord
 };
