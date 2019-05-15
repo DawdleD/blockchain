@@ -30,3 +30,20 @@ truffle migrate --network ganache_cli
 (18) 0xd579368f1a80adb14450c3928f47e49e4fca87fe (~100 ETH)
 (19) 0xa00d0bef46ee223e87bfbfdd5aae1d8827aaf980 (~100 ETH)
 
+使用Truffle部署合约后，在Server目录下创建eproject_abi.js并根据以下方法载入合约信息
+
+
+const projectaddress='0x8bd8e13275cdabac17da439f24a61c6c19980460';
+//以实际情况为准
+
+const projectABI={
+.....
+}
+//在编译并部署完成后自动产生的Build文件夹中可找到
+
+var projectconfig={
+  "projectaddress":projectaddress,
+  "projectABI":projectABI
+}
+
+module.exports = projectconfig;
