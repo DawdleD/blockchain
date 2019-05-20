@@ -30,7 +30,7 @@ truffle migrate --network ganache_cli
 (18) 0xd579368f1a80adb14450c3928f47e49e4fca87fe (~100 ETH)
 (19) 0xa00d0bef46ee223e87bfbfdd5aae1d8827aaf980 (~100 ETH)
 
-使用Truffle部署合约后，在Server目录下创建eproject_abi.js并根据以下方法载入合约信息
+使用Truffle部署合约后，在根目录/Solidity/下创建eproject_abi.js并根据以下方法载入合约信息
 
 
 const projectaddress='0x8bd8e13275cdabac17da439f24a61c6c19980460';
@@ -47,3 +47,46 @@ var projectconfig={
 }
 
 module.exports = projectconfig;
+
+
+改动情况：
+truffle.js
+配置以太坊节点接口时使用，决定了部署合约时，--network 后接的网络名
+
+solidity/
+eproject_abi.js（创建方法已在上文述及）
+
+service/
+project-xxxx.js
+（项目部分的数据库建表）
+支付记录表为project-paymentrecord.js
+
+routes/
+project.js
+（项目部分的API接口路由，API接口路由统一以/api/project/xxxxx/xxxxx）命名）
+
+migrations/
+供Truffle部署合约使用，无需进行调整
+
+ethereum/
+提供调用合约函数的接口、初始化Web3实例、合约实例的相关函数库
+
+contracts/
+合约代码
+
+config/
+对数据库配置文件稍作修改，可无视
+
+service/
+controller/
+添加了项目模块中控制层、服务层的相应代码
+
+app.js
+导入项目模块路由，以太坊交互接口、合约实例交互接口初始化
+在正式部署时，应把app.js中的下列对应代码注！释！
+app.get('/api/chguser',(req,res)=>{
+    req.session.userID=req.query.userID;
+    req.session.accessLevel=req.query.accessLevel
+    res.json({userID:req.session.userID,accessLevel:req.session.accessLevel});
+  });
+

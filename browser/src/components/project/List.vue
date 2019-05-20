@@ -48,7 +48,7 @@
                         <div class="right">
                             <ul>
                                 <li>
-                                    <span @click="testfunc">测试</span>
+                                    TEST<!-- <searchBarMid @searchInfo="handleSearchInfo" :searchColumnArr="searchColumnArr" :isSelectCom="isSelectCom" :searchOptionArr="searchOptionArr"></searchBarMid> -->
                                 </li>
                                 <li>
                                     <router-link :class="{cur:$route.query.sort===undefined}" :to="`${sortUrl}`">
@@ -158,9 +158,11 @@
     import ListHeader from './ListHeader'
     import SortPage from './SortPage'
     import InformationDialog from '../common/InformationDialog'
+    import SearchBarMid from '../common/SearchBar_mid'
     import {
     TotalOption,
     } from '../../utils/constant/options';  
+import SearchBar_mid from '../common/SearchBar_mid';
     export default {
         name: "List",
         data() {
@@ -183,15 +185,18 @@
                 infoArr:[{title:'defualt',value:'default'}],
                 infoTableWidth:0,
                 infoTable:[],
+
+                searchColumnArr:[],
+                isSelectCom:{},
+                searchOptionArr:{},
             }
         },
         methods: {
-            testfunc(){
-                this.infoDialogVisible=true;
-                this.infoArr=[{'title':'标题','value':'欢迎'}]
-                this.infoTableWidth=1;
-                this.infoTable=['1234','5678'];
+            
+            handleSearchInfo(val){
+                console.log(val);
             },
+
             handleDialogClose(){
                 this.infoDialogVisible=false;
             },
@@ -220,6 +225,7 @@
             "list-header": ListHeader,
             "list-footer": SortPage,
             "information-dialog":InformationDialog,
+            "searchBarMid":SearchBar_mid
         },
         computed: {
             /* 改变URL */
@@ -266,6 +272,21 @@
         created() {
             this.myTotalOption=TotalOption;
             /* 改变URL */
+            // Test SerachBarMid
+            this.searchColumnArr=[
+                {'value':'creatorID','label':'创建者'},
+                {'value':'projectField','label':'项目领域'},
+                {'value':'projectName','label':'项目名称'},
+            ];
+            this.isSelectCom={
+                'creatorID':false,
+                'projectField':true,
+                'projectName':false,
+            };
+            this.searchOptionArr={
+                'projectField':TotalOption.optionProjectField,
+            };
+            // Test SerachBarMid End
             let val = {
                 projectField: this.$route.query.projectField,
                 type: this.$route.query.type,
@@ -298,7 +319,6 @@
             this.$axios.get(apiUrl).then((response) => {
                 if (response.data.status == 1) {
                     this.projects = response.data.sqlres;
-                    console.log(this.projects);
                 } else console.log(response.data.message);
             }).catch((err) => {
                 console.log(err);
