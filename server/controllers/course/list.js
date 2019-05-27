@@ -88,3 +88,20 @@ exports.getRecommendCourse = async (req, res) => {
         res.json({status: 0, msg: '服务器错误'})
     })
 };
+
+/**
+ * 获取首页课程
+ */
+exports.getIndexCourse = async (req, res) => {
+    try {
+        let freeCourse = await CourseInfo.selectIndexCourse(true);
+        let chargeCourse = await CourseInfo.selectIndexCourse(false);
+        res.json({
+            status: 1,
+            freeCourse,
+            chargeCourse
+        })
+    } catch (e) {
+        res.json({status: 0, msg: '服务器错误'})
+    }
+};

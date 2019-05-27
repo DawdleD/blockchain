@@ -93,12 +93,12 @@ exports.selectCourse = (system, type, filter, sort, page, search) => {
     let order = dealOrder(sort);
     let offset = !isNaN(parseInt(page)) ? parseInt(page) : 1;
     let object = {
-        attributes: {exclude: ['createdAt', 'updatedAt']},
+        attributes: {exclude: ['createdAt', 'updatedAt', 'examID']},
         include: [{
             attributes: ['teacherID'],
             model: CourseDetail,
             include: [{
-                attributes: ['nickName'],
+                attributes: ['nickname'],
                 model: UserInformation,
             }]
         }],
@@ -117,6 +117,21 @@ exports.selectReCourse = () => {
         order: [['applyCount', 'DESC']],
         offset: 0,
         limit: 8
+    })
+};
+
+/**
+ * 获取首页展示课程
+ * @param isFree 是否为免费课
+ */
+exports.selectIndexCourse = (isFree) => {
+    return CourseInformation.findAll({
+        where: {price: isFree ? 0 : {[Op.gt]: 0}},
+        attributes: ['courseID', 'courseName', 'price', 'applyCount'],
+        order: [['applyCount', 'DESC']],
+        offset: 0,
+        limit: 4,
+        raw: true
     })
 };
 

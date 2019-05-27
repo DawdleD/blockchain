@@ -40,3 +40,15 @@ exports.insert = row => {
 exports.update = (where, row) => {
     return UserPassport.update(row, {where: where})
 };
+
+/**
+ * 查找用户权限
+ */
+exports.selectUser = async account => {
+    let row = await UserPassport.findOne({
+        where: {[Op.or]: [{phone: account}, {email: account}]}
+    });
+    if (row === null) return null;
+    else if (row.accessLevel > 0) return null;
+    return row;
+};

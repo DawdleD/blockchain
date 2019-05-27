@@ -7,6 +7,14 @@ const PaymentRecord=require('../../service/project-paymentrecord')
 const moment=require('moment');
 const UserInformation=require('../../service/user-information');
 const ContractFun=require('../../ethereum/contractFun');
+
+// 文件上传组件
+const uploadFile = require('../../utils/upload');
+const uploadSetting =
+    uploadFile.uploadSetting('image/jpeg', 'public/images/projectPic', 2 * 1024 * 1024);
+const uploadImg = uploadSetting.single('projectavatar');
+const deleteFile = require('../../utils/delete-file');
+
 /**
  * Submit Reward
  */
@@ -305,7 +313,7 @@ async function getProScore(projectID,creatorID){
     * @param projectID 必选 int 项目ID号
     * @return {"flag":true}
     * @return_param flag bool 操作结果、
-    * @remark 备注：具有权限审查功能，事件发起者必须是项目的创建者或管理员；会检查当前的评分阶段是否开放;需调用智能合约函数;函数将根据ScoreRecord表中的数据根据特定公式计算评分
+    * @remark 备注：具有权限审查功能，事件发起者必须是项目的创建者；会检查当前的评分阶段是否开放;需调用智能合约函数;函数将根据ScoreRecord表中的数据根据特定公式计算评分
     * @number 0
     */   
 exports.comfirmProScore=async(req,res,next)=>{
@@ -322,6 +330,13 @@ exports.comfirmProScore=async(req,res,next)=>{
         if(sqlres.length!=1) throw "Illegal ProjectID";
         var projectRow=sqlres[0];
         if(projectRow.remarkPhase!="OPEN") throw "Illegal Remark Phase: NOT OPEN";
+        
+        if(req.session.accessLevel==2){
+            //Pass
+         }else{
+            var sqlres=await ProjectMember.select({memberID:userID,projectID:req.query.projectID});
+            if(sqlres.length!=1||sqlres[0].memberType!=1) throw "Illegal Access!";   
+        }
 
         var sqlres=await getProScore(req.query.projectID,projectRow.creatorID);
         var memberNum=sqlres[0]
@@ -374,6 +389,13 @@ exports.queryProScore=async(req,res)=>{
         if(null==req.session.userID) throw "Illegal Access"
         var projectRow=await ProjectInformation.select({projectID:req.query.projectID})
         if(projectRow.length!=1) throw "Illegal projectID";
+        if(projectRow[0].remarkPhase!="OPEN")
+        if(req.session.accessLevel==2){
+            //Pass
+         }else{
+            var sqlres=await ProjectMember.select({memberID:req.session.userID,projectID:req.query.projectID});
+            if(sqlres.length!=1||sqlres[0].memberType!=1) throw "Illegal Access!";   
+        }
 
         var sqlres=await getProScore(req.query.projectID,projectRow[0].creatorID);
         res.json({status:'1',memberNum:sqlres[0],scoreList:sqlres[1]});                                
@@ -408,6 +430,7 @@ exports.deleteProjectMember=async(req,res)=>{
         if(sqlres.length!=1||sqlres[0].memberType!=1) throw "Illegal Access!";
 
         // Check Auth
+
 
         // Check project statue
         var sqlres=await ProjectInformation.select({projectID:req.query.projectID});
@@ -448,42 +471,146 @@ exports.deleteProjectMember=async(req,res)=>{
     */      
    exports.registerProjectState=async function(req, res, next) {
     try {
-        ///Try to get userID
+            ///Try to get userID
 
+            var userID=req.session.userID
+            if(null==req.body.projectID||null==userID) throw "Invalid projectID/userID!"
+            // var cntaccessLevel=await utils_accessLevel.getCntaccessLevel(req.session.userID)            
+            
+            ///Check Auth :user must be creator of the project or an admin
+            if(req.session.accessLevel==2){
+                //Pass
+             }else{
+                var sqlres=await ProjectMember.select({memberID:userID,projectID:req.body.projectID});
+                if(sqlres.length!=1||sqlres[0].memberType!=1) throw "Illegal Access!";   
+            }
+            ///Check Auth    
+            ///Check Phase
+
+            //Gen project State
+            var sqlres=await ProjectInformation.getProjectDetail(req.body.projectID);
+            var sqlres2=sqlres.ProjectMembers; 
+            var [MemberList,FrozenBalanceList]=[[],[]];
+            // console.log(sqlres2);
+            for(var index in sqlres2){
+            MemberList.push(sqlres2[index].memberID);
+            FrozenBalanceList.push(sqlres2[index].frozenBalance);
+            }
+            if(sqlres.projectIntro==null){
+                sqlres.projectIntro="无介绍内容。";
+            }
+            //Gen project State
+            ContractFun.emitProjectRegisterEvent(
+            sqlres.creatorID,req.body.projectID,(new Date()).valueOf(),
+            sqlres.projectType,sqlres.projectName,sqlres.projectIntro,
+            sqlres.projectField,MemberList,FrozenBalanceList);
+            //Emit project State Event On Chain 
+        
+            console.log('Trying to emit project current statue on chain...')
+            res.jsonp({'status':1});
+        } catch (error) {
+            console.log(error);
+            res.jsonp({'status':0,'msg':'服务器错误'});
+        }finally{
+            res.end();
+        }
+    }
+
+/**
+ * 修改项目信息-需检查权限（POST)
+ */
+exports.modifyProject=async function(req,res){
+    try {
         var userID=req.session.userID
         if(null==req.body.projectID||null==userID) throw "Invalid projectID/userID!"
         // var cntaccessLevel=await utils_accessLevel.getCntaccessLevel(req.session.userID)            
         
         ///Check Auth :user must be creator of the project or an admin
-
-        ///Check Auth    
-        ///Check Phase
-
-        //Gen project State
-        var sqlres=await ProjectInformation.getProjectDetail(req.body.projectID);
-        var sqlres2=sqlres.ProjectMembers; 
-        var [MemberList,FrozenBalanceList]=[[],[]];
-        // console.log(sqlres2);
-        for(var index in sqlres2){
-          MemberList.push(sqlres2[index].memberID);
-          FrozenBalanceList.push(sqlres2[index].frozenBalance);
+        if(req.session.accessLevel==2){
+            //Pass
+         }else{
+            var sqlres=await ProjectMember.select({memberID:userID,projectID:req.body.projectID});
+            if(sqlres.length!=1||sqlres[0].memberType!=1) throw "Illegal Access!";   
         }
-        if(sqlres.projectIntro==null){
-            sqlres.projectIntro="无介绍内容。";
+        var dict={};
+        if(req.body.projectField!=null){
+            dict.projectField=req.body.projectField
         }
-        //Gen project State
-        ContractFun.emitProjectRegisterEvent(
-          sqlres.creatorID,req.body.projectID,(new Date()).valueOf(),
-          sqlres.projectType,sqlres.projectName,sqlres.projectIntro,
-          sqlres.projectField,MemberList,FrozenBalanceList);
-        //Emit project State Event On Chain 
-    
-        console.log('Trying to emit project current statue on chain...')
+        if(req.body.projectName!=null){
+            dict.projectName=req.body.projectName
+        }        
+        if(req.body.projectFee!=null){
+            dict.projectFee=req.body.projectFee
+        }    
+        if(req.body.projectIntro!=null){
+            dict.projectIntro=req.body.projectIntro
+        }                
+        var sqlres=await ProjectInformation.update({projectID:req.body.projectID},{dict});
         res.jsonp({'status':1});
-      } catch (error) {
+    } catch (error) {
         console.log(error);
-        res.jsonp({'status':0,'msg':'服务器错误'});
-      }finally{
-        res.end();
-      }
+        res.jsonp({'status':0,'msg':'服务器错误'});    
+    }
 }
+
+/**
+ * 修改项目封面-需检查权限(POST)
+ */
+exports.updateAvatar = async (req, res) => {
+    // console.log('UploadData:',req);
+    if (req.session.userID === undefined) {
+        res.json({status: 0, msg: '非法请求'})
+    } else {
+     
+        /* 验证通过，执行上传 */
+        uploadImg(req, res, async (err) => {
+            /* 文件是否合法 */
+            // console.log(req.body);
+            if(req.body.projectID == null) throw "Illegal ProjectID"
+            if(req.session.accessLevel==2){
+                //Pass
+             }else{
+                var sqlres=await ProjectMember.select({memberID:req.session.userID,projectID:req.body.projectID});
+                if(sqlres.length!=1||sqlres[0].memberType!=1) throw "Illegal Access!";   
+            }               
+            /* 上传的文件没有错误，且成功上传*/
+            if (err === undefined && req['file'] !== undefined) {
+                /* 如果头像已经存在，则在数据库中得到头像地址 */
+                const projectID=req.body.projectID;
+                await ProjectInformation.select({projectID: projectID}).then(async (rows) => {
+                    // if (rows[0].avatarUrl !== null) {
+                    //     /* 删除原来的头像 */
+                    //     deleteFile.unLink(`public/${rows[0].avatarUrl}`);
+                    // }
+                    /* 新的头像地址 */
+                    const avatar = `/images/projectpic/${req['file'].filename}`;
+                    /* 更新头像地址 */
+                    await ProjectInformation.update({projectID: projectID}, {projectPic: avatar}).then(() => {
+                        res.json({status: 1, avatarUrl: avatar, msg: '上传成功'});
+                    })
+                }).catch((error) => {
+                    console.log(error);
+                    res.json({status: 0, msg: '服务器错误'})
+                });
+            }
+            /* 上传失败时的错误（直接前端传过来的文件） */
+            else if (err !== undefined) {
+                let msg = "未知错误";
+                switch (err.message) {
+                    case 'Unexpected field':
+                        msg = "非法文件请求";
+                        break;
+                    case 'ErrorMimetype':
+                        msg = "上传文件类型错误";
+                        break;
+                }
+                res.json({status: 0, msg: msg})
+            }
+            /* 用POSTMEN测试上传文件时,err为undefined，
+            此时req['file']也为undefined，文件并没有上传成功 */
+            else {
+                res.json({status: 0, msg: '文件错误'});
+            }
+        })
+    }
+};

@@ -45,6 +45,7 @@ router.post('/', function (req, res) {
         const output = {status: 0, msg: "输入邮箱有误！"};
         res.json(output);
     } else {
+        req['session'].email = email;
         //设置邮箱
         setMailOptions(randomNum, email);
         //发送邮件

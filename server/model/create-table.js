@@ -165,8 +165,10 @@ ProjectApplyRecord.belongsTo(UserInformation,{foreignKey:'userID',as:'AttendAppl
  * ProjectMember与UserInformation为多对一关系
  */
 
-UserInformation.belongsToMany(ProjectInformation, {  through: 'projectMember', foreignKey: 'memberID',as:'AttendProjects' })
-ProjectInformation.belongsToMany(UserInformation, {  through: 'projectMember', foreignKey: 'projectID',as:'AttendMembers' })
+UserInformation.belongsToMany(ProjectInformation, {  through: 'ProjectMember', foreignKey: 'memberID',as:'AttendProjects' })
+ProjectInformation.belongsToMany(UserInformation, {  through: 'ProjectMember', foreignKey: 'projectID',as:'AttendMembers' })
+
+// Test if can be removed
 ProjectMember.belongsTo(UserInformation,{foreignKey:'memberID'});
 ProjectMember.belongsTo(ProjectInformation,{foreignKey:'projectID'});
 UserInformation.hasMany(ProjectMember,{foreignKey:'memberID'});

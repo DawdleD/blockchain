@@ -84,7 +84,8 @@ exports.getRecord = async (req, res) => {
 exports.createApply=async(req,res)=>{
     try{
         var userID=req.session.userID;
-        if(null==userID) throw 'Illegal Access';
+        //Only teacher can create 项目申请
+        if(null==userID||req.session.accessLevel!=1) throw 'Illegal Access';
         var sqlRes=await CreateApplyRecord.insert({
             userID:userID, applyType:'PROJECT', projectType:0, 
             projectFee:req.body.projectFee, projectName:req.body.projectName, projectPic:req.body.projectPic, projectIntro:req.body.projectIntro, 

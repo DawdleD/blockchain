@@ -35,7 +35,7 @@
                             <div class="title">{{apply.ApplyInProject['projectName']}}</div>
                         </router-link>
                     </div>
-                    <div class="my-course-cell state">{{apply.ApplyerInfo['nickName']}}</div>
+                    <div class="my-course-cell state">{{apply.ApplyerInfo['nickname']}}</div>
                     <div class="my-course-cell state">{{myTotalOption.labelProjectApplyStatue[apply.applyStatue]}}</div>
                     <div class="my-course-cell operating">
                         <a :class="[apply.applyStatue!='WAITING'?'btn-operate-disabled':'btn-operate']" 

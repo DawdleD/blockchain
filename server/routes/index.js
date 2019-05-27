@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Login = require('../controllers/passport/login')
-const {getDetail} = require('../controllers/course/information')
+const Info = require('../controllers/teacher/student');
 
 
 /* GET home page. */
@@ -16,5 +15,5 @@ router.get('/', async function (req, res, next) {
     res.render('index', {title: 'Express'});
 });
 
-router.post('/test', getDetail);
+router.post('/test', Info.getStudentInfo);
 module.exports = router;

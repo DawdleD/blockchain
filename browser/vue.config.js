@@ -10,11 +10,11 @@ module.exports = {
                 changeOrigin: true,
                 pathRewrite: {'^/api': '/api'}
             },
-            '/img': {
+            '/images': {
                 target: 'http://127.0.0.1:3000',//设置你调用的接口域名和端口号 别忘了加http
                 changeOrigin: true,
                 pathRewrite: {
-                  '^/img': '/img'
+                  '^/images': '/images'
                 }
             }
         }

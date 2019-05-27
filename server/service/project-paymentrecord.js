@@ -75,7 +75,7 @@ exports.selectRecord = async (paymentID,userID,payStatue,objectID,payType,relate
     let object = {
         attributes: {exclude: ['createdAt', 'updatedAt']},
         include: [{
-            attributes: ['userID','nickName'],
+            attributes: ['userID','nickname'],
             model: UserInformation,
             as:'PaymentSender',
         }],

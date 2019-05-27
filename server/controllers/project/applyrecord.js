@@ -86,6 +86,10 @@ exports.createApply=async(req,res)=>{
         if(existApply!=0) throw 'Apply Existed';
         var existedMember=await ProjectMember.selectCount({projectID:req.body.projectID,memberID:userID});
         if(existedMember!=0) throw 'Member Existed';
+        var sqlRes=await ProjectInformation.select({projectID:req.body.projectID});
+        if(sqlRes.length!=1) throw "Invalid ProjectID";
+        // 检查课程是否开放
+        if(sqlRes.projectStatue!=0) throw "Course is closed";
         /**
          * 检查ProjectMember中用户是否已参加项目
          */

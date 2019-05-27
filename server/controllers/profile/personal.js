@@ -80,10 +80,10 @@ exports.getUserInfo = async (req, res) => {
                 status: 1,
                 msg: {
                     mobile: hiddenPhone(result[0].phone),
-                    email: email,
-                    birthday: birthday,
+                    email,
+                    birthday,
                     sex: rows[0].sex,
-                    nickName: rows[0].nickName,
+                    nickname: rows[0].nickname,
                     realName: rows[0].realName,
                     avatarUrl: rows[0].avatarUrl
                 }
@@ -182,19 +182,19 @@ exports.updateUserInfo = async (req, res) => {
     if (req.session.userID === undefined) {
         res.json({status: 0, msg: '保存失败'})
     } else {
-        const nickName = req.body.data['nickName'];
+        const nickname = req.body.data['nickname'];
         const realName = req.body.data['realName'];
         const sex = req.body.data['sex'];
         let date = moment(req.body.data['birthday']).format('YYYY-MM-DD');
         if (
-            validateLength(nickName, 0, 15) &&
+            validateLength(nickname, 0, 15) &&
             validateLength(realName, 0, 15) &&
             validateSex(sex) && date !== 'Invalid date') {
             await UserInfo.update({userID: req.session.userID}, {
-                nickName: nickName,
-                realName: realName,
+                nickname,
+                realName,
                 birthday: date,
-                sex: sex
+                sex
             }).then(() => {
                 res.json({status: 1, msg: '保存成功'})
             }).catch((error) => {
@@ -217,12 +217,13 @@ exports.updateAvatar = (req, res) => {
         /* 验证通过，执行上传 */
         uploadImg(req, res, async (err) => {
             /* 文件是否合法 */
-            if (err === undefined) {
+            /* 上传的文件没有错误，且成功上传*/
+            if (err === undefined && req['file'] !== undefined) {
                 /* 如果头像已经存在，则在数据库中得到头像地址 */
                 await UserInfo.select({userID: req.session.userID}).then(async (rows) => {
                     if (rows[0].avatarUrl !== null) {
                         /* 删除原来的头像 */
-                        deleteFile.unLink(`public/${rows[0]['AvatarUrl']}`);
+                        deleteFile.unLink(`public/${rows[0].avatarUrl}`);
                     }
                     /* 新的头像地址 */
                     const avatar = `/images/avatar/${req['file'].filename}`;
@@ -234,8 +235,9 @@ exports.updateAvatar = (req, res) => {
                     console.log(error);
                     res.json({status: 0, msg: '服务器错误'})
                 });
-            } else {
-                console.log(err.message);
+            }
+            /* 上传失败时的错误（直接前端传过来的文件） */
+            else if (err !== undefined) {
                 let msg = "未知错误";
                 switch (err.message) {
                     case 'Unexpected field':
@@ -246,6 +248,11 @@ exports.updateAvatar = (req, res) => {
                         break;
                 }
                 res.json({status: 0, msg: msg})
+            }
+            /* 用POSTMEN测试上传文件时,err为undefined，
+            此时req['file']也为undefined，文件并没有上传成功 */
+            else {
+                res.json({status: 0, msg: '文件错误'});
             }
         })
     }

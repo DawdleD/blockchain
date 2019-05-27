@@ -86,10 +86,13 @@ exports.selectProject = async (field,creatorID, page, search,userID=undefined,de
     if(userID!=undefined){
         object["include"]=[
             {
+                // model: UserInformation,
+                // as:'AttendMembers',
+                // where:{userID:userID}
               model: ProjectMember,
               where:{memberID:userID},
               include:[
-                  {model:UserInformation,attributes:['nickName','userID']}
+                  {model:UserInformation,attributes:['nickname','userID']}
               ],
             },                        
           ]
@@ -103,7 +106,7 @@ exports.selectProject = async (field,creatorID, page, search,userID=undefined,de
         var projectItem=item;
         var getRes=await projectItem.getProjectCreator(
             {
-                attributes:['nickName','userID']
+                attributes:['nickname','userID']
             }
         ).then(then2await);   
         projectItem.dataValues.ProjectCreator=getRes.dataValues;
@@ -138,11 +141,12 @@ exports.getProjectDetail= async(projectID)=>{
           {
             model: ProjectMember,
             include:[
-                {model:UserInformation,attributes:['nickName','userID']}
+                {model:UserInformation,attributes:['nickname','userID']}
             ],
           },
           {
             model: UserInformation,
+            attributes:['nickname','userID'],
             as:'ProjectCreator',
           },     
           {

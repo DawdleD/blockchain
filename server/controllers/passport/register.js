@@ -18,45 +18,49 @@ exports.register = async (req, res) => {
     if (!phone.toString().match(regPhone) || !password.toString().match(regPsw) || code === undefined)
         res.json({status: 0, msg: "输入有误"});
     else {
-        console.log("验证通过");
-        //检测手机号是否被注册
-        await UserPass.select({phone: phone}).then(async rows => {
-            if (rows.length > 0)
-                res.json({status: 0, msg: "该手机号已被注册"});
-            else if (req.session.smsCode !== code)
-                res.json({status: 0, msg: "验证码错误"});
-            else {
-                //随机生成用户ID
-                let userID = Math.random().toString().slice(2, 9);
-                const salt = encryption.getRandomHash();  //随机生成盐值
-                const encryptedPsw = encryption.encryptPassword(salt, password);  //加密密码
-                const time = new Date();  //获取当前时间
-                time.toLocaleString();
-                let state = true;
-                while (state) {
-                    await UserPass.insert({
-                        userID: userID,
-                        phone: phone,
-                        password: encryptedPsw,
-                        salt: salt,
-                        loginTime: time,
-                        failCount: 0,
-                        accessLevel: 0
-                    }).then(async () => {
-                        await UserInfo.insert({userID: userID});
-                        req.session.loginState = true;
-                        req.session.userID = userID;
-                        res.json({status: 1, msg: "注册成功"});
-                        state = false;
-                    }).catch(() => {
-                        userID = Math.random().toString().slice(2, 9);
-                    });
+        if (req.session.phone !== phone) res.json({status: 0, msg: '非法操作'});
+        else {
+            //检测手机号是否被注册
+            await UserPass.select({phone: phone}).then(async rows => {
+                if (rows.length > 0)
+                    res.json({status: 0, msg: "该手机号已被注册"});
+                else if (req.session.smsCode !== code)
+                    res.json({status: 0, msg: "验证码错误"});
+                else {
+                    //随机生成用户ID
+                    let userID = Math.random().toString().slice(2, 9);
+                    const salt = encryption.getRandomHash();  //随机生成盐值
+                    const encryptedPsw = encryption.encryptPassword(salt, password);  //加密密码
+                    const time = new Date();  //获取当前时间
+                    time.toLocaleString();
+                    let state = true;
+                    while (state) {
+                        await UserPass.insert({
+                            userID,
+                            phone,
+                            password: encryptedPsw,
+                            salt,
+                            loginTime: time,
+                            failCount: 0,
+                            accessLevel: 0
+                        }).then(async () => {
+                            await UserInfo.insert({userID, nickname: '默认用户'});
+                            req.session.loginState = true;
+                            req.session.userID = userID;
+                            res.json({status: 1, msg: "注册成功"});
+                            state = false;
+                            delete req.session.register;
+
+                        }).catch(() => {
+                            userID = Math.random().toString().slice(2, 9);
+                        });
+                    }
                 }
-            }
-        }).catch((err) => {
-            console.log(err);
-            res.json({status: 0, msg: "服务器错误"})
-        })
+            }).catch((err) => {
+                console.log(err);
+                res.json({status: 0, msg: "服务器错误"})
+            })
+        }
     }
 };
 

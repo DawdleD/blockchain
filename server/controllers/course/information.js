@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const Info = require('../../service/course-information');
 const File = require('../../service/course-file');
 const Class = require('../../service/course-class');
@@ -21,7 +23,7 @@ exports.getDetail = async (req, res) => {
         let details = await Detail.select({courseID: courseID});
         let detail = details[0], inf = infos[0];
         let teacherInfo = await Detail.selectTeacher({courseID: courseID});
-        detail.teacherName = teacherInfo[0]['nickName'];
+        detail.teacherName = teacherInfo[0].nickname;
         detail.startTime = moment(detail.startTime).format('YYYY-MM-DD');
         detail.finishTime = moment(detail.finishTime).format('YYYY-MM-DD');
         let systems = await System.selectName(inf.systemID);
@@ -53,9 +55,11 @@ exports.getChapter = async (req, res) => {
             await Video.select({chapterID: chapters[chapter].chapterID}).then((videos) => {
                 for (let video in videos) if (videos.hasOwnProperty(video)) {
                     courseVideo.push({
+                        number: parseInt(video) + 1,
                         id: videos[video].videoID,
                         name: videos[video].videoName,
                         url: videos[video].videoUrl,
+                        ware: videos[video].wareUrl,
                         duration: videos[video].videoDuration
                     })
                 }
@@ -90,7 +94,6 @@ exports.getFile = async (req, res) => {
                     courseFile.push({
                         id: files[file].fileID,
                         name: files[file].fileName,
-                        url: files[file].fileUrl,
                         type: files[file].fileType,
                         size: fileSize > 1024 ? `${(fileSize / 1024).toFixed(2)}MB` : `${fileSize}KB`
                     })
@@ -127,7 +130,7 @@ exports.getComment = async (req, res) => {
         for (let cmt in comments) if (comments.hasOwnProperty(cmt)) {
             let userInfo = await Comment.selectUser({userID: comments[cmt].userID});
             comment.push({
-                nickName: userInfo[0].nickName,
+                nickname: userInfo[0].nickname,
                 avatarUrl: userInfo[0].avatarUrl === null ?
                     '/images/avatar/default-avatar.jpg' : userInfo[0].avatarUrl,
                 star: comments[cmt].star,
@@ -193,12 +196,8 @@ exports.checkApply = async (req, res) => {
     if (userID === undefined) res.json({status: 0});
     else {
         const courseID = req.body.courseID;
-        await Class.select({userID: userID, courseID: courseID}).then(rows => {
-            if (rows.length > 0) res.json({status: 1});
-            else res.json({status: 0})
-        }).catch(() => {
-            res.json({status: 0});
-        })
+        let inClass = await Class.inClass({userID, courseID});
+        res.json({status: inClass ? 1 : 0})
     }
 };
 
@@ -208,13 +207,60 @@ exports.checkApply = async (req, res) => {
 exports.applyFree = async (req, res) => {
     const courseID = req.body.courseID;
     const userID = req.session.userID;
-    const joinTime = moment().format('YYYY-MM-DD HH:mm:ss');
-    await Class.insert({courseID: courseID, userID: userID, joinTime: joinTime}).then(async () => {
-        let applySum = await Class.selectCount({courseID: courseID});
-        Info.update({courseID: courseID}, {applyCount: applySum});
-        res.json({status: 1, msg: '报名成功', applyCount: applySum})
-    }).catch(() => {
-        res.json({status: 0, msg: '服务器错误'})
-    })
+    if (userID === undefined) res.json({status: 0});
+    else {
+        try {
+            let count = await Info.selectCount(undefined, undefined, 1, undefined);
+            if (count > 0) {
+                const joinTime = moment().format('YYYY-MM-DD HH:mm:ss');
+                await Class.insert({courseID, userID, score: 0, joinTime}).then(async () => {
+                    let applySum = await Class.selectCount({courseID: courseID});
+                    Info.update({courseID: courseID}, {applyCount: applySum});
+                    res.json({status: 1, msg: '报名成功', applyCount: applySum})
+                })
+            } else res.json({status: 0, msg: '非法操作'})
+        } catch (e) {
+            res.json({status: 0, msg: '服务器错误'});
+        }
+    }
 };
 
+/**
+ * 下载课程文件
+ */
+exports.downloadFile = async (req, res) => {
+    try {
+        if (req.session.userID === undefined) res.json({status: 0, msg: '非法请求'});
+        else {
+            let courseID = req.query.courseID;
+            let file = req.query.file;
+            let fileName = req.query.fileName;
+            let inClass = await Class.inClass({courseID, userID: req.session.userID});
+            if (inClass) {
+                const courseWare = path.resolve(__dirname, `../../static/coursefile/${file}`);
+                if (fs.existsSync(courseWare)) {
+                    let rs = fs.createReadStream(courseWare);
+                    res.setHeader("content-type", "application/octet-stream");
+                    res.writeHead(200, {
+                        'Content-Type': 'application/octet-stream;charset=uft-8',
+                        'Content-Disposition': `attachment; filename=${encodeURI(fileName)}`,
+                    });
+                    rs.pipe(res);
+                } else res.json({status: 0, msg: '文件不存在'})
+
+            } else res.json({status: 0, msg: '非法请求'})
+        }
+    } catch (e) {
+        console.log(e);
+        res.json({status: 0, msg: '服务器错误'})
+    }
+};
+
+/**
+ * 查找每节课程的所有视频
+ */
+exports.selectAllVideo = async (req, res) => {
+    let courseID = req.query.courseID;
+    let result = await Video.selectAll(courseID);
+    res.json(result);
+};

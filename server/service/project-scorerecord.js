@@ -61,7 +61,7 @@ exports.selectApplyRecord = (userID,projectID,scorerID, page) => {
     let object = {
         attributes: {exclude: ['createdAt', 'updatedAt']},
         // include: [{
-        //     attributes: ['userID','nickName'],
+        //     attributes: ['userID','nickname'],
         //     model: UserInformation,
         // },{
         //     attributes: ['projectID','projectName'],
@@ -78,7 +78,7 @@ exports.selectApplyRecord = (userID,projectID,scorerID, page) => {
             var scoreRecordItem=item;
             var getRes=await scoreRecordItem.getUserInformation(
                 {
-                    attributes:['nickName','userID']
+                    attributes:['nickname','userID']
                 }
             ).then(then2await);
             scoreRecordItem.dataValues.UserInformation=getRes.dataValues;

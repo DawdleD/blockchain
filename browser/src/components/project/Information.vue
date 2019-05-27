@@ -14,7 +14,7 @@
                         <h1 class="text-title">{{project.projectName}}</h1>
                         <div class="enroll-info">
                             <div class="enroll-course-info">
-                                <div class="teacher-name">项目发起人：{{project.ProjectCreator.nickName}}</div>
+                                <div class="teacher-name">项目发起人：{{project.ProjectCreator.nickname}}</div>
                                 <div class="workload">项目开始时间：{{project.createTime}}</div>
                                 <div class="workload">项目方向：{{myTotalOption.labelProjectField[project.projectField]}}</div>
                                 <div class="workload">项目费用：{{project.projectFee}}</div>
@@ -61,7 +61,7 @@
                                         </el-table-column>
                                         <el-table-column  label="昵称" width="180">
                                             <template slot-scope="scope">
-                                                {{scope.row.UserInformation.nickName}}
+                                                {{scope.row.UserInformation.nickname}}
                                             </template>                                                
                                         </el-table-column>
                                         <el-table-column prop="memberType" label="成员类型">

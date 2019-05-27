@@ -96,7 +96,7 @@ exports.selectRecord = async (applyID,userID,projectID,applyStatue,paymentID, pa
         var applyRecordItem=item;
         var getRes=await applyRecordItem.getAttendApplySender(
             {
-                attributes:['nickName','userID']
+                attributes:['nickname','userID']
             }
         ).then(then2await);
         applyRecordItem.dataValues.ApplyerInfo=getRes.dataValues;

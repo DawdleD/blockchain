@@ -16,7 +16,11 @@ exports.reset = async (req, res) => {
             //用户重置密码方式
             let verifyCode =
                 (type === 'email') ? req.session.mailCode : req.session.smsCode;
-            if (verifyCode !== code || code === undefined) {
+            if (type === 'email' && req.session.email !== account)
+                res.json({status: 0, msg: '非法操作'});
+            else if (type === 'phone' && req.session.phone !== account)
+                res.json({status: 0, msg: '非法操作'});
+            else if (verifyCode !== code || code === undefined) {
                 res.json({status: 0, msg: "验证码错误"});
             } else {
                 const salt = rows[0].salt;

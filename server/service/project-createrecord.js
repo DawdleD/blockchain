@@ -79,7 +79,7 @@ exports.selectRecord = async (applyID,userID,projectField,applyStatue,paymentID,
         var createRecordItem=item
         var getRes=await createRecordItem.getCreateApplySender(
             {
-                attributes:['nickName','userID']
+                attributes:['nickname','userID']
             }
         ).then(then2await);
         createRecordItem.dataValues.ProjectCreator=getRes.dataValues;

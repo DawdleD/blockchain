@@ -109,7 +109,7 @@
                                             {{project['projectFee'] === 0 ? '免费' : `${project['projectFee']} Wei`}}</a>
                                     </div>
                                     <!--授课老师/机构-->
-                                    <div class="teacher"><a>机构/老师名称:{{project.ProjectCreator.nickName}}</a></div>
+                                    <div class="teacher"><a>机构/老师名称:{{project.ProjectCreator.nickname}}</a></div>
                                     <!--描述-->
                                     <div class="description">{{project['projectIntro']}}</div>
                                     <!--细节-->

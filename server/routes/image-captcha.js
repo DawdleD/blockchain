@@ -14,7 +14,6 @@ router.get('/', (req, res) => {
         background: "#f4f3f2",
     });
     req['session'].imageCaptcha = cap.text; // session 存储验证码数值
-    console.log(cap.text);
     res.type('svg'); // 响应的类型
     res.send(cap.data);
 });

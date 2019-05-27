@@ -143,7 +143,7 @@
                 width="80">
                 </el-table-column>
                 <el-table-column
-                prop="UserInformation.nickName"
+                prop="UserInformation.nickname"
                 label="成员姓名"
                 width="100">
                 </el-table-column>

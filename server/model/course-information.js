@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         price: {type: DataTypes.FLOAT, allowNull: false},
         courseForm: {type: DataTypes.STRING(1), allowNull: true},
         favorableRate: {type: DataTypes.FLOAT, allowNull: true},
-        applyCount: {type: DataTypes.INTEGER(6), allowNull: true}
+        applyCount: {type: DataTypes.INTEGER(6), allowNull: true},
+        examID: {type: DataTypes.INTEGER(8), allowNull: true},
     }, {freezeTableName: true});
 };

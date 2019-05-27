@@ -71,7 +71,7 @@ exports.selectMember = async (memberID,projectID,memberType,page,creatorID=undef
         var projectMemberItem=item;
         var getRes=await projectMemberItem.getUserInformation(
             {
-                attributes:['nickName','userID']
+                attributes:['nickname','userID']
             }
         ).then(then2await);
         projectMemberItem.dataValues.UserInformation=getRes.dataValues;

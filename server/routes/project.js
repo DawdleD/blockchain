@@ -165,4 +165,14 @@ router.post('/projectmanagement/submitScore',ProjectManagement.submitScore);
  */
 router.post('/projectmanagement/regProjectState',ProjectManagement.registerProjectState);
 
+/**
+ * 修改项目信息
+ */
+router.post('/projectmanagement/modifyProject',ProjectManagement.modifyProject);
+
+/**
+ * 修改项目信息-头像
+ */
+router.post('/projectmanagement/updateAvatar',ProjectManagement.updateAvatar);
+
 module.exports = router;

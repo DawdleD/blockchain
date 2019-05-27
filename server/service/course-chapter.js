@@ -7,7 +7,5 @@ const {CourseChapter} = require('../model/create-table');
  * @param where
  */
 exports.select = where => {
-    return CourseChapter.findAll({
-        where: where
-})
+    return CourseChapter.findAll({where})
 };

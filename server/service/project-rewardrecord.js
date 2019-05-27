@@ -71,7 +71,7 @@ exports.selectRecord = (rewardID,userID,projectID,awardType,senderID, page) => {
     let object = {
         attributes: {exclude: ['createdAt', 'updatedAt']},
         // include: [{
-        //     attributes: ['userID','nickName'],
+        //     attributes: ['userID','nickname'],
         //     model: UserInformation,
         // },{
         //     attributes: ['projectID','projectName'],
@@ -87,7 +87,7 @@ exports.selectRecord = (rewardID,userID,projectID,awardType,senderID, page) => {
             var rewardRecordItem=item;
             var getRes=await rewardRecordItem.getUserInformation(
                 {
-                    attributes:['nickName','userID']
+                    attributes:['nickname','userID']
                 }
             ).then(then2await);
             rewardRecordItem.dataValues.UserInformation=getRes.dataValues;

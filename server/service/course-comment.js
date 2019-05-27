@@ -8,7 +8,7 @@ const {CourseComment, UserInformation} = require('../model/create-table');
  * 处理查询的 where 语句
  */
 function dealWhere(courseID, filter) {
-    let whereCase = {courseID: courseID};
+    let whereCase = {courseID};
     if (filter !== undefined && !isNaN(parseInt(filter)))
         switch (parseInt(filter)) {
             case 1:
@@ -56,9 +56,7 @@ exports.select = (courseID, filter, page) => {
  */
 exports.selectCount = (courseID, filter) => {
     let where = dealWhere(courseID, filter);
-    return CourseComment.count({
-        where: where
-    });
+    return CourseComment.count({where});
 };
 
 /**
@@ -67,8 +65,8 @@ exports.selectCount = (courseID, filter) => {
  */
 exports.selectUser = where => {
     return UserInformation.findAll({
-        attributes: {include: ['nickName', 'avatarUrl']},
-        where: where,
+        attributes: {include: ['nickname', 'avatarUrl']},
+        where,
         raw: true
     })
 };

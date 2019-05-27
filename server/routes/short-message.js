@@ -51,6 +51,7 @@ router.post('/', function (req, res) {
         client.request('SendSms', params, requestOption).then(() => {
             // console.log(result);
             req['session'].smsCode = getVerifyCode();
+            req['session'].phone = phone;
             res.json({status: 1, msg: "短信已发送至您的手机，请注意查收"});
         }, (ex) => {
             console.log(ex);
