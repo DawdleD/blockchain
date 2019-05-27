@@ -10,13 +10,13 @@
         </el-select>
         <el-select v-model="selectValue" v-if="isSelect">
             <el-option
-                v-for="item in searchOptionArr['selectColumn']"
+                v-for="item in searchOptionArr[selectColumn]"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
-        </el-option>
+            </el-option>
         </el-select>
-        <el-input v-if="!isSelect" v-model="inputValue"></el-input>
+        <el-input v-else v-model="inputValue"></el-input>
     </div>
 </template>
 
@@ -62,17 +62,22 @@
         computed: {
         },
         watch: {
-            selectColumn(val){
-                this.isSelect=this.isSelectCom[val]
+            selectColumn(nval,oval){
+                this.isSelect=this.isSelectCom[nval];
+                if(nval!=oval){
+                    // 清空搜索栏属性
+                    this.inputValue="";
+                    this.selectValue="";
+                }
             },
             inputValue(val){
-                if(val!=null) this.$emit('searchInfo',{
+                if(val!='') this.$emit('searchInfo',{
                     searchColumn:this.selectColumn,
                     searchContent:val
                 })
             },
             selectValue(val){
-                if(val!=null) this.$emit('searchInfo',{
+                if(val!='') this.$emit('searchInfo',{
                     searchColumn:this.selectColumn,
                     searchContent:val
                 })

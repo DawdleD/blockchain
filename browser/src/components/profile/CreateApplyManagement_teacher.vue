@@ -4,7 +4,12 @@
         <template>
                 <div class="my-course-list-header">
                 <div class="my-course-row">
-                    <div class="my-course-cell first">项目</div>
+                    <div class="my-course-cell first">
+                        <el-button @click="openCreateForm()">发起项目申请</el-button>
+                    </div>
+                </div>                    
+                <div class="my-course-row">
+                    <div class="my-course-cell first">项目名</div>
                     <div class="my-course-cell">支付事件号</div>
                     <div class="my-course-cell">申请状态</div>
                     <div class="my-course-cell">操作</div>
@@ -62,7 +67,36 @@
         </template>        
     <information-dialog @dialogClose="handleDialogClose" :infoArr="infoArr" :infoTableWidth="infoTableWidth" :infoDialogVisible="infoDialogVisible" :infoTable="infoTable"></information-dialog>
     
+    <el-dialog title="发起项目创建申请" :visible.sync="createFormVisible">
+    <el-form :model="createForm">
+        <el-form-item label="项目名称" >
+            <el-input v-model="createForm.projectName"  autocomplete="off" ></el-input>
+        </el-form-item>  
+           
+        <el-form-item label="项目费用（保证金）/单位(Finney)" >
+            <el-input v-model.number="createForm.projectFee" type="number" autocomplete="off" ></el-input>
+        </el-form-item>
 
+        <el-form-item label="项目介绍" >
+            <el-input v-model="createForm.projectIntro" type="text" autocomplete="off" ></el-input>
+        </el-form-item>
+        <el-form-item label="项目领域" >
+                <el-select v-model="createForm.projectField" placeholder="请选择操作类型">
+                        <el-option
+                        v-for="item in myTotalOption.optionProjectField"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                </el-select>              
+        </el-form-item>
+               
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="createFormVisible = false">取 消</el-button>
+        <el-button type="primary"  @click="submitApply()">确 定</el-button>
+    </div>
+    </el-dialog> 
 
 </div>
 
@@ -93,6 +127,13 @@
                 infoTableWidth:0,
                 infoTable:[],
 
+                createFormVisible:false,
+                createForm:{
+                    projectIntro:'',
+                    projectName:'',
+                    projectField:'',
+                    projectFee:'',
+                },
             }
         },
         methods: {
@@ -102,6 +143,12 @@
             // 跳转至支付页面
             redirectToPayment(){
                 this.$router.replace({path:'/profile/wallet'});
+            },
+            openCreateForm(){
+                for (var key in this.createForm) {
+                　　this.createForm[key]="";
+                }
+                this.createFormVisible=true;
             },
             memberInfo(item){
                 this.infoDialogVisible=true;
@@ -201,8 +248,27 @@
                     this.scoreFormVisible=false;
                     console.log(error);
                 }           
-            },        
+            },       
 
+            submitApply: async function(){
+                try {
+                    let res=await this.$axios.post('/api/project/CreateRecord/createapply',{
+                        'projectName':this.createForm.projectName,
+                        'projectIntro':this.createForm.projectIntro,
+                        'projectFee':this.createForm.projectFee,
+                        'projectField':this.createForm.projectField,
+                        })
+                    if(res.data.status==0){
+                        throw "Failed"
+                    }
+                    this.createFormVisible=false;
+                    Message.success("操作成功");    
+                } catch (error) {
+                    Message.error("操作失败!");  
+                    this.createFormVisible=false;
+                    console.log(error);
+                }           
+            },   
             //取消报名
             async cancelApply(applyID){
                 MessageBox.confirm('确定取消创建该项目？相关的支付事件将被自动删除', '提示', {

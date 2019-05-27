@@ -47,7 +47,7 @@
                             <el-dropdown-item
                                 @click.native.prevent="closeProjectApply(project['projectID'])">关闭课程</el-dropdown-item>
                             <el-dropdown-item 
-                                @click.native.prevent="modifyProject()">编辑</el-dropdown-item>
+                                @click.native.prevent="modifyProject(project)">编辑</el-dropdown-item>
                             <el-dropdown-item 
                                 @click.native.prevent="openInvestForm(project)"   :disabled="(project.projectStatue!=0)">
                                     投资</el-dropdown-item>
@@ -206,6 +206,56 @@
     </div>
     </el-dialog> 
 
+    <el-dialog title="项目信息编辑" :visible.sync="modifyFormVisible">
+    <el-form :model="modifyForm">
+        <el-form-item label="项目ID" >
+        <el-input v-model="modifyForm.projectID" autocomplete="off" :disabled="true" ></el-input>
+        </el-form-item>
+
+        <el-form-item label="项目名称" >
+            <el-input v-model="modifyForm.projectName" :disabled="true" autocomplete="off" ></el-input>
+        </el-form-item>  
+
+        <el-form-item label="项目封面" >
+                    <el-upload
+                            class="avatar-uploader"
+                            enctype="multipart/form-data"
+                            name="projectavatar"
+                            :data="uploadData"
+                            action="/api/project/projectmanagement/updateAvatar"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                            <!--  -->
+                        <img  :src="modifyForm.projectPic" alt="项目封面"  class="avatar">
+                    </el-upload>        
+        </el-form-item>
+           
+        <el-form-item label="项目费用（保证金）/单位(Finney)" >
+            <el-input v-model.number="modifyForm.projectFee" type="number" autocomplete="off" :change="check_num(val,'modifyForm','projectFee')" ></el-input>
+        </el-form-item>
+
+        <el-form-item label="项目介绍" >
+            <el-input v-model="modifyForm.projectIntro" autocomplete="off" ></el-input>
+        </el-form-item>
+        <el-form-item label="项目领域" >
+                <el-select v-model="modifyForm.projectField" placeholder="请选择项目领域">
+                        <el-option
+                        v-for="item in myTotalOption.optionProjectField"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                </el-select>              
+        </el-form-item>
+               
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="modifyFormVisible = false">取 消</el-button>
+        <el-button type="primary"  @click="submitModify()">确 定</el-button>
+    </div>
+    </el-dialog> 
+
 </div>
 
 </template>
@@ -259,9 +309,29 @@
                     projectName:'',
                     payAmount:'',
                 },
+
+                modifyFormVisible:false,
+                modifyForm:{
+                    projectID:'',
+                    projectName:'',
+                    projectPic:'',
+                    projectField:'',
+                    projectFee:'',
+                    projectIntro:'',
+                },
+                uploadData:{},
             }
         },
         methods: {
+            check_num: function(val,formname,value){
+                var awardAmount = this[formname][value];
+                awardAmount = awardAmount.toString().replace(/[^\d]/g, ''); // 清除“数字”和“.”以外的字符
+                if (awardAmount.indexOf('.') < 0 && awardAmount != '') {
+                    // 以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+                    awardAmount = parseInt(awardAmount);
+                }
+                this[formname][value] = awardAmount;
+            },                  
             handleDialogClose(){
                 this.infoDialogVisible=false;
             },                 
@@ -354,6 +424,26 @@
                 }           
             },        
 
+            submitModify:async function(){
+                try {
+                    let res=await this.$axios.post('/api/project/projectmanagement/modifyProject',{
+                        'projectID':this.modifyForm.projectID,
+                        'projectName':this.modifyForm.projectName,
+                        'projectField':this.modifyForm.projectField,
+                        'projectFee':this.modifyForm.projectFee,
+                        'projectIntro':this.modifyForm.projectIntro,
+                        })
+                    if(res.data.status==0){
+                        throw "Failed"
+                    }             
+                    this.modifyFormVisible=false;
+                    Message.success("操作成功");  
+                } catch (error) {
+                    Message.error("操作失败");  
+                    this.modifyFormVisible=false;
+                    console.log(error);
+                }
+            },
 
             //页码改变
             projectPageChanged(val) {
@@ -421,33 +511,58 @@
                 })         
             },
 
-        openInvestForm: async function(projectItem){
-            try {
-                this.investForm.projectName=projectItem.projectName;
-                this.investForm.projectID=projectItem.projectID;
-                this.investForm.payAmount=0;
-                this.investFormVisible=true;
-            } catch (error) {
-                this.rewardFormVisible=false;
-                console.log(error);
-            }
-        },     
-        submitInvest:async function () {
-            try {
-                let data = {
-                };     
-                data.projectID=this.investForm.projectID
-                data.payAmount=this.investForm.payAmount
-                console.log(data);
-                let res=await this.$axios.post(`/api/project/projectmanagement/submitInvest`, data)   
-                if(res.data.status==0) throw "Fetch Failed!"
-                this.investFormVisible=false;
-                Message.success("操作成功");      
-            } catch (error) {
-                Message.error("操作失败");   
-                console.log(error);
-            }
-        } ,
+            openInvestForm: async function(projectItem){
+                try {
+                    this.investForm.projectName=projectItem.projectName;
+                    this.investForm.projectID=projectItem.projectID;
+                    this.investForm.payAmount=0;
+                    this.investFormVisible=true;
+                } catch (error) {
+                    this.rewardFormVisible=false;
+                    console.log(error);
+                }
+            },     
+            submitInvest:async function () {
+                try {
+                    let data = {
+                    };     
+                    data.projectID=this.investForm.projectID
+                    data.payAmount=this.investForm.payAmount
+                    console.log(data);
+                    let res=await this.$axios.post(`/api/project/projectmanagement/submitInvest`, data)   
+                    if(res.data.status==0) throw "Fetch Failed!"
+                    this.investFormVisible=false;
+                    Message.success("操作成功");      
+                } catch (error) {
+                    Message.error("操作失败");   
+                    console.log(error);
+                }
+            } ,
+            modifyProject:function(project){
+                this.uploadData={'projectID':project.projectID};
+                this.modifyForm.projectID=project.projectID;
+                this.modifyForm.projectName=project.projectName;
+                this.modifyForm.projectPic=project.projectPic;
+                this.modifyForm.projectField=project.projectField;
+                this.modifyForm.projectFee=project.projectFee;
+                this.modifyForm.projectIntro=project.projectIntro;
+                this.modifyFormVisible=true;
+            },
+            /* 更改头像成功后执行 */
+            handleAvatarSuccess(res, file) {
+                if (res.status === 1) {
+                    this.modifyForm.projectPic = URL.createObjectURL(file.raw);
+                } else
+                    Message.error(res.msg);
+            },
+            /* 在提交头像之前检查 */
+            beforeAvatarUpload(file) {
+                const isJPG = file.type === 'image/jpeg';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+                if (!isJPG) Message.error('上传头像图片只能是 JPG 格式!');
+                if (!isLt2M) Message.error('上传头像图片大小不能超过 2MB!');
+                return isJPG && isLt2M;
+            },            
 
         },
         
@@ -673,4 +788,28 @@
         text-shadow: none;
         float: right;
     }
+
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>

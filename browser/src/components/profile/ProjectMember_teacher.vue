@@ -129,7 +129,7 @@
                 <el-input v-model="rewardForm.awardMember" autocomplete="off" :disabled="true" ></el-input>           
             </el-form-item>  
             <el-form-item label="操作额度" >
-                <el-input v-model.number="rewardForm.awardAmount" type="number" autocomplete="off" ></el-input>
+                <el-input v-model="rewardForm.awardAmount" type="text" autocomplete="off" :change="check_num(value,'rewardForm','awardAmount')"></el-input>
             </el-form-item>  
             <el-form-item label="操作类型" >
                 <el-select v-model="rewardForm.awardType" placeholder="请选择操作类型">
@@ -207,6 +207,15 @@
             }
         },
         methods: {
+            check_num: function(val,formname,value){
+                var awardAmount = this[formname][value];
+                awardAmount = awardAmount.toString().replace(/[^\d]/g, ''); // 清除“数字”和“.”以外的字符
+                if (awardAmount.indexOf('.') < 0 && awardAmount != '') {
+                    // 以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+                    awardAmount = parseInt(awardAmount);
+                }
+                this[formname][value] = awardAmount;
+            },         
             handleDialogClose(){
                 this.infoDialogVisible=false;
             },                 

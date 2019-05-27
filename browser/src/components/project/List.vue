@@ -47,9 +47,9 @@
                         </div> -->
                         <div class="right">
                             <ul>
-                                <li>
-                                    TEST<!-- <searchBarMid @searchInfo="handleSearchInfo" :searchColumnArr="searchColumnArr" :isSelectCom="isSelectCom" :searchOptionArr="searchOptionArr"></searchBarMid> -->
-                                </li>
+                                <!-- <li>
+                                    <searchBarMid @searchInfo="handleSearchInfo" :searchColumnArr="searchColumnArr" :isSelectCom="isSelectCom" :searchOptionArr="searchOptionArr"></searchBarMid>
+                                </li> -->
                                 <li>
                                     <router-link :class="{cur:$route.query.sort===undefined}" :to="`${sortUrl}`">
                                         综合排序
