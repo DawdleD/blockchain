@@ -1,5 +1,7 @@
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const productionGzipExtensions = ['js', 'css'];
 module.exports = {
-    assetsDir: 'assets',  //静态资源目录
+    assetsDir: 'assets',  //静态资源目录 
     devServer: {
         open: true,
         proxy: {
@@ -18,5 +20,23 @@ module.exports = {
                 }
             }
         }
+    },
+    configureWebpack: {
+        // 把原本需要写在webpack.config.js中的配置代码 写在这里 会自动合并
+        externals: {
+            'vue': 'Vue',
+            'element-ui': 'ELEMENT',
+            'axios':'axios',
+        },
+        plugins:[
+            /* 开启Gzip压缩*/
+            new CompressionWebpackPlugin({
+                filename: '[path].gz[query]',
+                algorithm: 'gzip',
+                test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+                threshold: 10240,
+                minRatio: 0.8
+            })
+        ]
     }
 }

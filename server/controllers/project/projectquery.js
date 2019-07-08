@@ -11,11 +11,12 @@ const ProjectMember=require('../../service/project-projectmember');
 exports.getProjectCount = async (req, res) => {
     const field = req.body.field;
     const search = req.body.search;
+    const projectID = req.body.projectID;
     // Wait
     const creatorID=req.body.creatorID;
     const userID=req.body.userID;
 
-    await ProjectInfo.selectCount(field,creatorID, search,userID).then((count) => {
+    await ProjectInfo.selectCount(field,creatorID, search,userID,projectID).then((count) => {
         res.json({status: 1, count: count})
     }).catch((err) => {
         console.log(err);
@@ -31,12 +32,13 @@ exports.getProject = async (req, res) => {
     const field = req.query.projectField;
     const page = req.query.page;
     const search = req.query.search;
+    const projectID=req.query.projectID;
     // Wait to be modified
     var creatorID=req.query.creatorID;
     // Wait 
     var userID=req.query.userID;
     try {
-        var sqlres=await ProjectInfo.selectProject(field,creatorID, page, search,userID);
+        var sqlres=await ProjectInfo.selectProject(field,creatorID, page, search, projectID,userID);
         // console.log(sqlres);
         res.json({status:1,sqlres});
     } catch (error) {
@@ -54,6 +56,7 @@ exports.getProjectAuthed = async (req, res) => {
     const field = req.query.projectField;
     const page = req.query.page;
     const search = req.query.search;
+    const projectID=req.query.projectID;
     // Wait to be modified
     var creatorID=req.query.creatorID;
     // Wait 
@@ -67,10 +70,12 @@ exports.getProjectAuthed = async (req, res) => {
     else if(req.session.accessLevel==1){
         creatorID=req.session.userID;
         if(creatorID==null) throw "Illegal Access";
+    }else if(req.session.accessLevel==null){
+        throw "Illegal Access"
     }
     
     try {
-        var sqlres=await ProjectInfo.selectProject(field,creatorID, page, search,userID,true);
+        var sqlres=await ProjectInfo.selectProject(field,creatorID, page, search,projectID,userID,true);
         // console.log(sqlres);
         res.json({status:1,sqlres});
     } catch (error) {
@@ -86,6 +91,7 @@ exports.getProjectAuthed = async (req, res) => {
 exports.getProjectCountAuthed = async (req, res) => {
     const field = req.body.field;
     const search = req.body.search;
+    const projectID=req.query.projectID;
     // Wait
     var creatorID=req.body.creatorID;
     var userID=req.body.userID;
@@ -97,8 +103,10 @@ exports.getProjectCountAuthed = async (req, res) => {
     else if(req.session.accessLevel==1){
         creatorID=req.session.userID;
         if(creatorID==null) throw "Illegal Access";
+    }else if(req.session.accessLevel==null){
+        throw "Illegal Access"
     }    
-    await ProjectInfo.selectCount(field,creatorID, search,userID).then((count) => {
+    await ProjectInfo.selectCount(field,creatorID, search,userID,projectID).then((count) => {
         res.json({status: 1, count: count})
     }).catch((err) => {
         console.log(err);

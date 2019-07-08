@@ -4,12 +4,10 @@
         <template>
             <searchBarMid @searchInfo="handleSearchInfo" :searchColumnArr="searchColumnArr" 
             :isSelectCom="isSelectCom" :searchOptionArr="searchOptionArr"></searchBarMid>             
-                <div class="my-course-list-header">
-                <div class="my-course-row">
-                    <div class="my-course-cell first">
+                    <div class="my-course-cell first" style="margin-top:20px">
                         <el-button @click="openCreateForm()">发起项目申请</el-button>
-                    </div>
-                </div>                    
+                    </div>     
+                <div class="my-course-list-header">
                 <div class="my-course-row">
                     <div class="my-course-cell first">项目名</div>
                     <div class="my-course-cell">支付事件号</div>
@@ -39,7 +37,7 @@
                 <div class="my-course-row content">
                     <div class="my-course-cell first cover">
                         <router-link :to="``">
-                            <img src="../../assets/image/project-hot.png" alt="">
+                            <img src="../../../assets/image/project-hot.png" alt="">
                             <div class="title">{{apply.projectName}}</div>
                         </router-link>
                     </div>
@@ -108,12 +106,12 @@
 </template>
 
 <script>
-    import InformationDialog from '../common/InformationDialog'
+    import InformationDialog from '../../common/InformationDialog'
     import {Message, MessageBox,ElTabs} from 'element-ui'
     import {
         TotalOption,
-    } from '../../utils/constant/options'; 
-    import SearchBar_mid from '../common/SearchBar_mid';
+    } from '../../../utils/constant/options'; 
+    import SearchBar_mid from '../../common/SearchBar_mid';
 
     export default {
         name: "Project",
@@ -319,6 +317,7 @@
         
         components: {            
             "information-dialog":InformationDialog,
+            "searchBarMid":SearchBar_mid,
         },        
         created() {
             this.myTotalOption=TotalOption;

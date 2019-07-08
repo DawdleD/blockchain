@@ -29,6 +29,12 @@ import ProfileCreateApplyManagement_teacher from './components/profile/CreateApp
 import ProfileProject_teacher from './components/profile/Project_teacher'
 import ProfileProjectMember_teacher from './components/profile/ProjectMember_teacher'
 
+const TeacherProject  = () =>import( './views/teacher/Project');
+const PAAM  = () =>import( './components/teacher/project/AttendApplyManagement_teacher');
+const PCAM  = () =>import( './components/teacher/project/CreateApplyManagement_teacher');
+const PP  = () =>import( './components/teacher/project/Project_teacher');
+const PPM  = () =>import( './components/teacher/project/ProjectMember_teacher');
+
 
 Vue.use(Router);
 
@@ -86,6 +92,14 @@ export default new Router({
                 }
             ]
         },
+        {
+            path: '/teacher/project', name: 'TeacherProject', component: TeacherProject, children: [
+                {path: '/teacher/project/project', name: 'PP', component: PP, meta: {title: '项目管理'}},
+                {path: '/teacher/project/attendapply', name: 'PAAM', component: PAAM, meta: {title: '项目报名申请管理'}},
+                {path: '/teacher/project/createapply', name: 'PCAM', component: PCAM, meta: {title: '项目创建申请管理'}},
+                {path: '/teacher/project/projectmember', name: 'PPM', component: PPM, meta: {title: '项目成员管理'}},
+            ]
+        },        
         {
             path: '/about', name: 'about',
             // route level code-splitting

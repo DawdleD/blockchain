@@ -34,7 +34,7 @@
                 <div class="my-course-row content">
                     <div class="my-course-cell first cover">
                         <router-link :to="`/project/${project['projectID']}/information`">
-                            <img src="../../assets/image/project-hot.png" alt="">
+                            <img src="../../../assets/image/project-hot.png" alt="">
                             <div class="title">{{project['projectName']}}</div>
                         </router-link>
                     </div>
@@ -166,12 +166,12 @@
 </template>
 
 <script>
-    import SearchBar_mid from '../common/SearchBar_mid';
-    import InformationDialog from '../common/InformationDialog'
+    import SearchBar_mid from '../../common/SearchBar_mid';
+    import InformationDialog from '../../common/InformationDialog'
     import {Message, MessageBox,ElTabs} from 'element-ui'
     import {
         TotalOption,
-    } from '../../utils/constant/options'; 
+    } from '../../../utils/constant/options'; 
 
     export default {
         name: "ProjectMember",
@@ -404,6 +404,7 @@
         },
         components: {            
             "information-dialog":InformationDialog,
+            "searchBarMid":SearchBar_mid,
         },        
         created() {
             this.myTotalOption=TotalOption;

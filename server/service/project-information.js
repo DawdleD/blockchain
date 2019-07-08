@@ -11,12 +11,14 @@ then2await=(gres)=>{return new Promise(function(resolve,reject){resolve(gres)})}
  * field:项目方向
  * search:检索内容（根据课程名调查）
  */
-function dealWhere(field,creatorID, search) {
+function dealWhere(field,creatorID, search,projectID) {
     let whereCase = {};
     if (field !== undefined && !isNaN(parseInt(field)))
         whereCase.projectField = field;
     if (creatorID !== undefined && !isNaN(parseInt(creatorID)))
-        whereCase.creatorID = creatorID;        
+        whereCase.creatorID = creatorID;       
+    if (projectID !== undefined && !isNaN(parseInt(projectID)))
+        whereCase.projectID = projectID;           
     // if (filter !== undefined && !isNaN(parseInt(filter)))
     //     switch (parseInt(filter)) {
     //         case 1:
@@ -55,8 +57,8 @@ exports.select = where => {
  * @param creatorID 创建人用户ID
  * @param search 查找
  */
-exports.selectCount = (field,creatorID, search,userID=undefined) => {
-    let where = dealWhere(field,creatorID, search);
+exports.selectCount = (field,creatorID, search,userID=undefined,projectID=undefined) => {
+    let where = dealWhere(field,creatorID, search,projectID);
     let object = where === undefined ? {} : where;
     if(userID!=undefined){
         object["include"]=[
@@ -75,8 +77,8 @@ exports.selectCount = (field,creatorID, search,userID=undefined) => {
  * @param page 分页
  * @param search 查找
  */
-exports.selectProject = async (field,creatorID, page, search,userID=undefined,detailInfo=false) => {
-    let where = dealWhere(field,creatorID, search);
+exports.selectProject = async (field,creatorID, page, search,projectID=undefined,userID=undefined,detailInfo=false) => {
+    let where = dealWhere(field,creatorID, search,projectID);
     // let order = dealOrder(sort);
     let offset = !isNaN(parseInt(page)) ? parseInt(page) : 1;
     let object = {

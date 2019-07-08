@@ -3,16 +3,11 @@
         <!--课程列表顶部信息 S-->
         <template>
             <searchBarMid @searchInfo="handleSearchInfo" :searchColumnArr="searchColumnArr" 
-            :isSelectCom="isSelectCom" :searchOptionArr="searchOptionArr"></searchBarMid>             
+            :isSelectCom="isSelectCom" :searchOptionArr="searchOptionArr"></searchBarMid>                
                 <div class="my-course-list-header">
                 <div class="my-course-row">
-                    <div class="my-course-cell first">
-                        <el-button @click="openCreateForm()">发起项目申请</el-button>
-                    </div>
-                </div>                    
-                <div class="my-course-row">
-                    <div class="my-course-cell first">项目名</div>
-                    <div class="my-course-cell">支付事件号</div>
+                    <div class="my-course-cell first">项目</div>
+                    <div class="my-course-cell">申请人信息</div>
                     <div class="my-course-cell">申请状态</div>
                     <div class="my-course-cell">操作</div>
                 </div>
@@ -33,26 +28,25 @@
             <!--课程不存在 E-->
             <!--课程存在 S-->
             <div class="my-course-list-item" v-else v-for="apply in applyRecords" :key="apply['applyID']">
-                <div class="my-course-row head">
-                    <!-- <div class="time">{{project.ProjectMembers[0]['joinTime']}}</div> -->
-                </div>
+
                 <div class="my-course-row content">
                     <div class="my-course-cell first cover">
-                        <router-link :to="``">
-                            <img src="../../assets/image/project-hot.png" alt="">
-                            <div class="title">{{apply.projectName}}</div>
+                        <!-- 注意ApplyInProject -->
+                        <router-link :to="`/project/${apply.ApplyInProject['projectID']}/information`">
+                            <img src="../../../assets/image/project-hot.png" alt="">
+                            <div class="title">{{apply.ApplyInProject['projectName']}}</div>
                         </router-link>
                     </div>
-                    <div class="my-course-cell price">{{(apply.paymentID==undefined)?"暂无":apply.paymentID}}</div>
+                    <div class="my-course-cell state">{{apply.ApplyerInfo['nickname']}}</div>
                     <div class="my-course-cell state">{{myTotalOption.labelProjectApplyStatue[apply.applyStatue]}}</div>
                     <div class="my-course-cell operating">
-                        <a :class="[apply.applyStatue!='PENDING'?'btn-operate-disabled':'btn-operate']" 
-                            @click="redirectToPayment">
-                            进行支付
+                        <a :class="[apply.applyStatue!='WAITING'?'btn-operate-disabled':'btn-operate']" 
+                            @click="agreeApply(apply['applyID'])">
+                            同意请求
                         </a>
-                        <a :class="[apply.applyStatue!='PENDING'?'btn-operate-disabled':'btn-operate']"
-                            @click="cancelApply(apply['applyID'])">
-                            取消创建
+                        <a :class="[apply.applyStatue!='WAITING'?'btn-operate-disabled':'btn-operate']"
+                            @click="rejectApply(apply['applyID'])">
+                            拒绝请求
                         </a>
                     </div>
                 </div>
@@ -64,56 +58,23 @@
                 <el-pagination background layout="prev, pager, next"
                             :pager-count="10" @current-change="applyPageChanged"
                             :total="10*applyCount"
-                            :current-page.sync="currentPage"
-                            >
-                            
+                            :current-page.sync="currentPage">
                 </el-pagination>
-            </div>           
+            </div>    
         </template>        
+
     <information-dialog @dialogClose="handleDialogClose" :infoArr="infoArr" :infoTableWidth="infoTableWidth" :infoDialogVisible="infoDialogVisible" :infoTable="infoTable"></information-dialog>
-    
-    <el-dialog title="发起项目创建申请" :visible.sync="createFormVisible">
-    <el-form :model="createForm">
-        <el-form-item label="项目名称" >
-            <el-input v-model="createForm.projectName"  autocomplete="off" ></el-input>
-        </el-form-item>  
-           
-        <el-form-item label="项目费用（保证金）/单位(Finney)" >
-            <el-input v-model.number="createForm.projectFee" type="number" autocomplete="off" ></el-input>
-        </el-form-item>
-
-        <el-form-item label="项目介绍" >
-            <el-input v-model="createForm.projectIntro" type="text" autocomplete="off" ></el-input>
-        </el-form-item>
-        <el-form-item label="项目领域" >
-                <el-select v-model="createForm.projectField" placeholder="请选择操作类型">
-                        <el-option
-                        v-for="item in myTotalOption.optionProjectField"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                </el-select>              
-        </el-form-item>
-               
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-        <el-button @click="createFormVisible = false">取 消</el-button>
-        <el-button type="primary"  @click="submitApply()">确 定</el-button>
     </div>
-    </el-dialog> 
-
-</div>
 
 </template>
 
 <script>
-    import InformationDialog from '../common/InformationDialog'
+    import InformationDialog from '../../common/InformationDialog'
     import {Message, MessageBox,ElTabs} from 'element-ui'
     import {
         TotalOption,
-    } from '../../utils/constant/options'; 
-    import SearchBar_mid from '../common/SearchBar_mid';
+    } from '../../../utils/constant/options'; 
+    import SearchBar_mid from '../../common/SearchBar_mid';
 
     export default {
         name: "Project",
@@ -126,20 +87,17 @@
                 applyRecords:[],
 
                 myTotalOption:[],
-
+                scoreForm:{
+                    projectID:"",
+                    memberList:[],
+                },                
+                scoreFormVisible:false,
 
                 infoDialogVisible:false,
                 infoArr:[{title:'defualt',value:'default'}],
                 infoTableWidth:0,
                 infoTable:[],
 
-                createFormVisible:false,
-                createForm:{
-                    projectIntro:'',
-                    projectName:'',
-                    projectField:'',
-                    projectFee:'',
-                },
                 // Search MID BAR
                 searchColumnArr:[],
                 isSelectCom:{},
@@ -147,45 +105,24 @@
                 searchColumn:"",
                 searchContent:"",    
                 currentPage:1,    
-
             }
         },
         methods: {
             handleDialogClose(){
                 this.infoDialogVisible=false;
             },                 
-            // 跳转至支付页面
-            redirectToPayment(){
-                this.$router.replace({path:'/profile/wallet'});
-            },
-            openCreateForm(){
-                for (var key in this.createForm) {
-                　　this.createForm[key]="";
-                }
-                this.createFormVisible=true;
-            },
-            memberInfo(item){
-                this.infoDialogVisible=true;
-                this.infoArr=[];
-                this.infoArr.push({'title':'项目ID','value':item.projectID});
-                this.infoArr.push({'title':'成员类型','value':this.myTotalOption.labelMemberType[item.memberType]});
-                this.infoArr.push({'title':'冻结金额','value':item.frozenBalance});
-                this.infoArr.push({'title':'是否参与评分','value':item.boolRemark==0?'否':'是'});
 
-                this.infoTableWidth=0;
-                this.infoTable=[];
-            },
 
-            //获取课程信息
-            async getCreateApply(page) {
+            //获取参加请求信息
+            async getAttendApply(page) {
                 try {
                     var dict={page}
                     if(this.searchColumn!=""&&this.serachContent!=""){
                         dict[this.searchColumn]=this.searchContent
-                    }                       
-                    let response = await this.$axios.get(`/api/project/query/getCreateRecord`,
+                    }                            
+                    let response = await this.$axios.get(`/api/project/query/getApplyRecord`,
                         {params:dict});
-                    let responseCount=await this.$axios.post(`/api/project/query/getCreateRecordCount`,dict);
+                    let responseCount=await this.$axios.post(`/api/project/query/getApplyRecordCount`,dict);
                     if (response.data.status === 0) Message.info(response.data.msg);
                     else {
                         this.projectCount = responseCount.data.count % 10 === 0 ?
@@ -253,55 +190,60 @@
                     this.scoreFormVisible=false;
                     console.log(error);
                 }           
-            },       
+            },        
 
-            submitApply: async function(){
-                try {
-                    let res=await this.$axios.post('/api/project/CreateRecord/createapply',{
-                        'projectName':this.createForm.projectName,
-                        'projectIntro':this.createForm.projectIntro,
-                        'projectFee':this.createForm.projectFee,
-                        'projectField':this.createForm.projectField,
-                        })
-                    if(res.data.status==0){
-                        throw "Failed"
-                    }
-                    this.createFormVisible=false;
-                    Message.success("操作成功");    
-                } catch (error) {
-                    Message.error("操作失败!");  
-                    this.createFormVisible=false;
-                    console.log(error);
-                }           
-            },   
-            //取消报名
-            async cancelApply(applyID){
-                MessageBox.confirm('确定取消创建该项目？相关的支付事件将被自动删除', '提示', {
+            //同意请求
+            async agreeApply(applyID){
+                MessageBox.confirm('确定同意该报名申请？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(async () => {
                     try {
-                        let response = await this.$axios.post(`/api/project/CreateRecord/cancelApply`,{
-                            applyID
+                        let response = await this.$axios.get(`/api/project/ApplyRecord/agreeApply`,{
+                            params:{applyID}
                         });
                         if (response.data.status != 1) Message.info('操作失败!');
                         else if (response.data.status === 1) {
-                            Message.success(response.data.msg);
-                            this.getCreateApply(1);
-                        } ;
+                            Message.success('操作成功');
+                            this.getAttendApply(1);
+                        } ;                       
                     } catch (error) {
-                        Message.info("操作失败");
+                        Message.error("操作失败!");
                     }
 
                 }).catch(() => {
                     Message.info("已取消操作");
                 })                
             },
+            //同意请求
+            async rejectApply(applyID){
+                MessageBox.confirm('确定拒绝该报名申请？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    try {
+                        let response = await this.$axios.get(`/api/project/ApplyRecord/rejectApply`,{
+                            params:{applyID}
+                        });
+                        if (response.data.status != 1) Message.info('操作失败!');
+                        else if (response.data.status === 1) {
+                            Message.success('操作成功!');
+                            this.getAttendApply(1);
+                        } ;                       
+                    } catch (error) {
+                        Message.error("操作失败!");
+                    }
+
+                }).catch(() => {
+                    Message.info("已取消操作");
+                })                
+            },            
 
             // 页码改变（项目参加申请）
             applyPageChanged(val) {
-                this.getCreateApply(val);
+                this.getAttendApply(val);
             },           
 
             // SearchBarMid
@@ -309,37 +251,33 @@
                 this.searchColumn=dict.searchColumn
                 this.searchContent=dict.searchContent
                 if(dict.searchInstantly==true){
-                    this.getCreateApply(1)
+                    this.getAttendApply(1)
                     this.currentPage=1
                 }
             },
-
-
         },
-        
         components: {            
             "information-dialog":InformationDialog,
+            "searchBarMid":SearchBar_mid,
         },        
         created() {
             this.myTotalOption=TotalOption;
-            this.getCreateApply(1);
-
+            this.getAttendApply(1);
+        
             // Search MID BAR
             this.searchColumnArr=[
-                {'value':'applyID','label':'申请ID'},
-                {'value':'projectField','label':'项目领域'},
+                {'value':'projectID','label':'项目ID'},
                 {'value':'applyStatue','label':'申请状态'},
             ];
             this.isSelectCom={
-                'applyID':false,
-                'projectField':true,
+                'projectID':false,
                 'applyStatue':true,
             };
             this.searchOptionArr={
                 'projectField':TotalOption.optionProjectField,
                 'applyStatue':TotalOption.optionProjectApplyStatue,
             };   
-            // Search MID BAR  
+            // Search MID BAR          
         }
     }
 </script>

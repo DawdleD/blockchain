@@ -273,19 +273,19 @@ import SearchBar_mid from '../common/SearchBar_mid';
             this.myTotalOption=TotalOption;
             /* 改变URL */
             // Test SerachBarMid
-            this.searchColumnArr=[
-                {'value':'creatorID','label':'创建者'},
-                {'value':'projectField','label':'项目领域'},
-                {'value':'projectName','label':'项目名称'},
-            ];
-            this.isSelectCom={
-                'creatorID':false,
-                'projectField':true,
-                'projectName':false,
-            };
-            this.searchOptionArr={
-                'projectField':TotalOption.optionProjectField,
-            };
+            // this.searchColumnArr=[
+            //     {'value':'creatorID','label':'创建者'},
+            //     {'value':'projectField','label':'项目领域'},
+            //     {'value':'projectName','label':'项目名称'},
+            // ];
+            // this.isSelectCom={
+            //     'creatorID':false,
+            //     'projectField':true,
+            //     'projectName':false,
+            // };
+            // this.searchOptionArr={
+            //     'projectField':TotalOption.optionProjectField,
+            // };
             // Test SerachBarMid End
             let val = {
                 projectField: this.$route.query.projectField,

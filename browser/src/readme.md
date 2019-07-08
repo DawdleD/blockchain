@@ -40,3 +40,24 @@ Project_teacher.vue 项目管理
 AttendApplyManagement_teacher 学生报名项目申请的管理界面
 CreateApplyManagement_teacher 教师创建项目申请的管理界面
 ProjectMember_teacher 项目成员管理界面
+
+
+改动说明-0708
+
+router.js:增加了教师管理界面的路由部分
+
+
+components\common\SearchBar_mid.vue:更改组件样式并完善功能
+
+
+views\teacher\Course.vue:教师管理界面的入口界面
+
+
+components\teacher\project\Project_teacher.vue、components\teacher\project\ProjectMember_teacher.vue、components\teacher\project\CreateApplyManagement_teacher.vue、components\teacher\project\AttendApplyManagement_teacher.vue：
+教师管理界面组件
+
+
+后端部分：
+
+
+controllers\project\projectquery.js、service\project-information.js：对于项目信息的查询逻辑进行了修改

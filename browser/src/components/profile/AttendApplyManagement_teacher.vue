@@ -2,6 +2,8 @@
     <div class="my-course-list">
         <!--课程列表顶部信息 S-->
         <template>
+            <searchBarMid @searchInfo="handleSearchInfo" :searchColumnArr="searchColumnArr" 
+            :isSelectCom="isSelectCom" :searchOptionArr="searchOptionArr"></searchBarMid>                
                 <div class="my-course-list-header">
                 <div class="my-course-row">
                     <div class="my-course-cell first">项目</div>
@@ -55,7 +57,8 @@
             <div class="course-sort-page" v-if="applyRecords.length>0">
                 <el-pagination background layout="prev, pager, next"
                             :pager-count="10" @current-change="applyPageChanged"
-                            :total="10*applyCount">
+                            :total="10*applyCount"
+                            :current-page.sync="currentPage">
                 </el-pagination>
             </div>    
         </template>        
@@ -71,6 +74,7 @@
     import {
         TotalOption,
     } from '../../utils/constant/options'; 
+    import SearchBar_mid from '../common/SearchBar_mid';
 
     export default {
         name: "Project",
@@ -93,6 +97,14 @@
                 infoArr:[{title:'defualt',value:'default'}],
                 infoTableWidth:0,
                 infoTable:[],
+
+                // Search MID BAR
+                searchColumnArr:[],
+                isSelectCom:{},
+                searchOptionArr:{},         
+                searchColumn:"",
+                searchContent:"",    
+                currentPage:1,    
             }
         },
         methods: {
@@ -104,8 +116,13 @@
             //获取参加请求信息
             async getAttendApply(page) {
                 try {
-                    let response = await this.$axios.get(`/api/project/query/getApplyRecord?page=${page}`);
-                    let responseCount=await this.$axios.post(`/api/project/query/getApplyRecordCount`);
+                    var dict={page}
+                    if(this.searchColumn!=""&&this.serachContent!=""){
+                        dict[this.searchColumn]=this.searchContent
+                    }                            
+                    let response = await this.$axios.get(`/api/project/query/getApplyRecord`,
+                        {params:dict});
+                    let responseCount=await this.$axios.post(`/api/project/query/getApplyRecordCount`,dict);
                     if (response.data.status === 0) Message.info(response.data.msg);
                     else {
                         this.projectCount = responseCount.data.count % 10 === 0 ?
@@ -223,12 +240,21 @@
                     Message.info("已取消操作");
                 })                
             },            
-            //页码改变
 
             // 页码改变（项目参加申请）
             applyPageChanged(val) {
                 this.getAttendApply(val);
             },           
+
+            // SearchBarMid
+            handleSearchInfo(dict){
+                this.searchColumn=dict.searchColumn
+                this.searchContent=dict.searchContent
+                if(dict.searchInstantly==true){
+                    this.getAttendApply(1)
+                    this.currentPage=1
+                }
+            },
         },
         components: {            
             "information-dialog":InformationDialog,
@@ -236,6 +262,21 @@
         created() {
             this.myTotalOption=TotalOption;
             this.getAttendApply(1);
+        
+            // Search MID BAR
+            this.searchColumnArr=[
+                {'value':'projectID','label':'项目ID'},
+                {'value':'applyStatue','label':'申请状态'},
+            ];
+            this.isSelectCom={
+                'projectID':false,
+                'applyStatue':true,
+            };
+            this.searchOptionArr={
+                'projectField':TotalOption.optionProjectField,
+                'applyStatue':TotalOption.optionProjectApplyStatue,
+            };   
+            // Search MID BAR          
         }
     }
 </script>
