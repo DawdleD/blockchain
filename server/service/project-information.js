@@ -1,5 +1,5 @@
 
-const {ProjectInformation, ProjectRewardRecord,ProjectScoreRecord,ProjectMember, UserInformation} = require('../model/create-table');
+const {ProjectInformation, ProjectRewardRecord,ProjectApplyRecord,ProjectScoreRecord,ProjectMember, UserInformation} = require('../model/create-table');
 const Op = require('sequelize').Op;
 
 then2await=(gres)=>{return new Promise(function(resolve,reject){resolve(gres)})}
@@ -70,6 +70,30 @@ exports.selectCount = (field,creatorID, search,userID=undefined,projectID=undefi
     }         
     return ProjectInformation.count(object);
 };
+
+/**
+ * 获取最新项目-供首页展示使用
+ */
+exports.selectIndexProject=async()=>{
+    var res=await ProjectInformation.findAll({
+        'order': [['createTime', 'DESC']],
+        'limit':8,
+        attributes: ['projectID', 'projectPic','projectFee'],
+    })
+
+    // ApplyCount指代提交报名的不同用户ID的数量，并非参与项目的实际人数
+    for(var ind in res){
+        console.log(res[ind])
+        var applyCount=await ProjectApplyRecord.count({
+            'attributes':['userID'],
+            where:{'projectID':res[ind].projectID},
+        })
+        console.log(applyCount)
+        res[ind].dataValues['applyCount']=applyCount
+    }
+    return res;
+};
+
 
 /**
  * 获取指定条件的课程

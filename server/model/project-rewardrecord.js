@@ -11,7 +11,7 @@ module.exports = function(sequelize,DataTypes){
             allowNull:false,
         },        
         userID:{
-            type:DataTypes.INTEGER(8).ZEROFILL,
+            type:DataTypes.INTEGER(11).ZEROFILL,
             allowNull:false,
         },               
         awardTime:{
@@ -35,7 +35,7 @@ module.exports = function(sequelize,DataTypes){
             type:DataTypes.INTEGER
         },      
         senderID:{
-            type:DataTypes.INTEGER(8).ZEROFILL,
+            type:DataTypes.INTEGER(11).ZEROFILL,
             allowNull:false,
         },                 
                                 

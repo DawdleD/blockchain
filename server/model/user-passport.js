@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('UserPassport', {
-        userID: {type: DataTypes.INTEGER(8).ZEROFILL, primaryKey: true, allowNull: false},
+        userID: {type: DataTypes.INTEGER(11).ZEROFILL, primaryKey: true, allowNull: false},
         phone: {type: DataTypes.STRING(11), allowNull: false, uniqueKey: true},
         email: {type: DataTypes.STRING(100), uniqueKey: true, isEmail: true},
         password: {type: DataTypes.STRING(128), allowNull: false},

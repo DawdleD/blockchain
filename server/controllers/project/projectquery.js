@@ -25,7 +25,20 @@ exports.getProjectCount = async (req, res) => {
 };
 
 /**
- * 获取课程
+ * 获取最新项目（首页）
+ */
+exports.getIndexProject= async(req,res)=>{
+    try {
+        var sqlres=await ProjectInfo.selectIndexProject();
+        return res.json({status: 1, sqlres});            
+    } catch (error) {
+        console.log(error);
+        res.json({status: 0, msg: '服务器错误'})        
+    }
+}
+
+/**
+ * 获取项目
  * 方式:Get
  */
 exports.getProject = async (req, res) => {

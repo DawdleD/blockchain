@@ -1,7 +1,7 @@
 module.exports = function(sequelize,DataTypes){
     var projectMember = sequelize.define('ProjectMember',{
         memberID:{
-            type:DataTypes.INTEGER(8).ZEROFILL,
+            type:DataTypes.INTEGER(11).ZEROFILL,
             primaryKey:true,
             allowNull:false,
         },

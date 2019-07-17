@@ -11,6 +11,12 @@ const ProjectManagement=require('../controllers/project/projectmanagement')
 // const CourseInformation = require('../controllers/course/information');
 
 /**
+ * 获取主页项目列表
+ */
+router.get('/query/getindexproject', ProjectQuery.getIndexProject);
+
+
+/**
  * 获取项目列表
  */
 router.get('/query/getproject', ProjectQuery.getProject);

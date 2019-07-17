@@ -2,7 +2,8 @@
 
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('CourseExam', {
-        examID: {type: DataTypes.INTEGER(8), primaryKey: true, allowNull: false},
+        examID: {type: DataTypes.INTEGER(8), primaryKey: true, allowNull: false, autoIncrement: true},
+        teacherID: {type: DataTypes.INTEGER(11), allowNull: false},
         exam: {type: DataTypes.JSON, allowNull: false},
         answer: {type: DataTypes.JSON, allowNull: false},
         startTime: {type: DataTypes.DATE, allowNull: true},
