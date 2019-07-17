@@ -84,9 +84,8 @@ exports.selectIndexProject=async()=>{
     // ApplyCount指代提交报名的不同用户ID的数量，并非参与项目的实际人数
     for(var ind in res){
         console.log(res[ind])
-        var applyCount=await ProjectApplyRecord.count({
-            'attributes':['userID'],
-            where:{'projectID':res[ind].projectID},
+        var applyCount=await ProjectApplyRecord.aggregate('userID','count',{
+            distinct:true
         })
         console.log(applyCount)
         res[ind].dataValues['applyCount']=applyCount
