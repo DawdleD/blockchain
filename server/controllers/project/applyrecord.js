@@ -130,7 +130,7 @@ exports.rejectApply=async(req,res)=>{
          * 权限检查
          */
         var memberRes=await ProjectMember.select({memberID:req.session.userID,projectID:sqlres[0].projectID})
-        if (!(req.session.accessLevel==2||(memberRes.length==1&&memberRes[0].memberType==1))){
+        if (!(req.session.level==2||(memberRes.length==1&&memberRes[0].memberType==1))){
             throw "Illegal Access!"
         }
         /**
@@ -175,7 +175,7 @@ exports.rejectApply=async(req,res)=>{
          * 权限检查
          */
         var memberRes=await ProjectMember.select({memberID:req.session.userID,projectID:sqlRes[0].projectID})
-        if (!(req.session.accessLevel==2||(memberRes.length==1&&memberRes[0].memberType==1))){
+        if (!(req.session.level==2||(memberRes.length==1&&memberRes[0].memberType==1))){
             throw "Illegal Access!"
         }
         /**

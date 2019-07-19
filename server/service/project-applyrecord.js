@@ -50,7 +50,7 @@ exports.select = where => {
  */
 exports.selectCount = (applyID,userID,projectID,applyStatue,paymentID,creatorID=undefined) => {
     let where = dealWhere(applyID,userID,projectID,applyStatue,paymentID);
-    let object = where === undefined ? {} : where;
+    let object = where === undefined ? {} : {where};
     if(creatorID!=undefined){
         object["include"]=[{
             model:ProjectInformation,

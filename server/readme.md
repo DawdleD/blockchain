@@ -86,7 +86,7 @@ app.js
 在正式部署时，应把app.js中的下列对应代码注！释！
 app.get('/api/chguser',(req,res)=>{
     req.session.userID=req.query.userID;
-    req.session.accessLevel=req.query.accessLevel
-    res.json({userID:req.session.userID,accessLevel:req.session.accessLevel});
+    req.session.level=req.query.accessLevel
+    res.json({userID:req.session.userID,accessLevel:req.session.level});
   });
 

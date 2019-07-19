@@ -222,7 +222,7 @@ exports.closeProject=async function(req,res,next){
          /**
           * check Auth
           */
-         if(req.session.accessLevel==2){
+         if(req.session.level==2){
             //Pass
          }else{
             var sqlres=await ProjectMember.select({memberID:userID,projectID:req.query.projectID});
@@ -331,7 +331,7 @@ exports.comfirmProScore=async(req,res,next)=>{
         var projectRow=sqlres[0];
         if(projectRow.remarkPhase!="OPEN") throw "Illegal Remark Phase: NOT OPEN";
         
-        if(req.session.accessLevel==2){
+        if(req.session.level==2){
             //Pass
          }else{
             var sqlres=await ProjectMember.select({memberID:userID,projectID:req.query.projectID});
@@ -390,7 +390,7 @@ exports.queryProScore=async(req,res)=>{
         var projectRow=await ProjectInformation.select({projectID:req.query.projectID})
         if(projectRow.length!=1) throw "Illegal projectID";
         if(projectRow[0].remarkPhase!="OPEN")
-        if(req.session.accessLevel==2){
+        if(req.session.level==2){
             //Pass
          }else{
             var sqlres=await ProjectMember.select({memberID:req.session.userID,projectID:req.query.projectID});
@@ -478,7 +478,7 @@ exports.deleteProjectMember=async(req,res)=>{
             // var cntaccessLevel=await utils_accessLevel.getCntaccessLevel(req.session.userID)            
             
             ///Check Auth :user must be creator of the project or an admin
-            if(req.session.accessLevel==2){
+            if(req.session.level==2){
                 //Pass
              }else{
                 var sqlres=await ProjectMember.select({memberID:userID,projectID:req.body.projectID});
@@ -526,7 +526,7 @@ exports.modifyProject=async function(req,res){
         // var cntaccessLevel=await utils_accessLevel.getCntaccessLevel(req.session.userID)            
         
         ///Check Auth :user must be creator of the project or an admin
-        if(req.session.accessLevel==2){
+        if(req.session.level==2){
             //Pass
          }else{
             var sqlres=await ProjectMember.select({memberID:userID,projectID:req.body.projectID});
@@ -567,7 +567,7 @@ exports.updateAvatar = async (req, res) => {
             /* 文件是否合法 */
             // console.log(req.body);
             if(req.body.projectID == null) throw "Illegal ProjectID"
-            if(req.session.accessLevel==2){
+            if(req.session.level==2){
                 //Pass
              }else{
                 var sqlres=await ProjectMember.select({memberID:req.session.userID,projectID:req.body.projectID});

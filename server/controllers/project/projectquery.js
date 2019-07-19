@@ -75,15 +75,15 @@ exports.getProjectAuthed = async (req, res) => {
     // Wait 
     var userID=req.query.userID;
     // 学生用户 强制只能对自己参与的项目进行管理
-    if(req.session.accessLevel==0){
+    if(req.session.level==0){
         userID=req.session.userID;
         if(userID==null) throw "Illegal Access";
     }
     // 教师用户 强制只能对自己创建的项目进行管理
-    else if(req.session.accessLevel==1){
+    else if(req.session.level==1){
         creatorID=req.session.userID;
         if(creatorID==null) throw "Illegal Access";
-    }else if(req.session.accessLevel==null){
+    }else if(req.session.level==null){
         throw "Illegal Access"
     }
     
@@ -104,19 +104,19 @@ exports.getProjectAuthed = async (req, res) => {
 exports.getProjectCountAuthed = async (req, res) => {
     const field = req.body.field;
     const search = req.body.search;
-    const projectID=req.query.projectID;
+    const projectID=req.body.projectID;
     // Wait
     var creatorID=req.body.creatorID;
     var userID=req.body.userID;
     // 学生用户 强制只能对自己参与的项目进行管理
-    if(req.session.accessLevel==0){
+    if(req.session.level==0){
         userID=req.session.userID;
         if(userID==null) throw "Illegal Access";        
     }
-    else if(req.session.accessLevel==1){
+    else if(req.session.level==1){
         creatorID=req.session.userID;
         if(creatorID==null) throw "Illegal Access";
-    }else if(req.session.accessLevel==null){
+    }else if(req.session.level==null){
         throw "Illegal Access"
     }    
     await ProjectInfo.selectCount(field,creatorID, search,userID,projectID).then((count) => {
@@ -170,7 +170,7 @@ exports.getPaymentCount = async (req, res) => {
     const payType = req.body.payType;
     const relateEvent=req.body.relateEvent;
     // 管理员用户可以管理所有人的支付记录
-    if(req.session.accessLevel!=3){
+    if(req.session.level!=3){
         userID=req.session.userID;
         if(userID==null) throw "Illegal Access";        
     }        
@@ -194,7 +194,7 @@ exports.getPaymentRecord = async (req, res) => {
     const payType = req.query.payType;
     const relateEvent=req.query.relateEvent;  
     const page=req.query.page; 
-    if(req.session.accessLevel!=3){
+    if(req.session.level!=3){
         userID=req.session.userID;
         if(userID==null) throw "Illegal Access";        
     }       
@@ -222,11 +222,11 @@ exports.getAttendApplyCount = async (req, res) => {
     var creatorID = req.body.creatorID;
     const projectID = req.body.projectID;
     // 用户为学生时，只能管理自己的项目参加申请
-    if(req.session.accessLevel==0){
+    if(req.session.level==0){
         userID=req.session.userID;
         if(userID==null) throw "Illegal Access";        
     }
-    else if(req.session.accessLevel==1){
+    else if(req.session.level==1){
         creatorID=req.session.userID;
         if(creatorID==null) throw "Illegal Access";        
     }  
@@ -253,12 +253,12 @@ exports.getAttendApply = async (req, res) => {
     const page=req.query.page;
 
     // 用户为学生时，只能管理自己的项目参加申请
-    if(req.session.accessLevel==0){
+    if(req.session.level==0){
         userID=req.session.userID;
         if(userID==null) throw "Illegal Access";        
     }    
     // 用户为教师时，智能管理自己创建项目的参加申请
-    else if(req.session.accessLevel==1){
+    else if(req.session.level==1){
         creatorID=req.session.userID;
         if(creatorID==null) throw "Illegal Access";        
     }     
@@ -284,7 +284,7 @@ exports.getCreateApplyCount = async (req, res) => {
     const applyStatue = req.body.applyStatue;
     // wait
     const projectField = req.body.projectField;
-    if(req.session.accessLevel==1){
+    if(req.session.level==1){
         userID=req.session.userID;
         if(userID==null) throw "Illegal Access";
     }else{
@@ -310,7 +310,7 @@ exports.getCreateApply = async (req, res) => {
     // wait
     const projectField = req.query.projectField;
     const page=req.query.page;
-    if(req.session.accessLevel==1){
+    if(req.session.level==1){
         userID=req.session.userID;
         if(userID==null) throw "Illegal Access";
     }else{

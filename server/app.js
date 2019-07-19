@@ -96,8 +96,8 @@ app.use('/api/project', project);
 /** 测试功能，模拟用户登录过程*/
 app.get('/api/chguser',(req,res)=>{
     req.session.userID=req.query.userID;
-    req.session.accessLevel=req.query.accessLevel
-    res.json({userID:req.session.userID,accessLevel:req.session.accessLevel});
+    req.session.level=req.query.accessLevel
+    res.json({userID:req.session.userID,accessLevel:req.session.level});
   });
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

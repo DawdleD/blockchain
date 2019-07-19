@@ -59,7 +59,7 @@ exports.select = where => {
  */
 exports.selectCount = (field,creatorID, search,userID=undefined,projectID=undefined) => {
     let where = dealWhere(field,creatorID, search,projectID);
-    let object = where === undefined ? {} : where;
+    let object = where === undefined ? {} : {where};
     if(userID!=undefined){
         object["include"]=[
             {
@@ -68,6 +68,7 @@ exports.selectCount = (field,creatorID, search,userID=undefined,projectID=undefi
             },                        
           ]
     }         
+
     return ProjectInformation.count(object);
 };
 
