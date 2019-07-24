@@ -123,6 +123,8 @@ exports.rejectApply=async(req,res)=>{
         /**
          * 权限检查
          */
+        // 只有教管员才能够进行此操作
+        if(session.level!=2) throw 'Illegal Access On session.level';
         var sqlRes=await CreateApplyRecord.select({applyID:req.query.applyID});
         if(sqlRes.length!=1||sqlRes[0].applyStatue!='WAITING') throw 'Illegal Operation: Wrong ApplyStatue or Invalid applyID'
         var sqlRes=await CreateApplyRecord.update({applyID:req.query.applyID},{applyStatue:'REJECTED'})
@@ -158,6 +160,8 @@ exports.rejectApply=async(req,res)=>{
         /**
          * 权限检查
          */
+        // 只有教管员才能够进行此操作
+        if(session.level!=2) throw 'Illegal Access On session.level';        
         var sqlRes=await CreateApplyRecord.select({applyID:req.query.applyID});
         if(sqlRes.length!=1||sqlRes[0].applyStatue!='WAITING') throw 'Illegal Operation: Wrong ApplyStatue or Invalid applyID'
         var dataRow=sqlRes[0];
@@ -212,6 +216,8 @@ exports.cancelApply=async(req,res)=>{
          */
         var sqlRes=await CreateApplyRecord.select({applyID:req.query.applyID});
         if(sqlRes.length!=1||sqlRes[0].applyStatue!='PENDING') throw 'Illegal Operation: Wrong ApplyStatue or Invalid applyID'
+        // 仅有提交该申请的用户才能够进行取消操作
+        if(sqlRes[0].userID!=userID) throw "Illegal Access. One can cancel its apply made by himself"
         var delID=sqlRes[0].paymentID;
         var sqlRes=await CreateApplyRecord.update({applyID:req.query.applyID},{paymentID:null,applyStatue:'CANCEL'})
         console.log(sqlRes);

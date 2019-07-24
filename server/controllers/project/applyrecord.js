@@ -89,7 +89,7 @@ exports.createApply=async(req,res)=>{
         var sqlRes=await ProjectInformation.select({projectID:req.body.projectID});
         if(sqlRes.length!=1) throw "Invalid ProjectID";
         // 检查课程是否开放
-        if(sqlRes.projectStatue!=0) throw "Course is closed";
+        if(sqlRes[0].projectStatue!=0) throw "Course is closed";
         /**
          * 检查ProjectMember中用户是否已参加项目
          */
@@ -234,6 +234,8 @@ exports.cancelApply=async(req,res)=>{
          */
         var sqlRes=await AttendApplyRecord.select({applyID:req.query.applyID});
         if(sqlRes.length!=1||sqlRes[0].applyStatue!='PENDING') throw 'Illegal Operation: Wrong ApplyStatue or Invalid applyID'
+        // 仅有提交该申请的用户才能够进行取消操作
+        if(sqlRes[0].userID!=userID) throw "Illegal Access. One can cancel its apply made by himself"        
         var delID=sqlRes[0].paymentID;
         var sqlRes=await AttendApplyRecord.update({applyID:req.query.applyID},{paymentID:null,applyStatue:'CANCEL'})
         console.log(sqlRes);

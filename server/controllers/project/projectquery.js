@@ -9,7 +9,7 @@ const ProjectMember=require('../../service/project-projectmember');
  * 方式:POST
  */
 exports.getProjectCount = async (req, res) => {
-    const field = req.body.field;
+    const field = req.body.projectField;
     const search = req.body.search;
     const projectID = req.body.projectID;
     // Wait
@@ -102,7 +102,7 @@ exports.getProjectAuthed = async (req, res) => {
  * 方式:POST
  */
 exports.getProjectCountAuthed = async (req, res) => {
-    const field = req.body.field;
+    const field = req.body.projectField;
     const search = req.body.search;
     const projectID=req.body.projectID;
     // Wait
@@ -287,6 +287,9 @@ exports.getCreateApplyCount = async (req, res) => {
     if(req.session.level==1){
         userID=req.session.userID;
         if(userID==null) throw "Illegal Access";
+    }else if(req.session.level==2){
+        //Do nothing
+        //调用该API的人具有教管员权限
     }else{
         throw "Illegal Access";
     }
@@ -313,6 +316,9 @@ exports.getCreateApply = async (req, res) => {
     if(req.session.level==1){
         userID=req.session.userID;
         if(userID==null) throw "Illegal Access";
+    }else if(req.session.level==2){
+        //Do nothing
+        //调用该API的人具有教管员权限
     }else{
         throw "Illegal Access";
     }
