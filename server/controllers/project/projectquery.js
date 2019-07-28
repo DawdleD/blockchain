@@ -334,7 +334,7 @@ exports.getCreateApply = async (req, res) => {
 // 项目成员
 
 /**
- * 获取项目成员列表总页数
+ * 获取项目成员列表总数(目前仅供教管员使用)
  * 方式:POST
  */
 exports.getProjectMemberCount = async (req, res) => {
@@ -342,6 +342,10 @@ exports.getProjectMemberCount = async (req, res) => {
     const projectID = req.body.projectID;
     const memberType=req.body.memberType;
     // Wait
+    // Check Level
+    if(req.session.level!=2){
+        throw "Illegal Access:level <> 2"
+    }    
     var creatorID = req.body.creatorID;
 
     await ProjectMember.selectProjectMemberCount(memberID,projectID,memberType,creatorID).then((count) => {
@@ -353,14 +357,17 @@ exports.getProjectMemberCount = async (req, res) => {
 };
 
 /**
- * 获取创建项目请求
+ * 获取项目成员记录（目前仅供教管员使用）
  * 方式:Get
  */
 exports.getProjectMember = async (req, res) => {
     const memberID = req.query.memberID;
     const projectID = req.query.projectID;
     const memberType=req.query.memberType;
-    // Wait
+    // Check Level
+    if(req.session.level!=2){
+        throw "Illegal Access:level <> 2"
+    }
     var creatorID = req.query.creatorID;
     const page=req.query.page;
     await ProjectMember.selectMember(memberID,projectID,memberType,page,creatorID).then((rows) => {
